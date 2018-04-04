@@ -1,6 +1,8 @@
 {
   "name": "angularMaterialExample",
-  "app_id": "",
+  "app_id": "cc62e269",
   "type": "ionic-angular",
-  "integrations": {}
+  "integrations": {
+    "cordova": {}
+  }
 }

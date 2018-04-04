@@ -11,6 +11,8 @@ import { LocalPage } from '../pages/local/local';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule, MatCheckboxModule} from '@angular/material';
 
+import { SQLite } from '@ionic-native/sqlite';
+import { SqLiteWrapperProvider } from '../providers/sq-lite-wrapper/sq-lite-wrapper';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import {MatButtonModule, MatCheckboxModule} from '@angular/material';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    SQLite,
+    SqLiteWrapperProvider,
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
   ]
 })
 export class AppModule {}
