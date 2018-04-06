@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform, AlertController } from 'ionic-angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-wrapper';
 import { DatePipe } from '@angular/common';
@@ -24,6 +24,7 @@ export class LocalPage {
     public navCtrl: NavController, 
     public navParams: NavParams, 
     private SQLService: SqLiteWrapperProvider, 
+    private alert: AlertController,
     private platform: Platform) {
       this.platform.ready()
         .then( (readySource) => {
@@ -63,9 +64,46 @@ export class LocalPage {
     console.log('ionViewDidLoad LocalPage');
   }
 
-  chamarIndividuos(local_id:number){
-    console.log(local_id)
+  chamarEstacoes(local_id:number){
+
+    // this.SQLService.getLocais(local_id)
+    //   .then( (results) => {
+        
+    //     console.log(results.rows.item(0).descricao);
+
+    //     if(results.rows.item(0).descricao){
+
+    //       let localName = results.rows.item(0).descricao;
+
+          
+          
+    //       console.log(local_id)
+
+    //     }
+    
+    //   });
+
+    var index = this.locais.findIndex(function(element,index){
+      if(element.id == local_id){
+        return element;
+      }
+    });
+
+    console.log('LOCAL CLICADO',this.locais[index].descricao);
+
+    let localName = this.locais[index].descricao;
+    this.alert.create({
+      title: 'Local Escolhido',
+      subTitle: 'Local: '+ localName,
+      buttons: ['OK']
+    }).present();
+
+    
+
+
   }
+
+
  
 
 }

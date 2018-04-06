@@ -114,7 +114,8 @@ export class SqLiteWrapperProvider {
     return this.getSQLiteInstance()
       .then( (db: SQLiteObject) => {
 
-        console.log('### DATABASE CREATED ###');
+        console.log('### DATABASE CREATED ###',db);
+
         
         db.sqlBatch(DATABASE_SCHEMA)
           .then( () => {
@@ -127,10 +128,20 @@ export class SqLiteWrapperProvider {
       })
   }
 
-  getLocais(){
+  /**
+   * 
+   * @param id 
+   */
+  getLocais(id?:number){
+
+    let where = '';
+    if(id){
+      where = `WHERE id = ${id}`;
+    }
+
     return this.getSQLiteInstance()
       .then( (db: SQLiteObject) => {
-        return db.executeSql(`SELECT * FROM local` ,[])
+        return db.executeSql(`SELECT * FROM local ${where}` ,[])
       });
   }
 

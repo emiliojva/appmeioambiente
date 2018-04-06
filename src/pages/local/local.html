@@ -24,7 +24,7 @@
 
   <ion-list>
     
-    <ion-item *ngFor="let l of locais" (click)="chamarIndividuos(l.id)">
+    <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l.id)">
 
       <ion-avatar item-start >
         <img src="assets/imgs/logo.png">
@@ -43,3 +43,18 @@
 
  
 </ion-content>
+
+
+<ion-footer>
+  <ion-toolbar>
+    <p>Comandos</p>
+    <ion-buttons end>
+      
+      <button ion-button full color="royal" >
+        Adicionar
+        <ion-icon name="send"></ion-icon>
+      </button>
+      
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
