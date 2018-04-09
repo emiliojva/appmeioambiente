@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { AddPage } from './add/add';
 
 /**
- * Generated class for the EstacaoPage page.
+ * Generated class for the AddPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -11,22 +10,16 @@ import { AddPage } from './add/add';
 
 @IonicPage()
 @Component({
-  selector: 'page-estacao',
-  templateUrl: 'estacao.html',
+  selector: 'page-add',
+  templateUrl: 'add.html',
 })
-export class EstacaoPage {
+export class AddPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad EstacaoPage');
-  }
-
-  addEstacao(){
-
-    this.navCtrl.push(AddPage)
-
+    console.log('ionViewDidLoad AddPage');
   }
 
 }
