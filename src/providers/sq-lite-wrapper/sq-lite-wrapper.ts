@@ -1,7 +1,8 @@
 // import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
-
+import { DateTime } from 'ionic-angular';
+import { Estacao } from '../../model/estacao.class';
 
 const DATABASE_SCHEMA = [
   /*Table local */
@@ -54,8 +55,9 @@ const DATABASE_SCHEMA = [
     datacriacao TEXT,
     FOREIGN KEY (estacao_id) REFERENCES estacao (id),
     FOREIGN KEY (especie_id) REFERENCES especie (id)
-  ');`
+  );`
   ]
+  ,
   /* Table Usuario */
   [`
   CREATE TABLE IF NOT EXISTS usuario (
@@ -145,11 +147,33 @@ export class SqLiteWrapperProvider {
       });
   }
 
+  getEstacao(){
+    return this.getSQLiteInstance()
+      .then( (db: SQLiteObject) => {
+        return db.executeSql(`SELECT * FROM individuos` ,[])
+      });
+  }
+
   getIndividuos(){
     return this.getSQLiteInstance()
       .then( (db: SQLiteObject) => {
         return db.executeSql(`SELECT * FROM individuos` ,[])
       });
+  }
+
+  storeEstacao(estacao:Estacao){
+
+    return this.getSQLiteInstance()
+      .then( (db: SQLiteObject) => {
+
+        estacao.datacriacao = new Date().getTime();
+
+        var sql = "INSERT INTO estacao (descricao,codigo,data,local_id,parcela,obs,datacriacao) " +
+                " VALUES (?,?,?,?,?,?,?);";
+        return db.executeSql(sql,[estacao.descricao,estacao.codigo,estacao.data,estacao.local_id,estacao.parcela,estacao,estacao.obs,estacao.datacriacao]);
+        
+      });
+
   }
 
 }
@@ -172,3 +196,5 @@ export class SqLiteWrapperProvider {
     //     console.log(error,'NO Platform SQLite avaliable');
     //   });
 
+
+   

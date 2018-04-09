@@ -7,6 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { LocalPage } from '../pages/local/local';
+import { EstacaoPage } from '../pages/estacao/estacao';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule, MatCheckboxModule} from '@angular/material';
@@ -18,7 +19,8 @@ import { SqLiteWrapperProvider } from '../providers/sq-lite-wrapper/sq-lite-wrap
   declarations: [
     MyApp,
     HomePage,
-    LocalPage
+    LocalPage,
+    EstacaoPage
   ],
   imports: [
     BrowserModule,
@@ -31,7 +33,8 @@ import { SqLiteWrapperProvider } from '../providers/sq-lite-wrapper/sq-lite-wrap
   entryComponents: [
     MyApp,
     HomePage,
-    LocalPage
+    LocalPage,
+    EstacaoPage
   ],
   providers: [
     StatusBar,

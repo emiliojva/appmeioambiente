@@ -12,7 +12,7 @@
           <ion-icon name='menu'></ion-icon>
       </button>
 
-    <ion-title>Locais</ion-title>
+    <ion-title>Estações</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -20,23 +20,25 @@
 
 <ion-content padding>
 
-    Locais
+    Estações
 
   <ion-list>
     
-    <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l.id)">
+    <!-- <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l.id)"> -->
+    <ion-item>
 
       <ion-avatar item-start >
         <img src="assets/imgs/logo.png">
       </ion-avatar>
 
-      <h2>{{ l.descricao }}</h2>
+      <h2>Estação 1</h2>
 
-      <h3>{{ l.codigo }}</h3>
+      <h3>Estação Código 001</h3>
 
       
 
-      <p>Criado em {{ l.datacriacao | date:'dd-MM-yyyy HH:mm:ss' }}</p>
+      <!-- <p>Criado em {{ l.datacriacao | date:'dd-MM-yyyy HH:mm:ss' }}</p> -->
+      <p>Criado em 1523295866481</p>
 
     </ion-item>
 

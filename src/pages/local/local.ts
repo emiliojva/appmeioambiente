@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, Platform, AlertController } from '
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-wrapper';
 import { DatePipe } from '@angular/common';
+import { EstacaoPage } from '../estacao/estacao';
 
 /**
  * Generated class for the LocalPage page.
@@ -66,23 +67,6 @@ export class LocalPage {
 
   chamarEstacoes(local_id:number){
 
-    // this.SQLService.getLocais(local_id)
-    //   .then( (results) => {
-        
-    //     console.log(results.rows.item(0).descricao);
-
-    //     if(results.rows.item(0).descricao){
-
-    //       let localName = results.rows.item(0).descricao;
-
-          
-          
-    //       console.log(local_id)
-
-    //     }
-    
-    //   });
-
     var index = this.locais.findIndex(function(element,index){
       if(element.id == local_id){
         return element;
@@ -91,14 +75,21 @@ export class LocalPage {
 
     console.log('LOCAL CLICADO',this.locais[index].descricao);
 
+    // Verifies the presence of the ALERT plugin. If not returns error.
     let localName = this.locais[index].descricao;
-    this.alert.create({
+    let btnAlert = this.alert.create({
       title: 'Local Escolhido',
       subTitle: 'Local: '+ localName,
       buttons: ['OK']
-    }).present();
+    });
 
-    
+    // btnAlert.addButton
+
+
+    btnAlert.present();
+
+    this.navCtrl.push(EstacaoPage);
+
 
 
   }
