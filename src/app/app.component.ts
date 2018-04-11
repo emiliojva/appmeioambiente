@@ -5,6 +5,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
 import { LocalPage } from '../pages/local/local';
+import { AddEstacaoPage } from '../pages/estacao/add-estacao/add-estacao';
+
 @Component({
   templateUrl: 'app.html'
 })
@@ -12,7 +14,9 @@ export class MyApp {
   
   @ViewChild(Nav) nav: Nav;
 
-  rootPage:any = LocalPage;
+  rootPage:any = AddEstacaoPage;
+  // rootPage:any = LocalPage;
+  // rootPage:any = HomePage;
 
   pages: Array<{title:string, component:any}>;
 
@@ -21,7 +25,8 @@ export class MyApp {
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Home', component: HomePage },
-      { title: 'Local', component: LocalPage }
+      { title: 'Local', component: LocalPage },
+      { title: 'Adicionar Estação', component: AddEstacaoPage }
     ];
 
     platform.ready().then(() => {

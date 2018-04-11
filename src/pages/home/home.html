@@ -24,4 +24,16 @@
     <button mat-raised-button disabled>Disabled</button>
     <a mat-raised-button routerLink=".">Link</a>
   </div>
+
+
+
+  <div>
+    <button ion-button (click)="insertInvoice()">Insert Invoice</button>
+    <ion-list>
+      <ion-item *ngFor="let invoice of invoices">
+        {{invoice.name}}
+      </ion-item>
+    </ion-list>
+  </div>
+
 </ion-content>

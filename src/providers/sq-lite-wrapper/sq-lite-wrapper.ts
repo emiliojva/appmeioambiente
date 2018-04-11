@@ -1,7 +1,7 @@
 // import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
-import { DateTime } from 'ionic-angular';
+import { DateTime, Platform } from 'ionic-angular';
 import { Estacao } from '../../model/estacao.class';
 
 const DATABASE_SCHEMA = [
@@ -83,6 +83,21 @@ const DATABASE_SCHEMA = [
   ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [3, 'Rh', 'Rhizophora mangle', new Date().getTime()] ]
 ];
 
+
+const POPULATE_TABLES = [
+  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [1, 'guapi','Guapimirim',new Date().getTime()] ],
+  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [2, 'gaurai','Gauraí',new Date().getTime()] ],
+  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [3, 'caceribu','Caceribu',new Date().getTime()] ],
+  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [4, 'guaraimirim','Guaraí-Mirim',new Date().getTime()] ],
+  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [5, 'imbui','Caceribu / Imbuí',new Date().getTime()] ],
+  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [6, 'guaxindiba','Guaxindiba',new Date().getTime()] ]
+  ,
+  ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [1, 'Av', 'Avicennia schaueriana', new Date().getTime()] ],
+  ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [2, 'Lg', 'Laguncularia racemosa', new Date().getTime()] ],
+  ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [3, 'Rh', 'Rhizophora mangle', new Date().getTime()] ]
+
+]
+
 /*
   Generated class for the SqLiteWrapperProvider provider.
 
@@ -92,13 +107,20 @@ const DATABASE_SCHEMA = [
 @Injectable()
 export class SqLiteWrapperProvider {
 
-  db: any;
+  // db: any;
+  database: SQLiteObject
   
   constructor(
     //public http: HttpClient, 
-    public sqlite: SQLite) 
+    public sqlite: SQLite,
+    public platform: Platform
+  ) 
   {
     console.log('Hello SqLiteWrapperProvider Provider');
+
+    this.getSQLiteInstance().then( (db: SQLiteObject) => {
+      this.database = db;
+    })
   }
 
   getSQLiteInstance(){
@@ -111,23 +133,130 @@ export class SqLiteWrapperProvider {
   
   }
 
-  createDatabase(){
+  public createTableForBrowser(){
 
-    return this.getSQLiteInstance()
-      .then( (db: SQLiteObject) => {
+    return this.database.executeSql(`
+      CREATE TABLE IF NOT EXISTS local 
+      (
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        codigo	VARCHAR(200) UNIQUE,
+        descricao	TEXT NOT NULL UNIQUE,
+        datacriacao	VARCHAR(50)
+      );      
 
-        console.log('### DATABASE CREATED ###',db);
+      CREATE TABLE IF NOT EXISTS especie (
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        codigo VARCHAR(200) UNIQUE,
+        descricao	TEXT NOT NULL UNIQUE,
+        datacriacao	VARCHAR(50)
+     );
+
+     CREATE TABLE IF NOT EXISTS estacao (
+      id	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      descricao TEXT NOT NULL,
+      codigo TEXT UNIQUE,
+      data TEXT NOT NULL,
+      local_id INTEGER NOT NULL,
+      parcela	TEXT,
+      obs	TEXT,
+      datacriacao	TEXT,
+      FOREIGN KEY (local_id) REFERENCES local (id)
+    );
+
+    CREATE TABLE IF NOT EXISTS individuo 
+    ( 
+      id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      codigo INTEGER NOT NULL ,
+      estacao_id INTEGER NOT NULL ,
+      especie_id INTEGER NOT NULL,
+      numero_de_troncos INTEGER NOT NULL,
+      altura INTEGER NOT NULL,
+      observacao TEXT,
+      datacriacao TEXT,
+      FOREIGN KEY (estacao_id) REFERENCES estacao (id),
+      FOREIGN KEY (especie_id) REFERENCES especie (id)
+    );
+
+    CREATE TABLE IF NOT EXISTS usuario (
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      name VARCHAR(255) NOT NULL,
+      email VARCHAR(255) NOT NULL,
+      telefone VARCHAR(255) NOT NULL,
+      login_id INTEGER NOT NULL
+    );
+
+    DELETE FROM local;
+    DELETE FROM especie;
+
+    `, {})
+    .then(() => {
+        
+      console.log('Tables created !');
+
+
+      this.database.executeSql("DELETE FROM local; DELETE FROM especie;",{} )
+          .then(() => {
+            console.log('Limpei tabelas local e especie  !');
+
+            for(let i=0; i<POPULATE_TABLES.length; i++){
+
+              let insertQuery:string = POPULATE_TABLES[i][0] as string;
+              let params = POPULATE_TABLES[i][1];
+      
+              this.database.executeSql(insertQuery , params)
+                .then(() => {
+                  console.log('registro inserido  !');
+                })
+                .catch( (error) => console.log(error,insertQuery,params,'ja existe') )
+            }
+
+          })
+          .catch( (error) => console.log(error,'Não Limpou') );
+
+    })
+    .catch(e => console.log(e));    
 
         
-        db.sqlBatch(DATABASE_SCHEMA)
-          .then( () => {
-            console.log('### TABLES CREATED ###');
-            //this.getLocais();
-          })
-          .catch( (error) => {
-            console.log(error.message);
-          });
+}
+
+  createDatabase(){
+
+      console.log('### DATABASE CREATED ###',this.database);
+
+      return this.platform.ready()
+      .then( (readySource) => {
+
+        console.log('PLATFORM BEGINS',readySource);  
+        
+        /* DOM/BROWSER SQLiteMock*/
+        if(readySource == 'dom'){
+          
+          console.log('BROWSER MODE',this.database);  
+          
+          return this.createTableForBrowser();
+          
+        } else {
+
+          console.log('DEVICE/EMULATOR MODE');     
+          
+          /* DEVICES/EMULATORS */
+          return this.database.sqlBatch(DATABASE_SCHEMA)
+            .then( () => {
+              console.log('### TABLES CREATED ###');
+              //this.getLocais();
+            })
+            .catch( (error) => {
+              console.log(error.message);
+            });
+        }
+
+
       })
+      .catch( (error) => {
+        console.log(error);   
+      })
+        
+        
   }
 
   /**
@@ -177,24 +306,3 @@ export class SqLiteWrapperProvider {
   }
 
 }
-
-
-  // this.getSQLiteInstance()
-    //       .then( (db: SQLiteObject) => {
-    //         console.log(db,'Platform SQLite avaliable');    
-    //       })
-    //       .catch( (error) => {
-    //         console.log(error,'NO Platform SQLite avaliable');    
-    //       });
-
-
-    // this.sqlite.selfTest()
-    //   .then( (res) => {
-    //     console.log('Platform SQLite avaliable');
-    //   })
-    //   .catch( (error) => {
-    //     console.log(error,'NO Platform SQLite avaliable');
-    //   });
-
-
-   

@@ -29,12 +29,14 @@ export class LocalPage {
     private platform: Platform) {
       this.platform.ready()
         .then( (readySource) => {
-          
+
           this.SQLService.createDatabase()
             .then( () => {
 
               this.SQLService.getLocais()          
                 .then( (results) => {
+
+                  console.log('results local',results.rows);
 
                   for (let index = 0; index < results.rows.length; index++) {
                     console.log(results.rows.item(index).codigo);
@@ -58,17 +60,19 @@ export class LocalPage {
   }
 
   ngOnInit(){
-    console.log('#### ngInit ####');
+    console.log('#### ngInit ####', new Date().getHours+':', new Date().getMinutes()+':', new Date().getSeconds());
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LocalPage');
   }
 
-  chamarEstacoes(local_id:number){
+  chamarEstacoes(local){
+
+    console.log(local.descricao);
 
     var index = this.locais.findIndex(function(element,index){
-      if(element.id == local_id){
+      if(element.id == local.id){
         return element;
       }
     });
@@ -76,19 +80,19 @@ export class LocalPage {
     console.log('LOCAL CLICADO',this.locais[index].descricao);
 
     // Verifies the presence of the ALERT plugin. If not returns error.
-    let localName = this.locais[index].descricao;
-    let btnAlert = this.alert.create({
-      title: 'Local Escolhido',
-      subTitle: 'Local: '+ localName,
-      buttons: ['OK']
-    });
+    // let localName = this.locais[index].descricao;
+    // let btnAlert = this.alert.create({
+    //   title: 'Local Escolhido',
+    //   subTitle: 'Local: '+ localName,
+    //   buttons: ['OK']
+    // });
 
-    // btnAlert.addButton
+    // btnAlert.present().then( () => {  
+    // });
 
+    this.navCtrl.push(EstacaoPage, {local: local});
 
-    btnAlert.present();
-
-    this.navCtrl.push(EstacaoPage);
+    
 
 
 

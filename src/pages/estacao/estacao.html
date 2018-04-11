@@ -13,19 +13,30 @@
       </button>
 
     <ion-title>Estações</ion-title>
+    
   </ion-navbar>
+
+  <ion-item>
+      
+      <ion-label>Local</ion-label>
+      
+      <ion-select [(ngModel)]="local_selected" okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione um local">
+        <ion-option *ngFor="let l of locais" value="{{l.id}}">{{l.descricao}}</ion-option>
+      </ion-select>
+      
+  </ion-item>
 
 </ion-header>
 
-
 <ion-content padding>
 
-    Estações
+ 
+      
 
   <ion-list>
     
     <!-- <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l.id)"> -->
-    <ion-item>
+    <ion-item style="cursor: pointer">
 
       <ion-avatar item-start >
         <img src="assets/imgs/logo.png">
@@ -35,14 +46,14 @@
 
       <h3>Estação Código 001</h3>
 
-      
-
       <!-- <p>Criado em {{ l.datacriacao | date:'dd-MM-yyyy HH:mm:ss' }}</p> -->
       <p>Criado em 1523295866481</p>
 
     </ion-item>
 
   </ion-list>
+
+    
 
 
  

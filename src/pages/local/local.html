@@ -20,11 +20,9 @@
 
 <ion-content padding>
 
-    Locais
-
   <ion-list>
     
-    <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l.id)">
+    <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l)" style="cursor: pointer">
 
       <ion-avatar item-start >
         <img src="assets/imgs/logo.png">
@@ -34,15 +32,11 @@
 
       <h3>{{ l.codigo }}</h3>
 
-      
-
       <p>Criado em {{ l.datacriacao | date:'dd-MM-yyyy HH:mm:ss' }}</p>
 
     </ion-item>
 
   </ion-list>
-
-
  
 </ion-content>
 
