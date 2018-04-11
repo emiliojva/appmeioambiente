@@ -123,10 +123,10 @@ export class SqLiteWrapperProvider {
           
           this.database = db;
 
-          // this.createDatabase()
-          //   .then( () => {
-          //     console.log('SQLService Constructor - Banco Created');
-          //   })
+          this.createDatabase()
+            .then( () => {
+              console.log('SQLService Constructor - Banco Created');
+            })
 
         });
 
