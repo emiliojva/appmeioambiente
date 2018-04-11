@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 import { SqLiteWrapperProvider } from '../../../providers/sq-lite-wrapper/sq-lite-wrapper';
 import { Validators, FormBuilder, FormGroup, Form } from '@angular/forms';
 import { Local } from '../../../model/local.class';
+import { Estacao } from '../../../model/estacao.class';
 
 /**
  * Generated class for the AddPage page.
@@ -32,7 +33,7 @@ export class AddEstacaoPage {
   ) {
 
     // populate array locais 
-    this.getLocais();
+    this.populateLocais();
     
     // Start formBuilder Group with data
     this.createForm();
@@ -59,7 +60,7 @@ export class AddEstacaoPage {
     
     // Compose group form 
     this.estacaoForm = this.formBuilder.group({
-      localID: [this.local_selected.id,Validators.required],
+      local_id: [this.local_selected.id, Validators.required],
       codigo: ['',Validators.required],
       data: [dataAtual, Validators.required],
       parcela: ['', Validators.required],
@@ -76,8 +77,11 @@ export class AddEstacaoPage {
       buttons: ['OK']
     });
     
+    // Check all fields from form
     if(this.estacaoForm.valid){
-      console.log(this.estacaoForm.value);
+      
+      this.storeEstacao(this.estacaoForm.value);
+
       alertEstacao
         .setTitle('Formulário Salvo com Sucesso')
         .present()
@@ -87,13 +91,23 @@ export class AddEstacaoPage {
     
   }
 
-  getLocais(){
+  populateLocais(){
+
     this.SQLService.getLocais()          
         .then( (results) => {
           for (let index = 0; index < results.rows.length; index++) {
             this.locais.push(results.rows.item(index));
           }
       });
+
+  }
+
+  storeEstacao(datasource: Estacao){
+
+    this.SQLService.storeEstacao(datasource)
+      .then( (result) => {
+        // console.log(result);
+      })
   }
 
   formatDate(date):string {
@@ -109,5 +123,3 @@ export class AddEstacaoPage {
   }
 
 }
-
-
