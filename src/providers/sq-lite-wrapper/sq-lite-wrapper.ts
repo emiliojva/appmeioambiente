@@ -83,7 +83,6 @@ const DATABASE_SCHEMA = [
   ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [3, 'Rh', 'Rhizophora mangle', new Date().getTime()] ]
 ];
 
-
 const POPULATE_TABLES = [
   ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [1, 'guapi','Guapimirim',new Date().getTime()] ],
   ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [2, 'gaurai','Gauraí',new Date().getTime()] ],
@@ -95,7 +94,6 @@ const POPULATE_TABLES = [
   ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [1, 'Av', 'Avicennia schaueriana', new Date().getTime()] ],
   ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [2, 'Lg', 'Laguncularia racemosa', new Date().getTime()] ],
   ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [3, 'Rh', 'Rhizophora mangle', new Date().getTime()] ]
-
 ]
 
 /*
@@ -108,22 +106,39 @@ const POPULATE_TABLES = [
 export class SqLiteWrapperProvider {
 
   // db: any;
-  database: SQLiteObject
+  database: SQLiteObject;
   
   constructor(
     //public http: HttpClient, 
     public sqlite: SQLite,
-    public platform: Platform
+    public platform: Platform,
   ) 
   {
     console.log('Hello SqLiteWrapperProvider Provider');
 
-    this.getSQLiteInstance().then( (db: SQLiteObject) => {
-      this.database = db;
-    })
+    this.playPlatform()
+      .then( (readySource) => {
+
+        this.getSQLiteInstance().then( (db: SQLiteObject) => {
+          
+          this.database = db;
+
+          // this.createDatabase()
+          //   .then( () => {
+          //     console.log('SQLService Constructor - Banco Created');
+          //   })
+
+        });
+
+      })
+    
   }
 
-  getSQLiteInstance(){
+  onInit(){
+    
+  }
+
+  private getSQLiteInstance(){
 
     return this.sqlite.create({
       name: 'meioambienteDB.db',
@@ -133,7 +148,111 @@ export class SqLiteWrapperProvider {
   
   }
 
-  public createTableForBrowser(){
+  
+
+  createDatabase(){
+
+      console.log('### DATABASE CREATED ###',this.database);
+
+      return this.platform.ready()
+      .then( (readySource) => {
+
+        console.log('PLATFORM BEGINS',readySource);  
+        
+        /* DOM/BROWSER SQLiteMock*/
+        if(readySource == 'dom'){
+          
+          console.log('BROWSER MODE',this.database);  
+          
+          return this.createTableForBrowser();
+          
+        } else {
+
+          console.log('DEVICE/EMULATOR MODE');     
+          
+          /* DEVICES/EMULATORS */
+          return this.database.sqlBatch(DATABASE_SCHEMA)
+            .then( () => {
+              console.log('### TABLES CREATED ###');
+              //this.getLocais();
+            })
+            .catch( (error) => {
+              console.log(error.message);
+            });
+        }
+
+
+      })
+      .catch( (error) => {
+        console.log(error);   
+      })
+        
+        
+  }
+
+  /**
+   * 
+   * @param id 
+   */
+  getLocais(id?:number){
+
+    return this.playPlatform()
+      .then( (readySource) => {
+
+        let where = '';
+        if(id){
+          where = `WHERE id = ${id}`;
+        }
+
+        return this.playPlatform()
+        .then( (readySource) => {
+            return this.database.executeSql(`SELECT * FROM local ${where}` ,[])
+        });
+
+      });
+  }
+
+  getEstacao(){
+    
+    return this.playPlatform()
+      .then( (readySource) => {
+          return this.database.executeSql(`SELECT * FROM estacao` ,[])
+      });
+    
+    
+  }
+
+  getIndividuos(){
+
+    return this.playPlatform()
+      .then( (readySource) => {
+          return this.database.executeSql(`SELECT * FROM individuos` ,[])
+      });
+  }
+
+  storeEstacao(estacao:Estacao){
+
+    return this.playPlatform()
+      .then( (readySource) => {
+        
+        estacao.datacriacao = new Date().getTime();
+
+        var sql = "INSERT INTO estacao (descricao,codigo,data,local_id,parcela,obs,datacriacao) " +
+                " VALUES (?,?,?,?,?,?,?);";
+
+        return this.database.executeSql(sql,[estacao.descricao,estacao.codigo,estacao.data,estacao.local_id,estacao.parcela,estacao,estacao.obs,estacao.datacriacao]);
+
+      });
+
+  }
+
+  // platform plugins ready to use
+  playPlatform(){
+    return this.platform.ready();
+  }
+
+  // used to mock creates simulations in browser
+  createTableForBrowser(){
 
     return this.database.executeSql(`
       CREATE TABLE IF NOT EXISTS local 
@@ -217,92 +336,6 @@ export class SqLiteWrapperProvider {
     .catch(e => console.log(e));    
 
         
-}
-
-  createDatabase(){
-
-      console.log('### DATABASE CREATED ###',this.database);
-
-      return this.platform.ready()
-      .then( (readySource) => {
-
-        console.log('PLATFORM BEGINS',readySource);  
-        
-        /* DOM/BROWSER SQLiteMock*/
-        if(readySource == 'dom'){
-          
-          console.log('BROWSER MODE',this.database);  
-          
-          return this.createTableForBrowser();
-          
-        } else {
-
-          console.log('DEVICE/EMULATOR MODE');     
-          
-          /* DEVICES/EMULATORS */
-          return this.database.sqlBatch(DATABASE_SCHEMA)
-            .then( () => {
-              console.log('### TABLES CREATED ###');
-              //this.getLocais();
-            })
-            .catch( (error) => {
-              console.log(error.message);
-            });
-        }
-
-
-      })
-      .catch( (error) => {
-        console.log(error);   
-      })
-        
-        
-  }
-
-  /**
-   * 
-   * @param id 
-   */
-  getLocais(id?:number){
-
-    let where = '';
-    if(id){
-      where = `WHERE id = ${id}`;
-    }
-
-    return this.getSQLiteInstance()
-      .then( (db: SQLiteObject) => {
-        return db.executeSql(`SELECT * FROM local ${where}` ,[])
-      });
-  }
-
-  getEstacao(){
-    return this.getSQLiteInstance()
-      .then( (db: SQLiteObject) => {
-        return db.executeSql(`SELECT * FROM individuos` ,[])
-      });
-  }
-
-  getIndividuos(){
-    return this.getSQLiteInstance()
-      .then( (db: SQLiteObject) => {
-        return db.executeSql(`SELECT * FROM individuos` ,[])
-      });
-  }
-
-  storeEstacao(estacao:Estacao){
-
-    return this.getSQLiteInstance()
-      .then( (db: SQLiteObject) => {
-
-        estacao.datacriacao = new Date().getTime();
-
-        var sql = "INSERT INTO estacao (descricao,codigo,data,local_id,parcela,obs,datacriacao) " +
-                " VALUES (?,?,?,?,?,?,?);";
-        return db.executeSql(sql,[estacao.descricao,estacao.codigo,estacao.data,estacao.local_id,estacao.parcela,estacao,estacao.obs,estacao.datacriacao]);
-        
-      });
-
   }
 
 }

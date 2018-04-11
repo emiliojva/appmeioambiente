@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform, AlertController } from 'ionic-angular';
-import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
 import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-wrapper';
 import { DatePipe } from '@angular/common';
 import { EstacaoPage } from '../estacao/estacao';
@@ -27,36 +27,21 @@ export class LocalPage {
     private SQLService: SqLiteWrapperProvider, 
     private alert: AlertController,
     private platform: Platform) {
-      this.platform.ready()
-        .then( (readySource) => {
 
-          this.SQLService.createDatabase()
-            .then( () => {
+            // Returns table list 'locais'
+            this.SQLService.getLocais()          
+              .then( (results) => {
 
-              this.SQLService.getLocais()          
-                .then( (results) => {
+                console.log('results local',results.rows);
 
-                  console.log('results local',results.rows);
-
-                  for (let index = 0; index < results.rows.length; index++) {
-                    console.log(results.rows.item(index).codigo);
-                    this.locais.push(results.rows.item(index));
-                  }
-
-              });
+                for (let index = 0; index < results.rows.length; index++) {
+                  console.log(results.rows.item(index).codigo);
+                  this.locais.push(results.rows.item(index));
+                }
 
             });
-
-          console.log('PLATFORM BEGINS',readySource);  
-          
-          if(readySource == 'dom'){
-            console.log('BROWSER MODE');     
-          }
-
-        })
-        .catch( (error) => {
-          console.log('BROWSER MODE');   
-        })
+    
+     
   }
 
   ngOnInit(){
