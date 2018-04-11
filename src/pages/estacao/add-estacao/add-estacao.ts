@@ -32,7 +32,6 @@ export class AddEstacaoPage {
     private formBuilder: FormBuilder,
   ) {
 
-
     // populate array locais 
     this.populateLocais();
     
@@ -61,7 +60,7 @@ export class AddEstacaoPage {
     
     // Compose group form 
     this.estacaoForm = this.formBuilder.group({
-      localID: [this.local_selected.id, Validators.required],
+      local_id: [this.local_selected.id, Validators.required],
       codigo: ['',Validators.required],
       data: [dataAtual, Validators.required],
       parcela: ['', Validators.required],
@@ -81,8 +80,6 @@ export class AddEstacaoPage {
     // Check all fields from form
     if(this.estacaoForm.valid){
       
-      console.log(this.estacaoForm.value);
-
       this.storeEstacao(this.estacaoForm.value);
 
       alertEstacao
@@ -106,10 +103,10 @@ export class AddEstacaoPage {
   }
 
   storeEstacao(datasource: Estacao){
-    
+
     this.SQLService.storeEstacao(datasource)
       .then( (result) => {
-        console.log(result);
+        // console.log(result);
       })
   }
 
