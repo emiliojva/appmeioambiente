@@ -19,7 +19,7 @@ export class EstacaoPage {
 
   locais: any[] = [];
   local_selected: number;  
-
+  estacaos: any[] = [];
   loading: any;
 
   constructor(
@@ -43,6 +43,18 @@ export class EstacaoPage {
             this.locais.push(results.rows.item(index));
           }
       });
+    
+
+
+    this.SQLService.getEstacaos(this.local_selected)
+      .then( (results) => {
+        for (let index = 0; index < results.rows.length; index++) {
+          console.log(results.rows.item(index));
+          this.estacaos.push(results.rows.item(index));
+        }
+      });
+
+
     
   }
 
