@@ -7,6 +7,7 @@ import { HomePage } from '../pages/home/home';
 import { LocalPage } from '../pages/local/local';
 import { AddEstacaoPage } from '../pages/estacao/add-estacao/add-estacao';
 import { IndividuoPage } from '../pages/individuo/individuo';
+import { AddIndividuoPage } from '../pages/individuo/add-individuo/add-individuo';
 
 @Component({
   templateUrl: 'app.html'
@@ -28,7 +29,8 @@ export class MyApp {
       { title: 'Home', component: HomePage },
       { title: 'Local', component: LocalPage },
       { title: 'Adicionar Estação', component: AddEstacaoPage },
-      { title: 'Individuo', component: IndividuoPage }
+      { title: 'Individuo', component: IndividuoPage },
+      { title: 'Adicionar Individuo', component: AddIndividuoPage }
     ];
 
     platform.ready().then(() => {

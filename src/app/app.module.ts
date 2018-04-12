@@ -15,6 +15,7 @@ import { LocalPage } from '../pages/local/local';
 import { EstacaoPage } from '../pages/estacao/estacao';
 import { AddEstacaoPage } from '../pages/estacao/add-estacao/add-estacao';
 import { IndividuoPage } from '../pages/individuo/individuo';
+import { AddIndividuoPage } from '../pages/individuo/add-individuo/add-individuo';
 
 // Mock SQLite
 import { SQLiteMock } from '../model/mock.sqlite';
@@ -26,7 +27,8 @@ import { SQLiteMock } from '../model/mock.sqlite';
     LocalPage,
     EstacaoPage,
     AddEstacaoPage,
-    IndividuoPage
+    IndividuoPage,
+    AddIndividuoPage
   ],
   imports: [
     BrowserModule,
@@ -42,7 +44,8 @@ import { SQLiteMock } from '../model/mock.sqlite';
     LocalPage,
     EstacaoPage,
     AddEstacaoPage,
-    IndividuoPage
+    IndividuoPage,
+    AddIndividuoPage
   ],
   providers: [
     StatusBar,
