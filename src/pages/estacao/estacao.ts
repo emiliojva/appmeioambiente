@@ -36,30 +36,38 @@ export class EstacaoPage {
     this.loading.present();
 
     this.local_selected = this.navParams.get('local').id;
-
+    
     this.SQLService.getLocais()          
-        .then( (results) => {
-          for (let index = 0; index < results.rows.length; index++) {
-            this.locais.push(results.rows.item(index));
-          }
+        .then( (rows) => {
+          this.locais = rows;
+          // for (let index = 0; index < results.rows.length; index++) {
+          //   this.locais.push(results.rows.item(index));
+          // }
+      });
+
+    this.SQLService.getEstacaos(this.local_selected)
+      .then( (results) => {
+        console.log(results);
+        for (var index = 0; index < results.rows.length; index++) {
+          console.log(results.rows.item(index));
+          this.estacaos.push(results.rows.item(index));
+        }
+
+
+        this.loading.dismiss();
+        
       });
     
 
 
-    this.SQLService.getEstacaos(this.local_selected)
-      .then( (results) => {
-        for (let index = 0; index < results.rows.length; index++) {
-          console.log(results.rows.item(index));
-          this.estacaos.push(results.rows.item(index));
-        }
-      });
+    
 
 
     
   }
 
   ngOnInit(){
-    this.loading.dismiss();
+    
   }
 
   ionViewDidLoad() {

@@ -3,10 +3,11 @@ import { Injectable } from '@angular/core';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
 import { DateTime, Platform } from 'ionic-angular';
 import { Estacao } from '../../model/estacao.class';
+import { Local } from '../../model/local.class';
 
 const DATABASE_SCHEMA = [
   /*Table local */
-  [`DROP TABLE estacao;`],
+  [`DROP TABLE IF EXISTS estacao;`],
   [`
   CREATE TABLE IF NOT EXISTS local 
   (
@@ -69,7 +70,7 @@ const DATABASE_SCHEMA = [
   )`
   ]
   ,
-  ['DELETE FROM local'],
+  // ['DELETE FROM local'],
   ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [1, 'guapi','Guapimirim',new Date().getTime()] ],
   ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [2, 'gaurai','Gauraí',new Date().getTime()] ],
   ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [3, 'caceribu','Caceribu',new Date().getTime()] ],
@@ -77,7 +78,7 @@ const DATABASE_SCHEMA = [
   ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [5, 'imbui','Caceribu / Imbuí',new Date().getTime()] ],
   ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [6, 'guaxindiba','Guaxindiba',new Date().getTime()] ]
   ,
-  ['DELETE FROM especie'],
+  // ['DELETE FROM especie'],
   ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [1, 'Av', 'Avicennia schaueriana', new Date().getTime()] ],
   ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [2, 'Lg', 'Laguncularia racemosa', new Date().getTime()] ],
   ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [3, 'Rh', 'Rhizophora mangle', new Date().getTime()] ]
@@ -120,27 +121,21 @@ export class SqLiteWrapperProvider {
 
     this.playPlatform()
       .then( (readySource) => {
-
-        this.getSQLiteInstance().then( (db: SQLiteObject) => {
+        console.log('PLATFORM BEGINS' , JSON.stringify(readySource) );  
           
-          this.database = db;
+        this.createDatabase()
+          .then( () => {
 
-          this.createDatabase()
-            .then( () => {
-              console.log('SQLService Constructor - Banco Created');
-            })
-
-        });
+            console.log('### DATABASE CREATED ###',this.database);
+            console.log('SQLService Constructor - Banco Created');
+          })
 
       })
+      .catch((error) => console.log(JSON.stringify(error)));
     
   }
 
-  onInit(){
-    
-  }
-
-  private getSQLiteInstance(){
+   getSQLiteInstance(){
 
     return this.sqlite.create({
       name: 'meioambienteDB.db',
@@ -154,39 +149,37 @@ export class SqLiteWrapperProvider {
 
   createDatabase(){
 
-      console.log('### DATABASE CREATED ###',this.database);
-
-      return this.platform.ready()
-      .then( (readySource) => {
-
-        console.log('PLATFORM BEGINS',readySource);  
-        
-        /* DOM/BROWSER SQLiteMock*/
-        if(readySource == 'dom'){
+        return this.getSQLiteInstance().then( (db: SQLiteObject) => {
           
-          console.log('BROWSER MODE',this.database);  
-          return this.createTablesMockSQL();
-          // return this.createTableForBrowser();
+          this.database = db;
+
+          /* DOM/BROWSER SQLiteMock*/
+          // if(readySource == 'dom'){
+          if(this.platform.is('dom')){
+            
+            console.log('BROWSER MODE',this.database);  
+            return this.createTablesMockSQL();
+            // return this.createTableForBrowser();
+            
+          } else {
+
+            console.log('DEVICE/EMULATOR MODE');     
           
-        } else {
-
-          console.log('DEVICE/EMULATOR MODE');     
+            /* DEVICES/EMULATORS */
+            return this.database.sqlBatch(DATABASE_SCHEMA)
+              .then( () => {
+                console.log('### TABLES CREATED ###');
+                //this.getLocais();
+              })
+              .catch( (error) => {
+                console.log('ERRO DE SQL-BATCH',JSON.stringify(error));
+              });
+          }
           
-          /* DEVICES/EMULATORS */
-          return this.database.sqlBatch(DATABASE_SCHEMA)
-            .then( () => {
-              console.log('### TABLES CREATED ###');
-              //this.getLocais();
-            })
-            .catch( (error) => {
-              console.log(error.message);
-            });
-        }
-
-
-      })
+        })
+          
       .catch( (error) => {
-        console.log(error);   
+        console.log('ERRO AO CARREGAR PLATFORM',error);   
       })
         
         
@@ -196,29 +189,49 @@ export class SqLiteWrapperProvider {
    * 
    * @param id 
    */
-  getLocais(id?:number){
+  getLocais(id?:number):Promise<Local[]>{
 
-    return this.playPlatform()
-      .then( (readySource) => {
+    return new Promise( (resolve,reject)=>{
+      // console.log(array_results);
 
-        let where = '';
-        if(id){
-          where = `WHERE id = ${id}`;
-        }
-
-        return this.playPlatform()
+      // Platform Ready
+      return this.playPlatform()
         .then( (readySource) => {
-            return this.database.executeSql(`SELECT * FROM local ${where}` ,[])
-        });
+          // Returns Instance of SQLiteObject. To do Transactions
+          return this.getSQLiteInstance()
+        })
+        .then( (db: SQLiteObject) => {
+              
+          let where = '';
+          if(id){
+            where = `WHERE id = ${id}`;
+          }
 
-      });
+          // Returns Promise with statament SQL executed. Equal results.rows array objects
+          return db.executeSql(`SELECT * FROM local ${where}` ,[])
+        })
+        .then( (results) => {
+            
+            let array_results: Local[] = [];
+
+            // iterates results rows SQL and push into 'Local' array 
+            for (let index = 0; index < results.rows.length; index++) {
+              let local:Local = results.rows.item(index);
+              array_results.push(local);
+            }
+            
+            // Resolve array of 'LOCAL' objects
+            resolve(array_results);
+          });
+
+        });
   }
 
   getEstacaos(local_id?:number){
 
     let where = '';
         if(local_id){
-          where = `WHERE id = ${local_id}`;
+          where = `WHERE local_id = ${local_id}`;
         }
     
     return this.playPlatform()
@@ -244,7 +257,7 @@ export class SqLiteWrapperProvider {
         
         estacao.datacriacao = new Date().getTime();
 
-        console.log(estacao);
+        console.log(JSON.stringify(estacao));
 
         // var sql = "INSERT INTO estacao (descricao,codigo,data,local_id,parcela,obs,datacriacao) " +
         //         " VALUES (?,?,?,?,?,?,?);";
@@ -258,7 +271,13 @@ export class SqLiteWrapperProvider {
             estacao.obs,
             estacao.datacriacao
           ]
-        );
+        )
+        .then( (results) => {
+          console.log('Gravando Estacao',JSON.stringify(results));
+        })
+        .catch( (error) => {
+          console.log('erro', JSON.stringify(error));
+        });
         // return this.database.executeSql('INSERT INTO estacao (descricao,codigo,data,local_id,parcela,obs,datacriacao) VALUES (?,?,?,?,?,?,?);',estacao);
 
       })
@@ -271,13 +290,13 @@ export class SqLiteWrapperProvider {
     return this.platform.ready();
   }
 
-
   // used to mock creates simulations in browser
   private createTablesMockSQL(){
 
     this.playPlatform().then( () => {
 
       // this.database.executeSql(`drop table estacao;`,{});
+      
       this.database.executeSql(`
         CREATE TABLE IF NOT EXISTS local 
         (
@@ -330,17 +349,49 @@ export class SqLiteWrapperProvider {
 
       });   
 
+      // /* FIX TO DO DELETE FIELD 'descricao' AND HOLD USER DATA */
+      // this.database.executeSql(`
+      //   /* BEGIN TRANSACTION;
+          
+      //     CREATE TEMPORARY TABLE estacao_backup(id,codigo,data,local_id,parcela,obs,datacriacao);
+      //     INSERT INTO estacao_backup SELECT * FROM estacao;
+      //     DROP TABLE estacao; */
+
+      //     CREATE TABLE IF NOT EXISTS estacao (
+      //       id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      //       codigo TEXT UNIQUE,
+      //       data TEXT NOT NULL,
+      //       local_id INTEGER NOT NULL,
+      //       parcela	TEXT,
+      //       obs	TEXT,
+      //       datacriacao	TEXT,
+      //       FOREIGN KEY (local_id) REFERENCES local (id)
+      //     );
+
+      //     /*
+      //     INSERT INTO estacao SELECT * FROM estacao_backup;
+      //     DROP TABLE estacao_backup;
+
+      //   COMMIT; */
+      //   `
+      // ,{})
+      // .then( (results) => {
+      //   console.log('estacao Table created');
+      // }); 
+
+
       this.database.executeSql(`
-        CREATE TABLE IF NOT EXISTS estacao (
-          id	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-          codigo TEXT UNIQUE,
-          data TEXT NOT NULL,
-          local_id INTEGER NOT NULL,
-          parcela	TEXT,
-          obs	TEXT,
-          datacriacao	TEXT,
-          FOREIGN KEY (local_id) REFERENCES local (id)
-        );`
+          CREATE TABLE IF NOT EXISTS estacao (
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            codigo TEXT UNIQUE,
+            data TEXT NOT NULL,
+            local_id INTEGER NOT NULL,
+            parcela	TEXT,
+            obs	TEXT,
+            datacriacao	TEXT,
+            FOREIGN KEY (local_id) REFERENCES local (id)
+          );
+        `
       ,{})
       .then( (results) => {
         console.log('estacao Table created');

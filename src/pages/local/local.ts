@@ -28,18 +28,23 @@ export class LocalPage {
     private alert: AlertController,
     private platform: Platform) {
 
-            // Returns table list 'locais'
-            this.SQLService.getLocais()          
-              .then( (results) => {
+      // Returns table list 'locais'
+      this.SQLService.getLocais()          
+        .then( (rows) => {
+          console.log(typeof(rows),'results local',JSON.stringify(rows));
+          this.locais = rows;
+      });
+    
+      //   .then( (results) => {
 
-                console.log('results local',results.rows);
+      //     console.log('results local',results.rows);
 
-                for (let index = 0; index < results.rows.length; index++) {
-                  console.log(results.rows.item(index).codigo);
-                  this.locais.push(results.rows.item(index));
-                }
+      //     for (let index = 0; index < results.rows.length; index++) {
+      //       console.log(results.rows.item(index).codigo);
+      //       this.locais.push(results.rows.item(index));
+      //     }
 
-            });
+      // });
     
      
   }

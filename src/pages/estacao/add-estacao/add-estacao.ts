@@ -65,18 +65,19 @@ export class AddEstacaoPage {
     // Check all fields from form
     if(this.estacaoForm.valid){
       
-      this.storeEstacao(this.estacaoForm.value)
-        .then( () => {
-          alertEstacao
-            .setTitle('Formulário Salvo com Sucesso')
-            .present()
-              .then(() => this.navCtrl.push(EstacaoPage,{
-                local:{id: this.local_selected.id}
-              }));
-        })
-        .catch( (error) => {
-          console.log(error);
-        })
+      
+      this.storeEstacao(this.estacaoForm.value);
+        // .then( (results) => {
+        //   // alertEstacao
+        //   //   .setTitle('Formulário Salvo com Sucesso')
+        //   //   .present()
+        //   //     .then(() => this.navCtrl.push(EstacaoPage,{
+        //   //       local:{id: this.local_selected.id}
+        //   //     }));
+        // })
+        // .catch( (error) => {
+        //   console.log('erro ao gravar',error);
+        // })
 
     } else {
       alertEstacao.present();
@@ -103,10 +104,12 @@ export class AddEstacaoPage {
   private populateLocais(){
 
     this.SQLService.getLocais()          
-        .then( (results) => {
-          for (let index = 0; index < results.rows.length; index++) {
-            this.locais.push(results.rows.item(index));
-          }
+        .then( (rows) => {
+          this.locais = rows;
+
+          // for (let index = 0; index < results.rows.length; index++) {
+          //   this.locais.push(results.rows.item(index));
+          // }
       });
 
   }
