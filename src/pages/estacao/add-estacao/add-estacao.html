@@ -40,7 +40,7 @@
 
       <ion-list>
 
-          <ion-input type="hidden" [value]="local_selected.id" formControlName="localID" required></ion-input>
+          <ion-input type="hidden" [value]="local_selected.id" formControlName="local_id" required></ion-input>
 
           <ion-item>
             <ion-label fixed>Código</ion-label>
@@ -59,7 +59,7 @@
         
           <ion-item>
             <ion-label fixed>Observação</ion-label>
-            <ion-textarea formControlName="observacao" placeholder="Descreva a Estação"  id="estacao_observacao" rows="5" required></ion-textarea>
+            <ion-textarea formControlName="obs" placeholder="Descreva a Estação"  id="estacao_observacao" rows="5" required></ion-textarea>
           </ion-item>
 
           <button ion-button>Gravar</button>

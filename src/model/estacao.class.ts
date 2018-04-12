@@ -1,8 +1,8 @@
 export class Estacao {
-    public descricao: string;
+    public id: number;
+    public local_id: number;
     public codigo: number;
     public data: Date;
-    public local_id: number;
     public parcela: number;
     public obs: string;
     public datacriacao: number

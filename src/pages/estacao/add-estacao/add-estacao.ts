@@ -4,6 +4,7 @@ import { SqLiteWrapperProvider } from '../../../providers/sq-lite-wrapper/sq-lit
 import { Validators, FormBuilder, FormGroup, Form } from '@angular/forms';
 import { Local } from '../../../model/local.class';
 import { Estacao } from '../../../model/estacao.class';
+import { EstacaoPage } from '../estacao';
 
 /**
  * Generated class for the AddPage page.
@@ -20,7 +21,7 @@ import { Estacao } from '../../../model/estacao.class';
 export class AddEstacaoPage {
   
   estacaoForm: FormGroup;
-  local_selected: Local = {id:0, codigo:'', data:'', parcela:0, observacao: ''};
+  local_selected: Local = {id:0, codigo:'', descricao:'', datacriacao: new Date().getTime()};
   locais: any[] = [];
   estacao_data: string;
 
@@ -31,7 +32,6 @@ export class AddEstacaoPage {
     private SQLService: SqLiteWrapperProvider,
     private formBuilder: FormBuilder,
   ) {
-
 
     // populate array locais 
     this.populateLocais();
@@ -54,23 +54,7 @@ export class AddEstacaoPage {
       console.log('ionViewDidLoad AddPage');
     
   }
-
-  createForm(){
-
-    let dataAtual = this.formatDate(new Date());
-    
-    // Compose group form 
-    this.estacaoForm = this.formBuilder.group({
-      localID: [this.local_selected.id, Validators.required],
-      codigo: ['',Validators.required],
-      data: [dataAtual, Validators.required],
-      parcela: ['', Validators.required],
-      observacao: ['', Validators.required]
-    });
-
-
-  }
-
+  
   logForm(){
 
     let alertEstacao = this.alert.create({
@@ -81,20 +65,42 @@ export class AddEstacaoPage {
     // Check all fields from form
     if(this.estacaoForm.valid){
       
-      console.log(this.estacaoForm.value);
+      this.storeEstacao(this.estacaoForm.value)
+        .then( () => {
+          alertEstacao
+            .setTitle('Formulário Salvo com Sucesso')
+            .present()
+              .then(() => this.navCtrl.push(EstacaoPage,{
+                local:{id: this.local_selected.id}
+              }));
+        })
+        .catch( (error) => {
+          console.log(error);
+        })
 
-      this.storeEstacao(this.estacaoForm.value);
-
-      alertEstacao
-        .setTitle('Formulário Salvo com Sucesso')
-        .present()
     } else {
       alertEstacao.present();
     }
     
   }
 
-  populateLocais(){
+  private createForm(){
+
+    let dataAtual = this.formatDate(new Date());
+    
+    // Compose group form 
+    this.estacaoForm = this.formBuilder.group({
+      local_id: [this.local_selected.id, Validators.required],
+      codigo: ['',Validators.required],
+      data: [dataAtual, Validators.required],
+      parcela: ['', Validators.required],
+      obs: ['', Validators.required]
+    });
+
+
+  }
+
+  private populateLocais(){
 
     this.SQLService.getLocais()          
         .then( (results) => {
@@ -105,15 +111,11 @@ export class AddEstacaoPage {
 
   }
 
-  storeEstacao(datasource: Estacao){
-    
-    this.SQLService.storeEstacao(datasource)
-      .then( (result) => {
-        console.log(result);
-      })
+  private storeEstacao(datasource: Estacao){
+    return this.SQLService.storeEstacao(datasource);
   }
 
-  formatDate(date):string {
+  private formatDate(date):string {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),

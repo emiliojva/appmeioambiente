@@ -30,32 +30,25 @@
 
 <ion-content padding>
 
- 
-      
-
   <ion-list>
     
     <!-- <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l.id)"> -->
-    <ion-item style="cursor: pointer">
+    <ion-item style="cursor: pointer" *ngFor="let e of estacaos">
 
       <ion-avatar item-start >
         <img src="assets/imgs/logo.png">
       </ion-avatar>
 
-      <h2>Estação 1</h2>
+      <h2>Estação {{e.id}}</h2>
 
-      <h3>Estação Código 001</h3>
+      <h3>Estação Código {{e.codigo}}</h3>
 
       <!-- <p>Criado em {{ l.datacriacao | date:'dd-MM-yyyy HH:mm:ss' }}</p> -->
-      <p>Criado em 1523295866481</p>
+      <p>Criado em {{e.data}}</p>
 
     </ion-item>
 
   </ion-list>
-
-    
-
-
  
 </ion-content>
 
