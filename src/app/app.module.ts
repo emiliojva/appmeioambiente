@@ -15,10 +15,12 @@ import { LocalPage } from '../pages/local/local';
 import { EstacaoPage } from '../pages/estacao/estacao';
 import { AddEstacaoPage } from '../pages/estacao/add-estacao/add-estacao';
 import { IndividuoPage } from '../pages/individuo/individuo';
-import { AddIndividuoPage } from '../pages/individuo/add-individuo/add-individuo';
+import { AddIndividuoPage } from '../pages/add-individuo/add-individuo';
+import { AddTroncoPage } from '../pages/add-tronco/add-tronco';
 
 // Mock SQLite
 import { SQLiteMock } from '../model/mock.sqlite';
+
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import { SQLiteMock } from '../model/mock.sqlite';
     EstacaoPage,
     AddEstacaoPage,
     IndividuoPage,
-    AddIndividuoPage
+    AddIndividuoPage,
+    AddTroncoPage
   ],
   imports: [
     BrowserModule,
@@ -45,7 +48,8 @@ import { SQLiteMock } from '../model/mock.sqlite';
     EstacaoPage,
     AddEstacaoPage,
     IndividuoPage,
-    AddIndividuoPage
+    AddIndividuoPage,
+    AddTroncoPage
   ],
   providers: [
     StatusBar,
