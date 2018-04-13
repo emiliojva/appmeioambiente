@@ -4,6 +4,7 @@ import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
 import { DateTime, Platform } from 'ionic-angular';
 import { Estacao } from '../../model/estacao.class';
 import { Local } from '../../model/local.class';
+import { UtilityProvider } from '../utility/utility';
 
 const DATABASE_SCHEMA = [
   // [`DROP TABLE IF EXISTS local`],
@@ -113,6 +114,7 @@ export class SqLiteWrapperProvider {
     //public http: HttpClient, 
     public sqlite: SQLite,
     public platform: Platform,
+    public util: UtilityProvider
   ) 
   {
     console.log('Hello SqLiteWrapperProvider Provider');
@@ -156,10 +158,10 @@ export class SqLiteWrapperProvider {
         return this.getSQLiteInstance().then( (db: SQLiteObject) => {
 
           this.database = db;
-          
+
           /* DOM/BROWSER SQLiteMock*/
           // if(readySource == 'dom'){
-          if(this.platform.is('dom')){
+          if(!this.util.mobilecheck()){
             
             console.log('BROWSER MODE',this.database);  
             return this.createTablesMockSQL();

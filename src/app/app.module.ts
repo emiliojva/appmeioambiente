@@ -20,6 +20,7 @@ import { AddTroncoPage } from '../pages/add-tronco/add-tronco';
 
 // Mock SQLite
 import { SQLiteMock } from '../model/mock.sqlite';
+import { UtilityProvider } from '../providers/utility/utility';
 
 
 @NgModule({
@@ -55,8 +56,9 @@ import { SQLiteMock } from '../model/mock.sqlite';
     StatusBar,
     SplashScreen,
     SqLiteWrapperProvider,
-    SQLite,
-    // {provide: SQLite, useClass: SQLiteMock},
+    UtilityProvider,
+    // SQLite,
+    {provide: SQLite, useClass: SQLiteMock},
     {provide: ErrorHandler, useClass: IonicErrorHandler},
   ]
 })
