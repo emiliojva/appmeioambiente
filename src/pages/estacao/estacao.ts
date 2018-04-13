@@ -33,32 +33,37 @@ export class EstacaoPage {
       content: "Aguarde..."
     });
 
-    this.loading.present();
+    // this.loading.present();
 
     this.local_selected = this.navParams.get('local').id;
+
     
-    this.SQLService.getLocais()          
-        .then( (rows) => {
-          this.locais = rows;
-          // for (let index = 0; index < results.rows.length; index++) {
-          //   this.locais.push(results.rows.item(index));
+    let myPromises = [];
+    
+      this.SQLService.getLocais()          
+          .then( (rows) => {
+            console.log(JSON.stringify(rows));
+            this.locais = rows;
+        });
+
+
+      this.SQLService.getEstacaos(this.local_selected)
+        .then( (results) => {
+
+          console.log(JSON.stringify(results));
+
+          // for (var index = 0; index < results.rows.length; index++) {
+          //   console.log(results.rows.item(index));
+          //   this.estacaos.push(results.rows.item(index));
           // }
-      });
-
-    this.SQLService.getEstacaos(this.local_selected)
-      .then( (results) => {
-        console.log(results);
-        for (var index = 0; index < results.rows.length; index++) {
-          console.log(results.rows.item(index));
-          this.estacaos.push(results.rows.item(index));
-        }
-
-
-        this.loading.dismiss();
-        
-      });
+          
+        });
     
-
+    
+    // Promise.all(myPromises)
+    //   .then( () => {
+    //     this.loading.dismiss();
+    //   })
 
     
 

@@ -6,8 +6,8 @@ import { Estacao } from '../../model/estacao.class';
 import { Local } from '../../model/local.class';
 
 const DATABASE_SCHEMA = [
+  // [`DROP TABLE IF EXISTS local`],
   /*Table local */
-  [`DROP TABLE IF EXISTS estacao;`],
   [`
   CREATE TABLE IF NOT EXISTS local 
   (
@@ -30,16 +30,14 @@ const DATABASE_SCHEMA = [
   ,
   [`
   CREATE TABLE IF NOT EXISTS estacao (
-    id	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    codigo TEXT UNIQUE,
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    codigo VARCHAR(200) UNIQUE,
     data TEXT NOT NULL,
     local_id INTEGER NOT NULL,
-    parcela	TEXT,
+    parcela	INTEGER,
     obs	TEXT,
     datacriacao	VARCHAR(50)
-    FOREIGN KEY (local_id) REFERENCES local (id)
-  );  
-  `
+  );`
   ]
   ,
   /* Table Individuo */
@@ -53,7 +51,7 @@ const DATABASE_SCHEMA = [
     numero_de_troncos INTEGER NOT NULL,
     altura INTEGER NOT NULL,
     observacao TEXT,
-    datacriacao TEXT,
+    datacriacao VARCHAR(50),
     FOREIGN KEY (estacao_id) REFERENCES estacao (id),
     FOREIGN KEY (especie_id) REFERENCES especie (id)
   );`
@@ -66,19 +64,19 @@ const DATABASE_SCHEMA = [
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     telefone VARCHAR(255) NOT NULL,
-    login_id INTEGER NOT NULL
+    login_id INTEGER NOT NULL,
+    datacriacao VARCHAR(50)
   )`
-  ]
-  ,
+  ],
   // ['DELETE FROM local'],
+  // ['DELETE FROM especie'],
   ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [1, 'guapi','Guapimirim',new Date().getTime()] ],
   ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [2, 'gaurai','Gauraí',new Date().getTime()] ],
   ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [3, 'caceribu','Caceribu',new Date().getTime()] ],
   ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [4, 'guaraimirim','Guaraí-Mirim',new Date().getTime()] ],
   ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [5, 'imbui','Caceribu / Imbuí',new Date().getTime()] ],
-  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [6, 'guaxindiba','Guaxindiba',new Date().getTime()] ]
-  ,
-  // ['DELETE FROM especie'],
+  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [6, 'guaxindiba','Guaxindiba',new Date().getTime()] ],
+
   ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [1, 'Av', 'Avicennia schaueriana', new Date().getTime()] ],
   ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [2, 'Lg', 'Laguncularia racemosa', new Date().getTime()] ],
   ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [3, 'Rh', 'Rhizophora mangle', new Date().getTime()] ]
@@ -121,38 +119,44 @@ export class SqLiteWrapperProvider {
 
     this.playPlatform()
       .then( (readySource) => {
+
         console.log('PLATFORM BEGINS' , JSON.stringify(readySource) );  
           
         this.createDatabase()
           .then( () => {
-
-            console.log('### DATABASE CREATED ###',this.database);
+            
+            console.log('### DATABASE CREATED ###', 'OK');
             console.log('SQLService Constructor - Banco Created');
+            console.log('### TABLES CREATED ###');
+            //this.getLocais();
           })
+          .catch( (error) => {
+            console.log('ERRO DE SQL-BATCH',JSON.stringify(error));
+          });
+        //   // .catch( (error) => {
+          //   console.log('Erro this.createDatabase()',JSON.stringify(error));
+          // })
 
       })
       .catch((error) => console.log(JSON.stringify(error)));
-    
   }
 
-   getSQLiteInstance(){
+  getSQLiteInstance(){
 
     return this.sqlite.create({
-      name: 'meioambienteDB.db',
+      name: 'meioambiente.db',
       location: 'default'
     });
 
   
   }
 
-  
-
-  createDatabase(){
+  createDatabase():Promise<any>{
 
         return this.getSQLiteInstance().then( (db: SQLiteObject) => {
-          
-          this.database = db;
 
+          this.database = db;
+          
           /* DOM/BROWSER SQLiteMock*/
           // if(readySource == 'dom'){
           if(this.platform.is('dom')){
@@ -163,32 +167,16 @@ export class SqLiteWrapperProvider {
             
           } else {
 
+            /* BATCH TO EXECUTE IN DEVICES/EMULATORS */
             console.log('DEVICE/EMULATOR MODE');     
+
+            return this.database.sqlBatch(DATABASE_SCHEMA);
           
-            /* DEVICES/EMULATORS */
-            return this.database.sqlBatch(DATABASE_SCHEMA)
-              .then( () => {
-                console.log('### TABLES CREATED ###');
-                //this.getLocais();
-              })
-              .catch( (error) => {
-                console.log('ERRO DE SQL-BATCH',JSON.stringify(error));
-              });
           }
           
-        })
-          
-      .catch( (error) => {
-        console.log('ERRO AO CARREGAR PLATFORM',error);   
-      })
-        
-        
+        });
   }
 
-  /**
-   * 
-   * @param id 
-   */
   getLocais(id?:number):Promise<Local[]>{
 
     return new Promise( (resolve,reject)=>{
@@ -233,7 +221,7 @@ export class SqLiteWrapperProvider {
         if(local_id){
           where = `WHERE local_id = ${local_id}`;
         }
-    
+
     return this.playPlatform()
       .then( (readySource) => {
           return this.database.executeSql(`SELECT * FROM estacao ${where}` ,[])

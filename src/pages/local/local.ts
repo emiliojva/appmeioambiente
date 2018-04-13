@@ -61,13 +61,13 @@ export class LocalPage {
 
     console.log(local.descricao);
 
-    var index = this.locais.findIndex(function(element,index){
-      if(element.id == local.id){
-        return element;
-      }
-    });
+    // var index = this.locais.findIndex(function(element,index){
+    //   if(element.id == local.id){
+    //     return element;
+    //   }
+    // });
 
-    console.log('LOCAL CLICADO',this.locais[index].descricao);
+    console.log('LOCAL CLICADO',local);
 
     // Verifies the presence of the ALERT plugin. If not returns error.
     // let localName = this.locais[index].descricao;
