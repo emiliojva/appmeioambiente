@@ -19,23 +19,38 @@
 
 <ion-content padding>
 
-    <form [formGroup]="myGroup" (ngSubmit)="logForm()">
+    <ion-list>
 
-        <ion-list>
-  
-    
-  
-            <ion-item>
-              <ion-label fixed>Código</ion-label>
-              <ion-input type="text" formControlName="firstName" id="estacao_codigo" required></ion-input>
-            </ion-item>
-  
-  
-            <button ion-button>Gravar</button>
-            <button ion-button type='reset'>Limpar</button>
-          
-        </ion-list>
-  
-      </form>
+      <ion-item>
+        INDIVIDUO 1
+        <button item-end>
+          <ion-icon name="arrow-dropright"></ion-icon>
+        </button>
+      </ion-item>
+
+      <ion-item>
+        INDIVIDUO 2
+        <button item-end>
+          <ion-icon name="arrow-dropright"></ion-icon>
+        </button>
+      </ion-item>
+
+      <ion-item>
+        INDIVIDUO 3
+        <button item-end>
+          <ion-icon name="arrow-dropright"></ion-icon>
+        </button>
+      </ion-item>
+
+      <ion-item>
+        INDIVIDUO 4
+        <button item-end>
+          <ion-icon name="arrow-dropright"></ion-icon>
+        </button>
+      </ion-item>
+
+      
+
+    </ion-list>
 
 </ion-content>
