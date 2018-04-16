@@ -57,27 +57,50 @@ export class AddEstacaoPage {
   
   logForm(){
 
+    let nav = this.navCtrl;
+    console.log(nav.getActive());
+    // remove current page
+    const indexCurrentPage = nav.getActive().index;
+
+    let local_id = this.local_selected.id;
+
     let alertEstacao = this.alert.create({
       title: 'Complete o formulário',
-      buttons: ['OK']
+      buttons: [
+        {
+          text: 'OK',
+          handler: function(){
+
+            // Add page 'estacao' 
+            nav.push(EstacaoPage,{
+              local:{id: local_id }
+            }).then( () => {
+
+              // remove addEstacaoPage of the stack pages
+              nav.remove(indexCurrentPage,2);          
+
+            })
+          }
+        }
+        
+      ]
     });
-    
+
     // Check all fields from form
     if(this.estacaoForm.valid){
       
+      // Form data submited
       let data_to_save = this.estacaoForm.value; 
       
+      // Save Estacao in the Model
       this.storeEstacao(data_to_save)
         .then( (estacao:Estacao) => {
 
           console.log(estacao);
 
-          // alertEstacao
-          //   .setTitle('Formulário Salvo com Sucesso')
-          //   .present()
-          //     .then(() => this.navCtrl.push(EstacaoPage,{
-          //       local:{id: this.local_selected.id}
-          //     }));
+          alertEstacao
+            .setTitle('Formulário Salvo com Sucesso')
+            .present()
         })
         .catch( (error) => {
           console.log('erro ao gravar estação',data_to_save,error);

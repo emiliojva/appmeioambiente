@@ -57,8 +57,8 @@ import { UtilityProvider } from '../providers/utility/utility';
     SplashScreen,
     SqLiteWrapperProvider,
     UtilityProvider,
-    // SQLite,
-    {provide: SQLite, useClass: SQLiteMock},
+    SQLite,
+    // {provide: SQLite, useClass: SQLiteMock},
     {provide: ErrorHandler, useClass: IonicErrorHandler},
   ]
 })

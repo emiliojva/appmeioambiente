@@ -47,16 +47,9 @@ export class EstacaoPage {
 
     // let myPromises = [];
 
-    let p1 = this.SQLService.getLocais()          
-        .then( (rows) => {
-          this.locais = rows;
-      });
+    let p1 = this.populateLocais();
 
-    let p2 = this.SQLService.getEstacaos(this.local_selected)
-      .then( (rows) => {
-        this.estacaos = rows;
-        console.log(JSON.stringify(rows));
-      });
+    let p2 = this.populateEstacaos();
 
     Promise.all([p1,p2])
       .then( () => {
@@ -72,4 +65,31 @@ export class EstacaoPage {
     this.navCtrl.push(AddEstacaoPage, {local:  this.navParams.get('local')})
   }
 
+  reloadPage(){
+    console.log('trocou para local',this.local_selected);
+
+    this.loading = this.loadingCtrl.create({
+      content: "Aguarde..."
+    });
+
+    this.loading.present();
+    
+    this.populateEstacaos()
+      .then( () => this.loading.dismiss() );
+  }
+
+  populateEstacaos():Promise<any>{
+    return this.SQLService.getEstacaos(this.local_selected)
+      .then( (rows) => {
+        this.estacaos = rows;
+        console.log(JSON.stringify(rows));
+      });
+  }
+
+  populateLocais():Promise<any>{
+    return this.SQLService.getLocais()          
+        .then( (rows) => {
+          this.locais = rows;
+      });
+  }
 }
