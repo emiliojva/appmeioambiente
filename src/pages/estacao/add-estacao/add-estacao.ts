@@ -65,19 +65,23 @@ export class AddEstacaoPage {
     // Check all fields from form
     if(this.estacaoForm.valid){
       
+      let data_to_save = this.estacaoForm.value; 
       
-      this.storeEstacao(this.estacaoForm.value);
-        // .then( (results) => {
-        //   // alertEstacao
-        //   //   .setTitle('Formulário Salvo com Sucesso')
-        //   //   .present()
-        //   //     .then(() => this.navCtrl.push(EstacaoPage,{
-        //   //       local:{id: this.local_selected.id}
-        //   //     }));
-        // })
-        // .catch( (error) => {
-        //   console.log('erro ao gravar',error);
-        // })
+      this.storeEstacao(data_to_save)
+        .then( (estacao:Estacao) => {
+
+          console.log(estacao);
+
+          // alertEstacao
+          //   .setTitle('Formulário Salvo com Sucesso')
+          //   .present()
+          //     .then(() => this.navCtrl.push(EstacaoPage,{
+          //       local:{id: this.local_selected.id}
+          //     }));
+        })
+        .catch( (error) => {
+          console.log('erro ao gravar estação',data_to_save,error);
+        })
 
     } else {
       alertEstacao.present();

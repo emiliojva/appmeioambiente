@@ -107,7 +107,6 @@ const POPULATE_TABLES_ESPECIE = [
 @Injectable()
 export class SqLiteWrapperProvider {
 
-  // db: any;
   database: SQLiteObject;
   
   constructor(
@@ -118,32 +117,17 @@ export class SqLiteWrapperProvider {
   ) 
   {
     console.log('Hello SqLiteWrapperProvider Provider');
-
-    this.playPlatform()
-      .then( (readySource) => {
-
-        console.log('PLATFORM BEGINS' , JSON.stringify(readySource) );  
-          
-        this.createDatabase()
-          .then( () => {
-            
-            console.log('### DATABASE CREATED ###', 'OK');
-            console.log('SQLService Constructor - Banco Created');
-            console.log('### TABLES CREATED ###');
-            //this.getLocais();
-          })
-          .catch( (error) => {
-            console.log('ERRO DE SQL-BATCH',JSON.stringify(error));
-          });
-        //   // .catch( (error) => {
-          //   console.log('Erro this.createDatabase()',JSON.stringify(error));
-          // })
-
-      })
-      .catch((error) => console.log(JSON.stringify(error)));
   }
 
-  getSQLiteInstance(){
+  // returns instance SQLite DB Promise 
+  getSQLiteInstance():Promise<SQLiteObject>{
+
+    if(!!this.database){
+      return new Promise(resolve => {
+        if(!!this.database)
+          resolve(this.database);
+      });
+    }
 
     return this.sqlite.create({
       name: 'meioambiente.db',
@@ -153,44 +137,42 @@ export class SqLiteWrapperProvider {
   
   }
 
+  // Creates DB and inserts records
   createDatabase():Promise<any>{
 
-        return this.getSQLiteInstance().then( (db: SQLiteObject) => {
+    return this.getSQLiteInstance()
+      .then( (db: SQLiteObject) => {
 
-          this.database = db;
+        // singleTon Pattern
+        this.database = db;
 
-          /* DOM/BROWSER SQLiteMock*/
-          // if(readySource == 'dom'){
-          if(!this.util.mobilecheck()){
-            
-            console.log('BROWSER MODE',this.database);  
-            return this.createTablesMockSQL();
-            // return this.createTableForBrowser();
-            
-          } else {
-
-            /* BATCH TO EXECUTE IN DEVICES/EMULATORS */
-            console.log('DEVICE/EMULATOR MODE');     
-
-            return this.database.sqlBatch(DATABASE_SCHEMA);
+        /* DOM/BROWSER SQLiteMock*/
+        // if(readySource == 'dom'){
+        if(!this.util.mobilecheck()){
           
-          }
+          console.log('BROWSER MODE',this.database);  
+          return this.createTablesMockSQL();
+          // return this.createTableForBrowser();
           
-        });
+        } else {
+
+          /* BATCH TO EXECUTE IN DEVICES/EMULATORS */
+          console.log('DEVICE/EMULATOR MODE');     
+
+          return this.database.sqlBatch(DATABASE_SCHEMA);
+        
+        }
+      }
+    );
   }
 
   getLocais(id?:number):Promise<Local[]>{
 
     return new Promise( (resolve,reject)=>{
-      // console.log(array_results);
 
       // Platform Ready
-      return this.playPlatform()
-        .then( (readySource) => {
-          // Returns Instance of SQLiteObject. To do Transactions
-          return this.getSQLiteInstance()
-        })
-        .then( (db: SQLiteObject) => {
+      return this.getSQLiteInstance()
+        .then( (db: SQLiteObject) => {  // Returns Instance of SQLiteObject. To do Transactions
               
           let where = '';
           if(id){
@@ -198,6 +180,7 @@ export class SqLiteWrapperProvider {
           }
 
           // Returns Promise with statament SQL executed. Equal results.rows array objects
+          // return db.executeSql(`SELECT * FROM local ${where}` ,[])
           return db.executeSql(`SELECT * FROM local ${where}` ,[])
         })
         .then( (results) => {
@@ -217,19 +200,37 @@ export class SqLiteWrapperProvider {
         });
   }
 
-  getEstacaos(local_id?:number){
+  getEstacaos(local_id?:number):Promise<Estacao[]>{
 
-    let where = '';
-        if(local_id){
-          where = `WHERE local_id = ${local_id}`;
-        }
+    return new Promise( (resolve,reject)=>{
 
-    return this.playPlatform()
-      .then( (readySource) => {
-          return this.database.executeSql(`SELECT * FROM estacao ${where}` ,[])
-      });
-    
-    
+      this.getSQLiteInstance()
+        .then( (db: SQLiteObject) => {  // Returns Instance of SQLiteObject. To do Transactions
+              
+          let where = '';
+          if(local_id){
+            where = `WHERE local_id = ${local_id}`;
+          }
+
+          // Returns Promise with statament SQL executed. Equal results.rows array objects
+          return db.executeSql(`SELECT * FROM estacao ${where}` ,[])
+        })
+        .then( (results) => {
+            
+            let array_results: Estacao[] = [];
+
+            // iterates results rows SQL and push into 'Estacao' array 
+            for (let index = 0; index < results.rows.length; index++) {
+              let estacao:Estacao = results.rows.item(index);
+              array_results.push(estacao);
+            }
+            
+            // Resolve array of 'LOCAL' objects
+            resolve(array_results);
+          });
+
+        });
+
   }
 
   getIndividuos(){
@@ -240,19 +241,16 @@ export class SqLiteWrapperProvider {
       });
   }
 
-  storeEstacao(estacao:Estacao){
+  storeEstacao(estacao:Estacao):Promise<Estacao>{
 
-    return this.playPlatform()
-      .then( (readySource) => {
+    return this.getSQLiteInstance()
+      .then( (db:SQLiteObject) => {
         
         estacao.datacriacao = new Date().getTime();
+        
+        console.log('Dados prepados para query', JSON.stringify(estacao));
 
-        console.log(JSON.stringify(estacao));
-
-        // var sql = "INSERT INTO estacao (descricao,codigo,data,local_id,parcela,obs,datacriacao) " +
-        //         " VALUES (?,?,?,?,?,?,?);";
-
-        return this.database.executeSql('INSERT INTO estacao (local_id,codigo,data,parcela,obs,datacriacao) VALUES (?,?,?,?,?,?);',
+        return db.executeSql('INSERT INTO estacao (local_id,codigo,data,parcela,obs,datacriacao) VALUES (?,?,?,?,?,?);',
           [
             estacao.local_id, 
             estacao.codigo, 
@@ -260,18 +258,14 @@ export class SqLiteWrapperProvider {
             estacao.parcela, 
             estacao.obs,
             estacao.datacriacao
-          ]
-        )
-        .then( (results) => {
-          console.log('Gravando Estacao',JSON.stringify(results));
-        })
-        .catch( (error) => {
-          console.log('erro', JSON.stringify(error));
-        });
-        // return this.database.executeSql('INSERT INTO estacao (descricao,codigo,data,local_id,parcela,obs,datacriacao) VALUES (?,?,?,?,?,?,?);',estacao);
+          ]);
 
       })
-      .catch( (error)=>console.log(error));
+      .then( (results) => {
+        console.log(results);
+        return estacao;
+      });
+      
 
   }
 
@@ -282,8 +276,6 @@ export class SqLiteWrapperProvider {
 
   // used to mock creates simulations in browser
   private createTablesMockSQL(){
-
-    this.playPlatform().then( () => {
 
       // this.database.executeSql(`drop table estacao;`,{});
       
@@ -405,21 +397,5 @@ export class SqLiteWrapperProvider {
       .then( (results) => {
         console.log('individuo Table created');
       });  
-    
-
-    });
-    
-    
-
-
-     
-
-
-
     }
-
-
-
-  
-  
 }

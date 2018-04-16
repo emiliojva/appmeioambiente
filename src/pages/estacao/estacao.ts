@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { AddEstacaoPage } from './add-estacao/add-estacao';
 import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-wrapper';
+import { Estacao } from '../../model/estacao.class';
+import { Local } from '../../model/local.class';
 
 /**
  * Generated class for the EstacaoPage page.
@@ -17,9 +19,9 @@ import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-w
 })
 export class EstacaoPage {
 
-  locais: any[] = [];
+  locais: Local[];
   local_selected: number;  
-  estacaos: any[] = [];
+  estacaos: Estacao[];
   loading: any;
 
   constructor(
@@ -29,50 +31,37 @@ export class EstacaoPage {
     private loadingCtrl: LoadingController
   ) {
 
+    // 'Local' selected in the previous screen.
+    this.local_selected = this.navParams.get('local').id;
+
     this.loading = this.loadingCtrl.create({
       content: "Aguarde..."
     });
 
-    // this.loading.present();
-
-    this.local_selected = this.navParams.get('local').id;
-
-    
-    let myPromises = [];
-    
-      this.SQLService.getLocais()          
-          .then( (rows) => {
-            console.log(JSON.stringify(rows));
-            this.locais = rows;
-        });
-
-
-      this.SQLService.getEstacaos(this.local_selected)
-        .then( (results) => {
-
-          console.log(JSON.stringify(results));
-
-          // for (var index = 0; index < results.rows.length; index++) {
-          //   console.log(results.rows.item(index));
-          //   this.estacaos.push(results.rows.item(index));
-          // }
-          
-        });
-    
-    
-    // Promise.all(myPromises)
-    //   .then( () => {
-    //     this.loading.dismiss();
-    //   })
-
-    
-
-
+    this.loading.present();
     
   }
 
+  // View Init Loaded
   ngOnInit(){
-    
+
+    // let myPromises = [];
+
+    let p1 = this.SQLService.getLocais()          
+        .then( (rows) => {
+          this.locais = rows;
+      });
+
+    let p2 = this.SQLService.getEstacaos(this.local_selected)
+      .then( (rows) => {
+        this.estacaos = rows;
+        console.log(JSON.stringify(rows));
+      });
+
+    Promise.all([p1,p2])
+      .then( () => {
+        this.loading.dismiss();
+      })
   }
 
   ionViewDidLoad() {
@@ -80,9 +69,7 @@ export class EstacaoPage {
   }
 
   addEstacao(){
-
     this.navCtrl.push(AddEstacaoPage, {local:  this.navParams.get('local')})
-
   }
 
 }

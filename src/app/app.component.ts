@@ -9,6 +9,7 @@ import { AddEstacaoPage } from '../pages/estacao/add-estacao/add-estacao';
 import { IndividuoPage } from '../pages/individuo/individuo';
 import { AddIndividuoPage } from '../pages/add-individuo/add-individuo';
 import { AddTroncoPage } from '../pages/add-tronco/add-tronco';
+import { SqLiteWrapperProvider } from '../providers/sq-lite-wrapper/sq-lite-wrapper';
 
 @Component({
   templateUrl: 'app.html'
@@ -23,7 +24,8 @@ export class MyApp {
 
   pages: Array<{title:string, component:any}>;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen,
+    private SQLService: SqLiteWrapperProvider  ) {
 
     
     // used for an example of ngFor and navigation
@@ -41,6 +43,19 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
+
+      // creating SQLite 
+      this.SQLService.createDatabase()
+          .then( () => {
+            
+            console.log('### DATABASE CREATED ###', 'OK');
+            console.log('SQLService Constructor - Banco Created');
+            console.log('### TABLES CREATED ###');
+            //this.getLocais();
+          })
+          .catch( (error) => {
+            console.log('ERRO DE SQL-BATCH',JSON.stringify(error));
+          });
     });
   }
 
