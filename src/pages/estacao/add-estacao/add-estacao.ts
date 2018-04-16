@@ -71,15 +71,14 @@ export class AddEstacaoPage {
           text: 'OK',
           handler: function(){
 
-            // Add page 'estacao' 
-            nav.push(EstacaoPage,{
-              local:{id: local_id }
-            }).then( () => {
+            nav.pop();
 
-              // remove addEstacaoPage of the stack pages
-              nav.remove(indexCurrentPage,2);          
-
-            })
+            // // Add page 'estacao' 
+            // nav.push(EstacaoPage,{local:{id: local_id }})
+            //   .then( () => {
+            //     // remove addEstacaoPage of the stack pages
+            //     nav.remove(indexCurrentPage,1);          
+            //   });
           }
         }
         
