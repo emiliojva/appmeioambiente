@@ -44,15 +44,14 @@ export class AddEstacaoPage {
   ngOnInit(){
 
     if(this.navParams.get('local')){
-      this.local_selected = this.navParams.get('local');
+      console.log(this.navParams.get('local'));
+      this.local_selected = this.navParams.get('local').id;
     }
 
   }
 
   ionViewDidLoad() {
-
       console.log('ionViewDidLoad AddPage');
-    
   }
   
   logForm(){
@@ -132,6 +131,11 @@ export class AddEstacaoPage {
     this.SQLService.getLocais()          
         .then( (rows) => {
           this.locais = rows;
+
+          if(this.navParams.get('local')){
+            console.log(this.navParams.get('local'));
+            this.local_selected = this.navParams.get('local').id;
+          }
 
           // for (let index = 0; index < results.rows.length; index++) {
           //   this.locais.push(results.rows.item(index));

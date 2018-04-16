@@ -30,12 +30,8 @@ export class EstacaoPage {
     private SQLService: SqLiteWrapperProvider, 
     private loadingCtrl: LoadingController
   ) {
-
     // 'Local' selected in the previous screen.
     this.local_selected = this.navParams.get('local').id;
-
-    
-    
   }
 
   // View Init Loaded
@@ -50,12 +46,12 @@ export class EstacaoPage {
   // On Active Page
   ionViewWillEnter(){
     console.log('Active Page Estacao');
-
     this.reloadPage();
   }
 
   addEstacao(){
-    this.navCtrl.push(AddEstacaoPage, {local:  this.navParams.get('local')})
+    console.log(this.navParams.get('local'))
+    this.navCtrl.push(AddEstacaoPage, {local:  this.local_selected})
   }
 
   reloadPage(){
@@ -82,7 +78,6 @@ export class EstacaoPage {
     return this.SQLService.getEstacaos(this.local_selected)
       .then( (rows) => {
         this.estacaos = rows;
-        // console.log(JSON.stringify(rows));
       });
   }
 

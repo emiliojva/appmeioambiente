@@ -80,10 +80,9 @@ const DATABASE_SCHEMA = [
   ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [4, 'guaraimirim','Guaraí-Mirim',new Date().getTime()] ],
   ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [5, 'imbui','Caceribu / Imbuí',new Date().getTime()] ],
   ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [6, 'guaxindiba','Guaxindiba',new Date().getTime()] ],
-
-  // ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [1, 'Av', 'Avicennia schaueriana', new Date().getTime()] ],
-  // ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [2, 'Lg', 'Laguncularia racemosa', new Date().getTime()] ],
-  // ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [3, 'Rh', 'Rhizophora mangle', new Date().getTime()] ]
+  ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [1, 'Av', 'Avicennia schaueriana', new Date().getTime()] ],
+  ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [2, 'Lg', 'Laguncularia racemosa', new Date().getTime()] ],
+  ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [3, 'Rh', 'Rhizophora mangle', new Date().getTime()] ]
 ];
 
 const POPULATE_TABLES_LOCAL = [
@@ -135,8 +134,6 @@ export class SqLiteWrapperProvider {
     if(!!this.database){
 
       console.log(!!this.database, 'database');
-
-
       return new Promise(resolve => {
         if(!!this.database)
           resolve(this.database);
@@ -185,9 +182,7 @@ export class SqLiteWrapperProvider {
             this.dbScriptDone = true;
             console.log(JSON.stringify(this.dbScriptDone), 'fim de script');
           })
-        
         }
-        
       }
     );
   }
@@ -204,14 +199,10 @@ export class SqLiteWrapperProvider {
     
   }
 
-
   getLocais(id?:number):Promise<Local[]>{
 
     return new Promise( (resolve,reject)=>{
 
-      
-
-      // Platform Ready
       return this.getSQLiteInstance()
         .then( (db: SQLiteObject) => {  // Returns Instance of SQLiteObject. To do Transactions
               
@@ -236,9 +227,6 @@ export class SqLiteWrapperProvider {
             
             // Resolve array of 'LOCAL' objects
             resolve(array_results);
-            
-            
-
           });
 
         });
@@ -319,127 +307,126 @@ export class SqLiteWrapperProvider {
   }
 
   // used to mock creates simulations in browser
-  private createTablesMockSQL(){
+  private createTablesMockSQL():Promise<any>{
 
       // this.database.executeSql(`drop table estacao;`,{});
-      
-      this.database.executeSql(`
-        CREATE TABLE IF NOT EXISTS local 
-        (
-          id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-          codigo	VARCHAR(200) UNIQUE,
-          descricao	TEXT NOT NULL UNIQUE,
-          datacriacao	VARCHAR(50)
-        );`
-      ,{})
-      .then( (results) => {
 
-        console.log('local Table created');
-
-        for(let i=0; i<POPULATE_TABLES_LOCAL.length; i++){
-
-          let insertQuery:string = POPULATE_TABLES_LOCAL[i][0] as string;
-          let params = POPULATE_TABLES_LOCAL[i][1];
-
-          this.database.executeSql(insertQuery , params)
-            .then(() => {
-              console.log('registro inserido  !');
-            })
-            .catch( (error) => console.log(insertQuery,params,'ja existe') )
-        }
-
-      });   
-
-      this.database.executeSql(`
-        CREATE TABLE IF NOT EXISTS especie (
-          id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-          codigo VARCHAR(200) UNIQUE,
-          descricao	TEXT NOT NULL UNIQUE,
-          datacriacao	VARCHAR(50)
-        );`
-      ,{})
-      .then( (results) => {
-        console.log('especie Table created');
-
-        for(let i=0; i<POPULATE_TABLES_ESPECIE.length; i++){
-
-          let insertQuery:string = POPULATE_TABLES_ESPECIE[i][0] as string;
-          let params = POPULATE_TABLES_ESPECIE[i][1];
-
-          this.database.executeSql(insertQuery , params)
-            .then((row) => {
-              console.log('registro inserido  !', row, insertQuery,params);
-            })
-            .catch( (error) => console.log(insertQuery,params,'ja existe') )
-        }
-
-      });   
-
-      // /* FIX TO DO DELETE FIELD 'descricao' AND HOLD USER DATA */
-      // this.database.executeSql(`
-      //   /* BEGIN TRANSACTION;
-          
-      //     CREATE TEMPORARY TABLE estacao_backup(id,codigo,data,local_id,parcela,obs,datacriacao);
-      //     INSERT INTO estacao_backup SELECT * FROM estacao;
-      //     DROP TABLE estacao; */
-
-      //     CREATE TABLE IF NOT EXISTS estacao (
-      //       id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-      //       codigo TEXT UNIQUE,
-      //       data TEXT NOT NULL,
-      //       local_id INTEGER NOT NULL,
-      //       parcela	TEXT,
-      //       obs	TEXT,
-      //       datacriacao	TEXT,
-      //       FOREIGN KEY (local_id) REFERENCES local (id)
-      //     );
-
-      //     /*
-      //     INSERT INTO estacao SELECT * FROM estacao_backup;
-      //     DROP TABLE estacao_backup;
-
-      //   COMMIT; */
-      //   `
-      // ,{})
-      // .then( (results) => {
-      //   console.log('estacao Table created');
-      // }); 
-
-
-      this.database.executeSql(`
-          CREATE TABLE IF NOT EXISTS estacao (
+      return Promise.all([
+        this.database.executeSql(`
+          CREATE TABLE IF NOT EXISTS local 
+          (
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            codigo TEXT UNIQUE,
-            data TEXT NOT NULL,
-            local_id INTEGER NOT NULL,
-            parcela	TEXT,
-            obs	TEXT,
-            datacriacao	TEXT,
-            FOREIGN KEY (local_id) REFERENCES local (id)
-          );
-        `
-      ,{})
-      .then( (results) => {
-        console.log('estacao Table created');
-      }); 
+            codigo	VARCHAR(200) UNIQUE,
+            descricao	TEXT NOT NULL UNIQUE,
+            datacriacao	VARCHAR(50)
+          );`
+        ,{})
+        .then( (results) => {
 
-      this.database.executeSql(`
-        CREATE TABLE IF NOT EXISTS individuo 
-        ( 
-          id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-          codigo INTEGER NOT NULL ,
-          estacao_id INTEGER NOT NULL ,
-          especie_id INTEGER NOT NULL,
-          numero_de_troncos INTEGER NOT NULL,
-          altura INTEGER NOT NULL,
-          observacao TEXT,
-          datacriacao TEXT,
-          FOREIGN KEY (estacao_id) REFERENCES estacao (id),
-          FOREIGN KEY (especie_id) REFERENCES especie (id)
-        );`
-      ,{})
-      .then( (results) => {
-        console.log('individuo Table created');
-      });  
+          console.log('local Table created');
+
+          for(let i=0; i<POPULATE_TABLES_LOCAL.length; i++){
+
+            let insertQuery:string = POPULATE_TABLES_LOCAL[i][0] as string;
+            let params = POPULATE_TABLES_LOCAL[i][1];
+
+            this.database.executeSql(insertQuery , params)
+              .then(() => {
+                console.log('registro inserido  !');
+              })
+              .catch( (error) => console.log(insertQuery,params,'ja existe') )
+          }
+
+        })
+        ,
+        this.database.executeSql(`
+          CREATE TABLE IF NOT EXISTS especie (
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            codigo VARCHAR(200) UNIQUE,
+            descricao	TEXT NOT NULL UNIQUE,
+            datacriacao	VARCHAR(50)
+          );`
+        ,{})
+        .then( (results) => {
+          console.log('especie Table created');
+
+          for(let i=0; i<POPULATE_TABLES_ESPECIE.length; i++){
+
+            let insertQuery:string = POPULATE_TABLES_ESPECIE[i][0] as string;
+            let params = POPULATE_TABLES_ESPECIE[i][1];
+
+            this.database.executeSql(insertQuery , params)
+              .then((row) => {
+                console.log('registro inserido  !', row, insertQuery,params);
+              })
+              .catch( (error) => console.log(insertQuery,params,'ja existe') )
+          }
+
+        }),
+        // /* FIX TO DO DELETE FIELD 'descricao' AND HOLD USER DATA */
+        // this.database.executeSql(`
+        //   /* BEGIN TRANSACTION;
+            
+        //     CREATE TEMPORARY TABLE estacao_backup(id,codigo,data,local_id,parcela,obs,datacriacao);
+        //     INSERT INTO estacao_backup SELECT * FROM estacao;
+        //     DROP TABLE estacao; */
+
+        //     CREATE TABLE IF NOT EXISTS estacao (
+        //       id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        //       codigo TEXT UNIQUE,
+        //       data TEXT NOT NULL,
+        //       local_id INTEGER NOT NULL,
+        //       parcela	TEXT,
+        //       obs	TEXT,
+        //       datacriacao	TEXT,
+        //       FOREIGN KEY (local_id) REFERENCES local (id)
+        //     );
+
+        //     /*
+        //     INSERT INTO estacao SELECT * FROM estacao_backup;
+        //     DROP TABLE estacao_backup;
+
+        //   COMMIT; */
+        //   `
+        // ,{})
+        // .then( (results) => {
+        //   console.log('estacao Table created');
+        // }); 
+        this.database.executeSql(`
+            CREATE TABLE IF NOT EXISTS estacao (
+              id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+              codigo TEXT UNIQUE,
+              data TEXT NOT NULL,
+              local_id INTEGER NOT NULL,
+              parcela	TEXT,
+              obs	TEXT,
+              datacriacao	TEXT,
+              FOREIGN KEY (local_id) REFERENCES local (id)
+            );
+          `
+        ,{})
+        .then( (results) => {
+          console.log('estacao Table created');
+        })
+        ,
+        this.database.executeSql(`
+          CREATE TABLE IF NOT EXISTS individuo 
+          ( 
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            codigo INTEGER NOT NULL ,
+            estacao_id INTEGER NOT NULL ,
+            especie_id INTEGER NOT NULL,
+            numero_de_troncos INTEGER NOT NULL,
+            altura INTEGER NOT NULL,
+            observacao TEXT,
+            datacriacao TEXT,
+            FOREIGN KEY (estacao_id) REFERENCES estacao (id),
+            FOREIGN KEY (especie_id) REFERENCES especie (id)
+          );`
+        ,{})
+        .then( (results) => {
+          console.log('individuo Table created');
+        })
+      ]);
     }
 }
