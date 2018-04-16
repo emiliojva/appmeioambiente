@@ -34,29 +34,40 @@ export class EstacaoPage {
     // 'Local' selected in the previous screen.
     this.local_selected = this.navParams.get('local').id;
 
+    // creates loading
     this.loading = this.loadingCtrl.create({
       content: "Aguarde..."
     });
 
+    // show loading
     this.loading.present();
     
   }
 
   // View Init Loaded
   ngOnInit(){
+    console.log('ngOnInit');
+  }
 
-    // let myPromises = [];
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad EstacaoPage');
+  }
 
-    let p1 = this.SQLService.getLocais()          
-        .then( (rows) => {
-          this.locais = rows;
-      });
+  // On Active Page
+  ionViewWillEnter(){
+    this.reloadPage();
+  }
 
-    let p2 = this.SQLService.getEstacaos(this.local_selected)
-      .then( (rows) => {
-        this.estacaos = rows;
-        console.log(JSON.stringify(rows));
-      });
+  addEstacao(){
+    this.navCtrl.push(AddEstacaoPage, {local:  this.navParams.get('local')})
+  }
+
+  reloadPage(){
+
+    console.log('Active Page Estacao');
+    let p1 = this.populateLocais();
+
+    let p2 = this.populateEstacaos();
 
     Promise.all([p1,p2])
       .then( () => {
@@ -64,12 +75,18 @@ export class EstacaoPage {
       })
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad EstacaoPage');
+  populateEstacaos():Promise<any>{
+    return this.SQLService.getEstacaos(this.local_selected)
+      .then( (rows) => {
+        this.estacaos = rows;
+        // console.log(JSON.stringify(rows));
+      });
   }
 
-  addEstacao(){
-    this.navCtrl.push(AddEstacaoPage, {local:  this.navParams.get('local')})
+  populateLocais():Promise<any>{
+    return this.SQLService.getLocais()          
+        .then( (rows) => {
+          this.locais = rows;
+      });
   }
-
 }
