@@ -28,12 +28,7 @@ export class LocalPage {
     private alert: AlertController,
     private platform: Platform) {
 
-      // Returns table list 'locais'
-      this.SQLService.getLocais()          
-        .then( (rows) => {
-          console.log(typeof(rows),'results local',JSON.stringify(rows));
-          this.locais = rows;
-      });
+     
     
       //   .then( (results) => {
 
@@ -51,6 +46,13 @@ export class LocalPage {
 
   ngOnInit(){
     console.log('#### ngInit ####', new Date().getHours+':', new Date().getMinutes()+':', new Date().getSeconds());
+
+     // Returns table list 'locais'
+     this.SQLService.getLocais()          
+     .then( (rows) => {
+       console.log(typeof(rows),'results local',JSON.stringify(rows));
+       this.locais = rows;
+    });
   }
 
   ionViewDidLoad() {

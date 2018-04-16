@@ -34,13 +34,7 @@ export class EstacaoPage {
     // 'Local' selected in the previous screen.
     this.local_selected = this.navParams.get('local').id;
 
-    // creates loading
-    this.loading = this.loadingCtrl.create({
-      content: "Aguarde..."
-    });
-
-    // show loading
-    this.loading.present();
+    
     
   }
 
@@ -55,6 +49,8 @@ export class EstacaoPage {
 
   // On Active Page
   ionViewWillEnter(){
+    console.log('Active Page Estacao');
+
     this.reloadPage();
   }
 
@@ -64,7 +60,14 @@ export class EstacaoPage {
 
   reloadPage(){
 
-    console.log('Active Page Estacao');
+    // creates
+    this.loading = this.loadingCtrl.create({
+      content: "Aguarde..."
+    });
+
+    // show loading
+    this.loading.present();
+
     let p1 = this.populateLocais();
 
     let p2 = this.populateEstacaos();
@@ -72,7 +75,7 @@ export class EstacaoPage {
     Promise.all([p1,p2])
       .then( () => {
         this.loading.dismiss();
-      })
+      });
   }
 
   populateEstacaos():Promise<any>{
