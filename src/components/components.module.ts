@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
-
+import { ExpansionPanelComponent } from './expansion-panel/expansion-panel';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
-	declarations: [],
+	declarations: [ExpansionPanelComponent],
 	imports: [],
-	exports: []
+	exports: [ExpansionPanelComponent]
 })
 export class ComponentsModule {}

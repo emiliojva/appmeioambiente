@@ -19,8 +19,8 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   // rootPage:any = AddEstacaoPage;
-  rootPage:any = LocalPage;
-  // rootPage:any = HomePage;
+  // rootPage:any = LocalPage;
+  rootPage:any = HomePage;
 
   pages: Array<{title:string, component:any}>;
 
