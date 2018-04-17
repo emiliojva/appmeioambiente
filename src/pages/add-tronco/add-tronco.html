@@ -20,49 +20,6 @@
 
 <ion-content padding>
 
-    <form>
-
-        <ion-list>
-
-            <!-- <ion-input type="hidden" [value]="local_selected.id" formControlName="local_id" required></ion-input> -->
-
-            <ion-item>
-              <ion-label stacked>Lacre</ion-label>
-              <ion-input type="number"  id="tronco_lacre" required></ion-input>
-            </ion-item>
-          
-            <ion-item>
-              <ion-label stacked>DAP</ion-label>
-              <ion-input type="number" id="tronco_dap" required></ion-input>
-            </ion-item>
-
-            <ion-item>
-              <ion-label stacked>Observação</ion-label>
-              <ion-textarea id="tronco_observacao" rows="3" ></ion-textarea>
-            </ion-item>
-
-            <ion-list radio-group>
-
-                <ion-list-header>
-                    Condição:
-                </ion-list-header>
-              <ion-item>
-                  <ion-label>Vivo</ion-label>
-                  <ion-radio color="dark"></ion-radio>
-              </ion-item>
-              <ion-item>
-                  <ion-label>Morto</ion-label>
-                  <ion-radio color="dark"></ion-radio>
-              </ion-item>
-            </ion-list>
-
-            <ion-buttons padding>
-              <button ion-button>Gravar</button>
-              <button ion-button type='reset'>Limpar</button>
-            </ion-buttons>
-          
-        </ion-list>
-
-      </form>
+  <expansion-panel></expansion-panel>
 
 </ion-content>
