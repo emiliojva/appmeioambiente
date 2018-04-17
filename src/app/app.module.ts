@@ -17,10 +17,12 @@ import { AddEstacaoPage } from '../pages/estacao/add-estacao/add-estacao';
 import { IndividuoPage } from '../pages/individuo/individuo';
 import { AddIndividuoPage } from '../pages/add-individuo/add-individuo';
 import { AddTroncoPage } from '../pages/add-tronco/add-tronco';
-
+import { ExpansionPanelComponent } from '../components/expansion-panel/expansion-panel';
+import { MatExpansionModule } from '@angular/material/expansion';
 // Mock SQLite
 import { SQLiteMock } from '../model/mock.sqlite';
 import { UtilityProvider } from '../providers/utility/utility';
+
 
 
 @NgModule({
@@ -32,9 +34,11 @@ import { UtilityProvider } from '../providers/utility/utility';
     AddEstacaoPage,
     IndividuoPage,
     AddIndividuoPage,
-    AddTroncoPage
+    AddTroncoPage,
+    ExpansionPanelComponent
   ],
   imports: [
+    MatExpansionModule,
     BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,

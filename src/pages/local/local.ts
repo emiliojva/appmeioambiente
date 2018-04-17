@@ -5,6 +5,7 @@ import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-w
 import { DatePipe } from '@angular/common';
 import { EstacaoPage } from '../estacao/estacao';
 
+
 /**
  * Generated class for the LocalPage page.
  *
