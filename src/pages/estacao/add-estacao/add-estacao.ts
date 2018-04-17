@@ -21,7 +21,7 @@ import { EstacaoPage } from '../estacao';
 export class AddEstacaoPage {
   
   estacaoForm: FormGroup;
-  local_selected: Local = {id:0, codigo:'', descricao:'', datacriacao: new Date().getTime()};
+  local_selected: number;
   locais: any[] = [];
   estacao_data: string;
 
@@ -45,7 +45,7 @@ export class AddEstacaoPage {
 
     if(this.navParams.get('local')){
       console.log(this.navParams.get('local'));
-      this.local_selected = this.navParams.get('local').id;
+      this.local_selected = this.navParams.get('local');
     }
 
   }
@@ -61,7 +61,7 @@ export class AddEstacaoPage {
     // remove current page
     const indexCurrentPage = nav.getActive().index;
 
-    let local_id = this.local_selected.id;
+    let local_id = this.local_selected;
 
     let alertEstacao = this.alert.create({
       title: 'Complete o formulário',
@@ -116,7 +116,7 @@ export class AddEstacaoPage {
     
     // Compose group form 
     this.estacaoForm = this.formBuilder.group({
-      local_id: [this.local_selected.id, Validators.required],
+      local_id: [this.local_selected, Validators.required],
       codigo: ['',Validators.required],
       data: [dataAtual, Validators.required],
       parcela: ['', Validators.required],
@@ -131,15 +131,6 @@ export class AddEstacaoPage {
     this.SQLService.getLocais()          
         .then( (rows) => {
           this.locais = rows;
-
-          if(this.navParams.get('local')){
-            console.log(this.navParams.get('local'));
-            this.local_selected = this.navParams.get('local').id;
-          }
-
-          // for (let index = 0; index < results.rows.length; index++) {
-          //   this.locais.push(results.rows.item(index));
-          // }
       });
 
   }
