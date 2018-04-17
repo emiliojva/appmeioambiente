@@ -59,6 +59,6 @@ export class LocalPage {
   chamarEstacoes(local){
     console.log(local.descricao);
     console.log('LOCAL CLICADO',local);
-    this.navCtrl.push(EstacaoPage, {local: local});
+    this.navCtrl.push(EstacaoPage, {local: local.id});
   }
 }

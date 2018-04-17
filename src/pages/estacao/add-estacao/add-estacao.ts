@@ -5,6 +5,7 @@ import { Validators, FormBuilder, FormGroup, Form } from '@angular/forms';
 import { Local } from '../../../model/local.class';
 import { Estacao } from '../../../model/estacao.class';
 import { EstacaoPage } from '../estacao';
+import { LocalPage } from '../../local/local';
 
 /**
  * Generated class for the AddPage page.
@@ -48,6 +49,8 @@ export class AddEstacaoPage {
       this.local_selected = this.navParams.get('local');
     }
 
+    
+
   }
 
   ionViewDidLoad() {
@@ -55,6 +58,12 @@ export class AddEstacaoPage {
   }
   
   logForm(){
+
+    
+
+    const navPrevious = this.navCtrl.getPrevious();
+
+    console.log('Nav Previous',navPrevious);
 
     let nav = this.navCtrl;
     console.log(nav.getActive());
@@ -70,14 +79,17 @@ export class AddEstacaoPage {
           text: 'OK',
           handler: function(){
 
-            nav.pop();
+            if(navPrevious == null || navPrevious.index==0){
 
-            // // Add page 'estacao' 
-            // nav.push(EstacaoPage,{local:{id: local_id }})
-            //   .then( () => {
-            //     // remove addEstacaoPage of the stack pages
-            //     nav.remove(indexCurrentPage,1);          
-            //   });
+              nav.push(EstacaoPage, {local: local_id}).then( () => {
+                nav.remove(indexCurrentPage,1);   
+                nav.insertPages(0,[{page: LocalPage}]);
+              });                
+                
+            } else {
+              nav.pop();
+            }
+
           }
         }
         

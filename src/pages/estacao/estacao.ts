@@ -31,7 +31,7 @@ export class EstacaoPage {
     private loadingCtrl: LoadingController
   ) {
     // 'Local' selected in the previous screen.
-    this.local_selected = this.navParams.get('local').id;
+    this.local_selected = this.navParams.get('local');
   }
 
   // View Init Loaded
