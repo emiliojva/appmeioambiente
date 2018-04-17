@@ -33,7 +33,7 @@
   <ion-list>
     
     <!-- <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l.id)"> -->
-    <ion-item style="cursor: pointer" *ngFor="let e of estacaos">
+    <ion-item style="cursor: pointer" *ngFor="let e of estacaos" (click)="chamarIndividuos(e.id)">
 
       <ion-avatar item-start >
         <img src="assets/imgs/logo.png">

@@ -5,6 +5,7 @@ import { DateTime, Platform } from 'ionic-angular';
 import { Estacao } from '../../model/estacao.class';
 import { Local } from '../../model/local.class';
 import { UtilityProvider } from '../utility/utility';
+import { Individuo } from '../../model/individuo.class';
 
 const DATABASE_SCHEMA = [
   [`DROP TABLE IF EXISTS usuario`],
@@ -265,12 +266,37 @@ export class SqLiteWrapperProvider {
 
   }
 
-  getIndividuos(){
+  getIndividuos(estacao_id:number):Promise<Individuo[]>{
 
-    return this.playPlatform()
-      .then( (readySource) => {
-          return this.database.executeSql(`SELECT * FROM individuos` ,[])
-      });
+    return new Promise( (resolve,reject)=>{
+
+      this.getSQLiteInstance()
+        .then( (db: SQLiteObject) => {  // Returns Instance of SQLiteObject. To do Transactions
+              
+          let where = '';
+          if(estacao_id){
+            where = `WHERE estacao_id = ${estacao_id}`;
+          }
+
+          // Returns Promise with statament SQL executed. Equal results.rows array objects
+          // return db.executeSql(`SELECT * FROM individuo ${where}` ,[]);
+          return db.executeSql(`SELECT * FROM individuo ${where}` ,[]);
+        })
+        .then( (results) => {
+            
+            let array_results: Individuo[] = [];
+
+            // iterates results rows SQL and push into 'Estacao' array 
+            for (let index = 0; index < results.rows.length; index++) {
+              let individuo:Individuo = results.rows.item(index);
+              array_results.push(individuo);
+            }
+            
+            // Resolve array of 'LOCAL' objects
+            resolve(array_results);
+          });
+
+        });
   }
 
   storeEstacao(estacao:Estacao):Promise<Estacao>{
@@ -291,6 +317,32 @@ export class SqLiteWrapperProvider {
             estacao.obs,
             estacao.datacriacao
           ]);
+
+      })
+      .then( (results) => {
+        console.log(results);
+        return estacao;
+      });
+      
+
+  }
+  
+  storeIndividuo(individuo:Individuo):Promise<Estacao>{
+
+    return this.getSQLiteInstance()
+      .then( (db:SQLiteObject) => {
+        
+        individuo.datacriacao = new Date().getTime();
+        
+        console.log('Dados prepados para query', JSON.stringify(individuo));
+
+        let array_sql = [];
+        for(let x in individuo){
+          array_sql.push(individuo[x]);
+        }
+
+        return db.executeSql('INSERT INTO estacao (local_id,codigo,data,parcela,obs,datacriacao) VALUES (?,?,?,?,?,?);',
+          array_sql);
 
       })
       .then( (results) => {

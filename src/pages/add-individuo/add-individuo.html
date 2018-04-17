@@ -14,6 +14,27 @@
     
   </ion-navbar>
 
+      
+    <ion-item>
+        
+        <ion-label>Local</ion-label>
+        
+        <ion-select [(ngModel)]="local_selected" (ionChange)="reloadPage($event)" okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione um local" >
+            <ion-option *ngFor="let l of locais" value="{{l.id}}">{{l.descricao}}</ion-option>
+        </ion-select>
+        
+    </ion-item>
+
+    <ion-item>
+        
+        <ion-label>Estação</ion-label>
+        
+        <ion-select [(ngModel)]="estacao_selected" (ionChange)="reloadPage($event)" okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione uma estação" >
+            <ion-option *ngFor="let e of estacao" value="{{e.id}}">{{e.codigo}}</ion-option>
+        </ion-select>
+            
+    </ion-item>
+
 </ion-header>
 
 
@@ -50,18 +71,19 @@
                 <ion-list-header>
                     Selecione a especie:
                 </ion-list-header>
-              <ion-item>
-                  <ion-label>AV</ion-label>
-                  <ion-radio color="dark"></ion-radio>
-              </ion-item>
-              <ion-item>
-                  <ion-label>LG</ion-label>
-                  <ion-radio color="dark"></ion-radio>
-              </ion-item>
-              <ion-item>
-                  <ion-label>RH</ion-label>
-                  <ion-radio color="dark"></ion-radio>
-              </ion-item>
+                <ion-item>
+                    <ion-label>AV</ion-label>
+                    <ion-radio color="dark"></ion-radio>
+                </ion-item>
+                <ion-item>
+                    <ion-label>LG</ion-label>
+                    <ion-radio color="dark"></ion-radio>
+                </ion-item>
+                <ion-item>
+                    <ion-label>RH</ion-label>
+                    <ion-radio color="dark"></ion-radio>
+                </ion-item>
+                
             </ion-list>
 
             <ion-buttons padding>

@@ -54,6 +54,16 @@ export class EstacaoPage {
     this.navCtrl.push(AddEstacaoPage, {local:  this.local_selected})
   }
 
+  chamarIndividuos(estacao_id:number){
+
+    console.log(estacao_id);
+
+    this.SQLService.getIndividuos(estacao_id)
+      .then( rows => {
+        console.log(rows);
+      });
+  }
+
   reloadPage(){
 
     // creates
