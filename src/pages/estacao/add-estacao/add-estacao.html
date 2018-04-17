@@ -22,7 +22,7 @@
       
       <ion-label>Local</ion-label>
 
-      <ion-select [(ngModel)]="local_selected.id" okText="Ok" cancelText="Cancelar" placeholder="Selecione um local">
+      <ion-select [(ngModel)]="local_selected" okText="Ok" cancelText="Cancelar" placeholder="Selecione um local">
         <ion-option *ngFor="let l of locais" value="{{l.id}}">{{l.descricao}}</ion-option>
       </ion-select>
       
@@ -40,7 +40,7 @@
 
       <ion-list>
 
-          <ion-input type="hidden" [value]="local_selected.id" formControlName="local_id" required></ion-input>
+          <ion-input type="hidden" [value]="local_selected" formControlName="local_id" required></ion-input>
 
           <ion-item>
             <ion-label fixed>Código</ion-label>
@@ -71,7 +71,7 @@
 
     <p>Form value: {{ estacaoForm.value | json }}</p>
     <p>Form status: {{ estacaoForm.status | json }}</p>
-    <p>LocalID: {{ local_selected.id | json }}</p>
+    <p>LocalID: {{ local_selected }}</p>
     <!-- <p>Form status: {{ estacaoForm.parcela | json }}</p> -->
     <!-- <p>Form status: {{ estacaoForm.observacao | json }}</p> -->
       

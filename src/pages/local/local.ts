@@ -28,8 +28,6 @@ export class LocalPage {
     private alert: AlertController,
     private platform: Platform) {
 
-     
-    
       //   .then( (results) => {
 
       //     console.log('results local',results.rows);
@@ -40,18 +38,16 @@ export class LocalPage {
       //     }
 
       // });
-    
-     
   }
 
   ngOnInit(){
     console.log('#### ngInit ####', new Date().getHours+':', new Date().getMinutes()+':', new Date().getSeconds());
 
-     // Returns table list 'locais'
-     this.SQLService.getLocais()          
-     .then( (rows) => {
-       console.log(typeof(rows),'results local',JSON.stringify(rows));
-       this.locais = rows;
+    // Returns table list 'locais'
+    this.SQLService.getLocais()          
+    .then( (rows) => {
+      console.log(typeof(rows),'results local',JSON.stringify(rows));
+      this.locais = rows;
     });
   }
 
@@ -60,37 +56,8 @@ export class LocalPage {
   }
 
   chamarEstacoes(local){
-
     console.log(local.descricao);
-
-    // var index = this.locais.findIndex(function(element,index){
-    //   if(element.id == local.id){
-    //     return element;
-    //   }
-    // });
-
     console.log('LOCAL CLICADO',local);
-
-    // Verifies the presence of the ALERT plugin. If not returns error.
-    // let localName = this.locais[index].descricao;
-    // let btnAlert = this.alert.create({
-    //   title: 'Local Escolhido',
-    //   subTitle: 'Local: '+ localName,
-    //   buttons: ['OK']
-    // });
-
-    // btnAlert.present().then( () => {  
-    // });
-
     this.navCtrl.push(EstacaoPage, {local: local});
-
-    
-
-
-
   }
-
-
- 
-
 }

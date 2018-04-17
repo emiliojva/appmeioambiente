@@ -47,9 +47,6 @@ export class MyApp {
       // creating SQLite 
       this.SQLService.createDatabase()
           .then( () => {
-
-            this.SQLService.dbScriptDone = true;
-            
             console.log('### DATABASE CREATED ###', 'OK');
             console.log('SQLService Constructor - Banco Created');
             console.log('### TABLES CREATED ###');
