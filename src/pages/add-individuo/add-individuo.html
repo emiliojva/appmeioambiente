@@ -19,7 +19,7 @@
         
         <ion-label>Local</ion-label>
         
-        <ion-select [(ngModel)]="local_selected" (ionChange)="reloadPage($event)" okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione um local" >
+        <ion-select [(ngModel)]="local_selected" (ionChange)="reloadSelectEstacao($event)" okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione um local" >
             <ion-option *ngFor="let l of locais" value="{{l.id}}">{{l.descricao}}</ion-option>
         </ion-select>
         
@@ -29,7 +29,7 @@
         
         <ion-label>Estação</ion-label>
         
-        <ion-select [(ngModel)]="estacao_selected" (ionChange)="reloadPage($event)" okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione uma estação" >
+        <ion-select [(ngModel)]="estacao_selected" okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione uma estação" >
             <ion-option *ngFor="let e of estacao" value="{{e.id}}">{{e.codigo}}</ion-option>
         </ion-select>
             

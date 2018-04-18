@@ -62,6 +62,15 @@ export class AddIndividuoPage {
       });
   }
 
+  reloadSelectEstacao(){
+    return this.SQLService.getEstacaos(this.local_selected)
+    .then( (rows) => {
+      
+      this.estacaos = rows;
+      console.log(this.estacaos);
+    });
+  }
+
   private createForm(){
 
     // Compose group form 

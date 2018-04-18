@@ -327,7 +327,7 @@ export class SqLiteWrapperProvider {
 
   }
   
-  storeIndividuo(individuo:Individuo):Promise<Estacao>{
+  storeIndividuo(individuo:Individuo):Promise<Individuo>{
 
     return this.getSQLiteInstance()
       .then( (db:SQLiteObject) => {
@@ -347,7 +347,7 @@ export class SqLiteWrapperProvider {
       })
       .then( (results) => {
         console.log(results);
-        return estacao;
+        return individuo;
       });
       
 
