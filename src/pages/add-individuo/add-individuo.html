@@ -6,14 +6,12 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-      <button ion-button menuToggle icon-only>
-          <ion-icon name='menu'></ion-icon>
-      </button>
-    <ion-title>add-individuo</ion-title>
-    
-  </ion-navbar>
-
+    <ion-navbar>
+        <button ion-button menuToggle icon-only>
+            <ion-icon name='menu'></ion-icon>
+        </button>
+        <ion-title>add-individuo</ion-title>
+    </ion-navbar>
       
     <ion-item>
         
@@ -25,15 +23,7 @@
         
     </ion-item>
 
-    <ion-item>
-        
-        <ion-label>Estação</ion-label>
-        
-        <ion-select [(ngModel)]="estacao_selected" okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione uma estação" >
-            <ion-option *ngFor="let e of estacao" value="{{e.id}}">{{e.codigo}}</ion-option>
-        </ion-select>
-            
-    </ion-item>
+    
 
 </ion-header>
 
@@ -43,13 +33,23 @@
     <form [formGroup]="addIndividuoFormGroup" (ngSubmit)="logForm()">
 
         <ion-list>
+
+            <ion-item *ngIf="local_selected">
+    
+                <ion-label stacked>Estação</ion-label>
+                
+                <ion-select [(ngModel)]="estacao_selected" formControlName="local_id" #selectEstacao   okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione uma estação" id="tronco_estacao">
+                    <ion-option *ngFor="let e of estacaos" value="{{e.id}}">{{e.codigo}}</ion-option>
+                </ion-select>
+                    
+            </ion-item>
   
             <!-- <ion-input type="hidden" [value]="local_selected.id" formControlName="local_id" required></ion-input> -->
   
-            <ion-item>
+            <!-- <ion-item>
                 <ion-label stacked>Estação</ion-label>
                 <ion-input type="text" id="tronco_estacao"></ion-input>
-            </ion-item>
+            </ion-item> -->
 
             <ion-item>
               <ion-label stacked>Numero de Troncos</ion-label>
