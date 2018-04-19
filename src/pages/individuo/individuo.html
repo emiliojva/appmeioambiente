@@ -21,9 +21,11 @@
 
     <ion-list>
 
-      <button ion-item *ngFor="let i of individuos" (click)="getTroncos(i)">
+      <button ion-item *ngFor="let individuo of individuos; index as i">
 
-        {{i}}
+        <h2>Individuo {{i}}</h2>
+        <h3>Avicennia schaueriana</h3>
+        <p>Testando observação do individuo</p>
 
       </button>
 

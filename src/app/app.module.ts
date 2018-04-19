@@ -22,6 +22,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 // Mock SQLite
 import { SQLiteMock } from '../model/mock.sqlite';
 import { UtilityProvider } from '../providers/utility/utility';
+import { Individuo2Page } from '../pages/individuo2/individuo2';
 
 
 
@@ -35,7 +36,8 @@ import { UtilityProvider } from '../providers/utility/utility';
     IndividuoPage,
     AddIndividuoPage,
     AddTroncoPage,
-    ExpansionPanelComponent
+    ExpansionPanelComponent,
+    Individuo2Page
   ],
   imports: [
     MatExpansionModule,
@@ -54,7 +56,8 @@ import { UtilityProvider } from '../providers/utility/utility';
     AddEstacaoPage,
     IndividuoPage,
     AddIndividuoPage,
-    AddTroncoPage
+    AddTroncoPage,
+    Individuo2Page
   ],
   providers: [
     StatusBar,

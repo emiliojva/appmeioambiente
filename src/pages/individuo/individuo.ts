@@ -17,9 +17,40 @@ import { Individuo } from '../../model/individuo.class';
 })
 export class IndividuoPage {
 
-  Individuos: Individuo[];
+  individuos: Individuo[] = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+
+    this.individuos.push({
+      id: 1,
+      codigo: 33,
+      estacao_id: 12,
+      especie_id: 2,
+      numero_de_troncos: 44,
+      altura: 201,
+      observacao: 'teste',
+      datacriacao: new Date().getTime()
+    },
+    {
+      id: 2,
+      codigo: 33,
+      estacao_id: 12,
+      especie_id: 2,
+      numero_de_troncos: 44,
+      altura: 201,
+      observacao: 'teste',
+      datacriacao: new Date().getTime()
+    },
+    {
+      id: 3,
+      codigo: 33,
+      estacao_id: 12,
+      especie_id: 2,
+      numero_de_troncos: 44,
+      altura: 201,
+      observacao: 'teste',
+      datacriacao: new Date().getTime()
+    });
 
   }
 
