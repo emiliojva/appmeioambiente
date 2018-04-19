@@ -6,6 +6,7 @@ import { Estacao } from '../../model/estacao.class';
 import { Local } from '../../model/local.class';
 import { UtilityProvider } from '../utility/utility';
 import { Individuo } from '../../model/individuo.class';
+import { Especie } from '../../model/especie.class';
 
 const DATABASE_SCHEMA = [
   [`DROP TABLE IF EXISTS usuario`],
@@ -130,11 +131,7 @@ export class SqLiteWrapperProvider {
 
   // returns instance SQLite DB Promise 
   getSQLiteInstance():Promise<SQLiteObject>{
-
-    
     if(!!this.database){
-
-      console.log(!!this.database, 'database');
       return new Promise(resolve => {
         if(!!this.database)
           resolve(this.database);
@@ -256,6 +253,33 @@ export class SqLiteWrapperProvider {
             for (let index = 0; index < results.rows.length; index++) {
               let estacao:Estacao = results.rows.item(index);
               array_results.push(estacao);
+            }
+            
+            // Resolve array of 'LOCAL' objects
+            resolve(array_results);
+          });
+
+        });
+
+  }
+
+  getEspecies():Promise<Especie[]>{
+
+    return new Promise( (resolve,reject)=>{
+
+      this.getSQLiteInstance()
+        .then( (db: SQLiteObject) => {  // Returns Instance of SQLiteObject. To do Transactions
+          // Returns Promise with statament SQL executed. Equal results.rows array objects
+          return db.executeSql(`SELECT * FROM especie ` ,[])
+        })
+        .then( (results) => {
+            
+            let array_results: Especie[] = [];
+
+            // iterates results rows SQL and push into 'Estacao' array 
+            for (let index = 0; index < results.rows.length; index++) {
+              let especie:Especie = results.rows.item(index);
+              array_results.push(especie);
             }
             
             // Resolve array of 'LOCAL' objects

@@ -38,13 +38,11 @@
     
                 <ion-label stacked>Estação</ion-label>
                 
-                <ion-select [(ngModel)]="estacao_selected" formControlName="local_id" #selectEstacao   okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione uma estação" id="tronco_estacao">
+                <ion-select [(ngModel)]="estacao_selected" formControlName="estacao_id" #selectEstacao   okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione uma estação" id="tronco_estacao">
                     <ion-option *ngFor="let e of estacaos" value="{{e.id}}">{{e.codigo}}</ion-option>
                 </ion-select>
                     
             </ion-item>
-  
-            <!-- <ion-input type="hidden" [value]="local_selected.id" formControlName="local_id" required></ion-input> -->
   
             <!-- <ion-item>
                 <ion-label stacked>Estação</ion-label>
@@ -66,22 +64,17 @@
               <ion-textarea formControlName="obs"  id="individuo_observacao" rows="3" required></ion-textarea>
             </ion-item>
 
-            <ion-list radio-group>
+            <!-- <ion-input type="hidden"  [value]="especie_selected"></ion-input> -->
+            <!-- [(ngModel)]="especie_selected" -->
+            <ion-list radio-group formControlName="especie_id">
 
                 <ion-list-header>
                     Selecione a especie:
                 </ion-list-header>
-                <ion-item>
-                    <ion-label>AV</ion-label>
-                    <ion-radio color="dark"></ion-radio>
-                </ion-item>
-                <ion-item>
-                    <ion-label>LG</ion-label>
-                    <ion-radio color="dark"></ion-radio>
-                </ion-item>
-                <ion-item>
-                    <ion-label>RH</ion-label>
-                    <ion-radio color="dark"></ion-radio>
+
+                <ion-item *ngFor="let especie of especies"> 
+                    <ion-label>{{ especie.codigo | uppercase}}</ion-label>
+                    <ion-radio color="dark" value="{{ especie.id }}"></ion-radio>
                 </ion-item>
                 
             </ion-list>
@@ -94,5 +87,11 @@
         </ion-list>
   
       </form>
+
+      
+      
+        <p>Form value: {{ addIndividuoFormGroup.value | json }}</p>
+        <p>Form status: {{ addIndividuoFormGroup.status | json }}</p>
+        <p>especieID: {{ addIndividuoFormGroup.value.especie_id }}</p>
 
 </ion-content>
