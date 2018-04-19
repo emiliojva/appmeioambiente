@@ -315,13 +315,9 @@ export class SqLiteWrapperProvider {
               let individuo:Individuo = Object.assign(results.rows.item(index), Individuo);
               array_results.push(individuo);
             }
-
-            
-            
             // Resolve array of 'Individuos' objects
             resolve(array_results);
           });
-
         });
   }
 
@@ -399,7 +395,6 @@ export class SqLiteWrapperProvider {
           , 
           values: array_values
         };
-    
   }
 
   // platform plugins ready to use

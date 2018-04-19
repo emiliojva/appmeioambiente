@@ -23,12 +23,11 @@
 
       <button ion-item *ngFor="let individuo of individuos; index as i">
 
-        <h2>Individuo {{i}}</h2>
-        <h3>Avicennia schaueriana</h3>
-        <p>Testando observação do individuo</p>
+        <h2>Individuo {{ individuo.id }}</h2>
+        <h3>{{ individuo.especie_id }}</h3>
+        <p>{{ individuo.observacao }}</p>
 
       </button>
-
 
     </ion-list>
 

@@ -6,5 +6,5 @@ export class Individuo {
     public numero_de_troncos: number;
     public altura: number;
     public observacao: string;
-    public datacriacao: number
+    public datacriacao: number;
   }

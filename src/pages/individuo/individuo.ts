@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Form } from 'ionic-angular';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Individuo } from '../../model/individuo.class';
+import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-wrapper';
 
 /**
  * Generated class for the IndividuoPage page.
@@ -18,39 +19,20 @@ import { Individuo } from '../../model/individuo.class';
 export class IndividuoPage {
 
   individuos: Individuo[] = [];
+  estacao_selected: number;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+    public SQLService: SqLiteWrapperProvider) {
 
-    this.individuos.push({
-      id: 1,
-      codigo: 33,
-      estacao_id: 12,
-      especie_id: 2,
-      numero_de_troncos: 44,
-      altura: 201,
-      observacao: 'teste',
-      datacriacao: new Date().getTime()
-    },
-    {
-      id: 2,
-      codigo: 33,
-      estacao_id: 12,
-      especie_id: 2,
-      numero_de_troncos: 44,
-      altura: 201,
-      observacao: 'teste',
-      datacriacao: new Date().getTime()
-    },
-    {
-      id: 3,
-      codigo: 33,
-      estacao_id: 12,
-      especie_id: 2,
-      numero_de_troncos: 44,
-      altura: 201,
-      observacao: 'teste',
-      datacriacao: new Date().getTime()
-    });
+    if(this.navParams.get('estacao')){
+
+      this.estacao_selected = this.navParams.get('estacao');
+      this.SQLService.getIndividuos(this.estacao_selected)
+        .then( rows => {
+          this.individuos = rows;
+          console.log('listando estacoes',rows);
+        });
+    }
 
   }
 

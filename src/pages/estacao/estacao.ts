@@ -5,6 +5,7 @@ import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-w
 import { Estacao } from '../../model/estacao.class';
 import { Local } from '../../model/local.class';
 import { Individuo } from '../../model/individuo.class';
+import { IndividuoPage } from '../individuo/individuo';
 
 /**
  * Generated class for the EstacaoPage page.
@@ -58,11 +59,12 @@ export class EstacaoPage {
   chamarIndividuos(estacao_id:number){
 
     console.log(estacao_id);
+    this.navCtrl.push(IndividuoPage,{estacao: estacao_id});
 
-    this.SQLService.getIndividuos(estacao_id)
-      .then( (rows:Individuo[]) => {
-        console.log(rows);
-      });
+    // this.SQLService.getIndividuos(estacao_id)
+    //   .then( (rows:Individuo[]) => {
+    //     console.log(rows);
+    //   });
   }
 
   reloadPage(){
