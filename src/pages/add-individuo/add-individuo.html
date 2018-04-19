@@ -38,7 +38,7 @@
     
                 <ion-label stacked>Estação</ion-label>
                 
-                <ion-select [(ngModel)]="estacao_selected" formControlName="estacao_id" #selectEstacao   okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione uma estação" id="tronco_estacao">
+                <ion-select [(ngModel)]="estacao_selected" formControlName="estacao_id" (ionChange)="reloadIndividuos()"  #selectEstacao   okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione uma estação" id="tronco_estacao">
                     <ion-option *ngFor="let e of estacaos" value="{{e.id}}">{{e.codigo}}</ion-option>
                 </ion-select>
                     
@@ -51,17 +51,17 @@
 
             <ion-item>
               <ion-label stacked>Numero de Troncos</ion-label>
-              <ion-input type="number" formControlName="numTronco" id="numero_troncos" required></ion-input>
+              <ion-input type="number" formControlName="numero_de_troncos" id="numero_troncos" required></ion-input>
             </ion-item>
           
             <ion-item>
               <ion-label stacked>Altura</ion-label>
               <ion-input formControlName="altura" type="number"  id="individuo_altura" required></ion-input>
             </ion-item>
-          
+
             <ion-item>
               <ion-label stacked>Observação</ion-label>
-              <ion-textarea formControlName="obs"  id="individuo_observacao" rows="3" required></ion-textarea>
+              <ion-textarea formControlName="observacao"  id="individuo_observacao" rows="3" required></ion-textarea>
             </ion-item>
 
             <!-- <ion-input type="hidden"  [value]="especie_selected"></ion-input> -->

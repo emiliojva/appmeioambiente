@@ -312,11 +312,13 @@ export class SqLiteWrapperProvider {
 
             // iterates results rows SQL and push into 'Estacao' array 
             for (let index = 0; index < results.rows.length; index++) {
-              let individuo:Individuo = results.rows.item(index);
+              let individuo:Individuo = Object.assign(results.rows.item(index), Individuo);
               array_results.push(individuo);
             }
+
             
-            // Resolve array of 'LOCAL' objects
+            
+            // Resolve array of 'Individuos' objects
             resolve(array_results);
           });
 
@@ -355,26 +357,49 @@ export class SqLiteWrapperProvider {
 
     return this.getSQLiteInstance()
       .then( (db:SQLiteObject) => {
-        
+
+        individuo.codigo =  parseInt(individuo.especie_id + '' +individuo.estacao_id);
         individuo.datacriacao = new Date().getTime();
         
         console.log('Dados prepados para query', JSON.stringify(individuo));
 
-        let array_sql = [];
-        for(let x in individuo){
-          array_sql.push(individuo[x]);
-        }
+        // get object {query,values} formatted
+        const obj_query = this.objectToInsertQuery(individuo);
 
-        return db.executeSql('INSERT INTO estacao (local_id,codigo,data,parcela,obs,datacriacao) VALUES (?,?,?,?,?,?);',
-          array_sql);
+        return db.executeSql(obj_query.query, obj_query.values);
 
       })
-      .then( (results) => {
-        console.log(results);
+      .then( (result) => {
+
+        if(result.rows[0]){
+          individuo.id = result.rows[0].id;
+        }
+
         return individuo;
       });
       
 
+  }
+
+  private objectToInsertQuery(object: Object):{query:string,values:any[]}{
+    
+    let array_columns = [];
+        let array_values = [];
+        let array_binds = [];
+        for(let x in object){
+          array_columns.push(x);
+          array_values.push(object[x]);
+          array_binds.push('?');
+        }
+        let string_columns = array_columns.join(',');
+        let string_binds = array_binds.join(',');
+
+        return {
+          query: `INSERT INTO individuo (${string_columns}) VALUES (${string_binds});`
+          , 
+          values: array_values
+        };
+    
   }
 
   // platform plugins ready to use

@@ -1,10 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Validators, FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Estacao } from '../../model/estacao.class';
 import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-wrapper';
 import { Local } from '../../model/local.class';
 import { Especie } from '../../model/especie.class';
+import { Individuo } from '../../model/individuo.class';
+import { IndividuoPage } from '../individuo/individuo';
+import { LocalPage } from '../local/local';
+import { EstacaoPage } from '../estacao/estacao';
 
 /**
  * Generated class for the AddIndividuoPage page.
@@ -34,7 +38,8 @@ export class AddIndividuoPage {
     public navCtrl: NavController, 
     public navParams: NavParams,
     private formBuilder: FormBuilder,
-    private SQLService: SqLiteWrapperProvider
+    private SQLService: SqLiteWrapperProvider,
+    private alert: AlertController
   ) {
     
     this.SQLService.getEspecies()
@@ -79,6 +84,7 @@ export class AddIndividuoPage {
       
       this.estacaos = rows;
       console.log(this.estacaos);
+      
     });
   }
 
@@ -86,14 +92,91 @@ export class AddIndividuoPage {
 
     // Compose group form 
     this.addIndividuoFormGroup = this.formBuilder.group({
-      especie_id:['',Validators.required], 
+      especie_id:['', Validators.required ]  , 
       estacao_id:['',Validators.required], 
-      numTronco: ['',Validators.required],
+      numero_de_troncos: ['', [ Validators.required, Validators.min(0) ] ]   ,
       altura: ['', Validators.required],
-      obs: ['', Validators.required],
+      observacao: ['', Validators.required],
     });
 
 
   }
 
+  logForm(){
+
+    const navPrevious = this.navCtrl.getPrevious();
+
+    let nav = this.navCtrl;
+    // remove current page
+    const indexCurrentPage = nav.getActive().index;
+
+    let estacao_id = this.estacao_selected;
+
+    let alertIndividuo = this.alert.create({
+      title: 'Complete o formulário',
+      buttons: [
+        {
+          text: 'OK',
+          handler: function(){
+
+            if(navPrevious == null || navPrevious.index==0){
+
+              nav.push(IndividuoPage, {estacao: estacao_id}).then( () => {
+                nav.remove(indexCurrentPage,1);   
+                nav.insertPages(0,[{page: LocalPage}, {page: EstacaoPage}]);
+              });                
+                
+            } else {
+              nav.pop();
+            }
+
+          }
+        }
+        
+      ]
+    });
+
+    // Check all fields from form
+    if(this.addIndividuoFormGroup.valid){
+      
+      // Form data submited
+      let data_to_save = this.addIndividuoFormGroup.value; 
+
+      const individuo:Individuo = Object.assign(this.addIndividuoFormGroup.value, Individuo);
+
+      console.log(individuo);
+      
+      this.SQLService.storeIndividuo(individuo).then( () => {
+        
+        console.log('SAVE');
+
+        // Save Estacao in the Model
+        this.SQLService.storeIndividuo(data_to_save)
+        .then( (individuo:Individuo) => {
+
+          console.log(individuo);
+
+          alertIndividuo
+            .setTitle('Formulário Salvo com Sucesso')
+            .present()
+        })
+        .catch( (error) => {
+          console.log('erro ao gravar estação',data_to_save,error);
+        });
+
+      }).catch( error => console.log(error) );
+        
+
+      } else {
+        alertIndividuo.present();
+      }
+  }
+
+
+  reloadIndividuos(){
+
+    this.SQLService.getIndividuos(this.estacao_selected)
+        .then( rows => console.log(rows) );
+    
+  }
 }
