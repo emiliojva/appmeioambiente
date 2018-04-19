@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Form } from 'ionic-angular';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Individuo } from '../../model/individuo.class';
 
 /**
  * Generated class for the IndividuoPage page.
@@ -16,15 +17,17 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class IndividuoPage {
 
-  myGroup: FormGroup;
+  Individuos: Individuo[];
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
 
-    this.myGroup = new FormGroup({ firstName: new FormControl()});
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad IndividuoPage');
   }
 
+  getTroncos(i) {
+    
+  }
 }
