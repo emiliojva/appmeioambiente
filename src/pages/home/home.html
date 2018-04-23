@@ -10,30 +10,33 @@
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
 
-  <h3>Raised Buttons</h3>
+  <h4>Bem vindo ao App Meio Ambiente - Inovuerj</h4>
+
+  Projeto desenvolvido pelo Profº Felipe .
+
+  <p>
+     InovUERJ <a href="http://inovuerj.sr2.uerj.br">Site</a> .
+  </p>
+  
   <div class="button-row">
-    <button mat-raised-button>Basic</button>
-    <button mat-raised-button color="primary">Primary</button>
+    <button mat-raised-button [navPush]="navPage">Locais</button>
+    <!-- <button mat-raised-button color="primary">Primary</button>
     <button mat-raised-button color="accent">Accent</button>
     <button mat-raised-button color="warn">Warn</button>
-    <button mat-raised-button disabled>Disabled</button>
-    <a mat-raised-button routerLink=".">Link</a>
+    <button mat-raised-button disabled>Disabled</button> -->
+    <!-- <a mat-raised-button routerLink="." >Locais</a> -->
   </div>
 
 
 
-  <div>
+  <!-- <div>
     <button ion-button (click)="insertInvoice()">Insert Invoice</button>
     <ion-list>
       <ion-item *ngFor="let invoice of invoices">
         {{invoice.name}}
       </ion-item>
     </ion-list>
-  </div>
+  </div> -->
 
 </ion-content>

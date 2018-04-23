@@ -4,6 +4,7 @@ import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
 import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-wrapper';
 import { DatePipe } from '@angular/common';
 import { EstacaoPage } from '../estacao/estacao';
+import { Page } from 'ionic-angular/navigation/nav-util';
 
 
 /**
@@ -21,6 +22,8 @@ import { EstacaoPage } from '../estacao/estacao';
 export class LocalPage {
 
   locais: Array<any> = [];
+  
+  
 
   constructor(
     public navCtrl: NavController, 
@@ -28,17 +31,7 @@ export class LocalPage {
     private SQLService: SqLiteWrapperProvider, 
     private alert: AlertController,
     private platform: Platform) {
-
-      //   .then( (results) => {
-
-      //     console.log('results local',results.rows);
-
-      //     for (let index = 0; index < results.rows.length; index++) {
-      //       console.log(results.rows.item(index).codigo);
-      //       this.locais.push(results.rows.item(index));
-      //     }
-
-      // });
+      
   }
 
   ngOnInit(){

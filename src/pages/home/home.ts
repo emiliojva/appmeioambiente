@@ -3,6 +3,8 @@ import { NavController, MenuController } from 'ionic-angular';
 import { MatButton  } from '@angular/material';
 import { SQLiteMock } from '../../model/mock.sqlite';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite';
+import { Page } from 'ionic-angular/navigation/nav-util';
+import { LocalPage } from '../local/local';
 
 
 @Component({
@@ -14,25 +16,27 @@ export class HomePage {
   public database: SQLiteObject;
   public invoices: Array<Object>;
   public counter : number = 0;
+  public navPage: Page;
 
   constructor(
     public navCtrl: NavController, 
     menu: MenuController,
     private sqlite : SQLite) {
     menu.enable(true);
+    this.navPage = LocalPage;
   }
 
 
   ionViewDidEnter(){
     console.log('view did enter');
         
-    this.sqlite.create({name: "data.db", location: "default"})
-      .then((db : SQLiteObject) => {
-        this.database = db;
-          this.createTable();
-      }, (error) => {
-          console.log("ERROR: ", error);
-      });    
+    // this.sqlite.create({name: "data.db", location: "default"})
+    //   .then((db : SQLiteObject) => {
+    //     this.database = db;
+    //       this.createTable();
+    //   }, (error) => {
+    //       console.log("ERROR: ", error);
+    //   });    
 
   }
 
