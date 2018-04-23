@@ -17,7 +17,7 @@
         
         <ion-label>Local</ion-label>
         
-        <ion-select [(ngModel)]="local_selected" (ionChange)="reloadSelectEstacao($event)" okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione um local" >
+        <ion-select [(ngModel)]="local_id" (ionChange)="reloadSelectEstacao($event)" okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione um local" >
             <ion-option *ngFor="let l of locais" value="{{l.id}}">{{l.descricao}}</ion-option>
         </ion-select>
         
@@ -34,11 +34,11 @@
 
         <ion-list>
 
-            <ion-item *ngIf="local_selected">
+            <ion-item *ngIf="local_id">
     
                 <ion-label stacked>Estação</ion-label>
                 
-                <ion-select [(ngModel)]="estacao_selected" formControlName="estacao_id" (ionChange)="reloadIndividuos()"  #selectEstacao   okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione uma estação" id="tronco_estacao">
+                <ion-select [(ngModel)]="estacao_id" formControlName="estacao_id" (ionChange)="reloadIndividuos()"  #selectEstacao   okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione uma estação" id="tronco_estacao">
                     <ion-option *ngFor="let e of estacaos" value="{{e.id}}">{{e.codigo}}</ion-option>
                 </ion-select>
                     
@@ -87,8 +87,6 @@
         </ion-list>
   
       </form>
-
-      
       
         <p>Form value: {{ addIndividuoFormGroup.value | json }}</p>
         <p>Form status: {{ addIndividuoFormGroup.status | json }}</p>

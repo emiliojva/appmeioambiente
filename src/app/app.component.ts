@@ -49,10 +49,16 @@ export class MyApp {
       // creating SQLite 
       this.SQLService.createDatabase()
           .then( () => {
+
+            this.SQLService.populateLocal();
+            this.SQLService.populateEspecie();
+
             console.log('### DATABASE CREATED ###', 'OK');
             console.log('SQLService Constructor - Banco Created');
             console.log('### TABLES CREATED ###');
             //this.getLocais();
+
+
           })
           .catch( (error) => {
             console.log('ERRO DE SQL-BATCH',JSON.stringify(error));

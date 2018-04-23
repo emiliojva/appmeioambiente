@@ -66,7 +66,24 @@ import { Individuo2Page } from '../pages/individuo2/individuo2';
     UtilityProvider,
     // SQLite,
     {provide: SQLite, useClass: SQLiteMock},
+    // {provide: SQLite, useFactory: factorySQLite},
     {provide: ErrorHandler, useClass: IonicErrorHandler},
   ]
 })
 export class AppModule {}
+
+
+
+function factorySQLite(){
+    console.log('Mobile?', UtilityProvider.isMobile);
+    return new SQLite();
+  
+    // if(UtilityProvider.isMobile){
+    //   console.log('MOBILE SQLite');
+    //   return new SQLite();
+    // }  else {
+    //   console.log('BROWSER SQLiteMock');
+    //   return new SQLiteMock();
+    // }
+  
+}

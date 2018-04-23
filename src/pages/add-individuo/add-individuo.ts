@@ -28,10 +28,12 @@ export class AddIndividuoPage {
 
   locais: Local[] = [];
   local_selected: number;
+  local_id: number;
   especies: Especie[] = [];
   especie_selected: number;
   estacaos: Estacao[] = [];
-  estacao_selected: number;
+  estacao_selected: Estacao;
+  estacao_id: number;
   addIndividuoFormGroup: FormGroup;
 
   constructor(
@@ -43,20 +45,21 @@ export class AddIndividuoPage {
   ) {
     
     this.SQLService.getEspecies()
-      .then( rows => this.especies = rows)
+      .then( rows => this.especies = rows);
 
-  
     if(this.navParams.get('estacao')){
 
       this.estacao_selected = this.navParams.get('estacao');
-      this.SQLService.getIndividuos(this.estacao_selected)
+      
+      console.log(this.especie_selected);
+      this.estacao_id = this.estacao_selected.id;
+      this.local_id = this.estacao_selected.local_id;
+
+      this.SQLService.getEstacaos(this.local_id)
         .then( rows => {
-          console.log('listando estacoes',rows);
+            this.estacaos = rows;
         });
-
-
     }
-
     
     this.createForm();
   }
@@ -79,11 +82,10 @@ export class AddIndividuoPage {
   }
 
   reloadSelectEstacao(){
-    return this.SQLService.getEstacaos(this.local_selected)
+    return this.SQLService.getEstacaos(this.local_id)
     .then( (rows) => {
-      
       this.estacaos = rows;
-      console.log(this.estacaos);
+      console.log('estacoes',this.estacaos);
       
     });
   }
@@ -110,8 +112,11 @@ export class AddIndividuoPage {
     // remove current page
     const indexCurrentPage = nav.getActive().index;
 
-    let estacao_id = this.estacao_selected;
-
+    var estacao_id = 0;
+    if(this.estacao_id){
+      estacao_id = this.estacao_id;
+    }
+      
     let alertIndividuo = this.alert.create({
       title: 'Complete o formulário',
       buttons: [
@@ -144,38 +149,30 @@ export class AddIndividuoPage {
 
       const individuo:Individuo = Object.assign(this.addIndividuoFormGroup.value, Individuo);
 
-      console.log(individuo);
-      
       this.SQLService.storeIndividuo(individuo).then( () => {
         
         console.log('SAVE');
 
-        // Save Estacao in the Model
-        this.SQLService.storeIndividuo(data_to_save)
-        .then( (individuo:Individuo) => {
+        console.log(individuo);
 
-          console.log(individuo);
+        alertIndividuo
+          .setTitle('Formulário Salvo com Sucesso')
+          .present()
 
-          alertIndividuo
-            .setTitle('Formulário Salvo com Sucesso')
-            .present()
-        })
-        .catch( (error) => {
-          console.log('erro ao gravar estação',data_to_save,error);
-        });
+      }).catch( error => {
+        console.log(error)
+        console.log('erro ao gravar estação',data_to_save,error);
+      });
 
-      }).catch( error => console.log(error) );
-        
-
-      } else {
-        alertIndividuo.present();
-      }
+    } else {
+      alertIndividuo.present();
+    }
   }
 
 
   reloadIndividuos(){
 
-    this.SQLService.getIndividuos(this.estacao_selected)
+    this.SQLService.getIndividuos(this.estacao_id)
         .then( rows => console.log(rows) );
     
   }

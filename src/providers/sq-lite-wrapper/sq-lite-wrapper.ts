@@ -9,10 +9,12 @@ import { Individuo } from '../../model/individuo.class';
 import { Especie } from '../../model/especie.class';
 
 const DATABASE_SCHEMA = [
-  [`DROP TABLE IF EXISTS usuario`],
   [`DROP TABLE IF EXISTS individuo`],
   [`DROP TABLE IF EXISTS estacao`],
   [`DROP TABLE IF EXISTS local`],
+  [`DROP TABLE IF EXISTS especie`],
+  [`DROP TABLE IF EXISTS usuario`]
+  ,
   /*Table local */
   [`
   CREATE TABLE IF NOT EXISTS local 
@@ -34,6 +36,7 @@ const DATABASE_SCHEMA = [
   );`
   ]
   ,
+  /*Table Estacao */
   [`
   CREATE TABLE IF NOT EXISTS estacao (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -73,18 +76,7 @@ const DATABASE_SCHEMA = [
     login_id INTEGER NOT NULL,
     datacriacao VARCHAR(50)
   )`
-  ],
-  // ['DELETE FROM local'],
-  // ['DELETE FROM especie'],
-  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [1, 'guapi','Guapimirim',new Date().getTime()] ],
-  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [2, 'gaurai','Gauraí',new Date().getTime()] ],
-  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [3, 'caceribu','Caceribu',new Date().getTime()] ],
-  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [4, 'guaraimirim','Guaraí-Mirim',new Date().getTime()] ],
-  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [5, 'imbui','Caceribu / Imbuí',new Date().getTime()] ],
-  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [6, 'guaxindiba','Guaxindiba',new Date().getTime()] ],
-  ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [1, 'Av', 'Avicennia schaueriana', new Date().getTime()] ],
-  ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [2, 'Lg', 'Laguncularia racemosa', new Date().getTime()] ],
-  ['INSERT INTO especie (id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [3, 'Rh', 'Rhizophora mangle', new Date().getTime()] ]
+  ]
 ];
 
 const POPULATE_TABLES_LOCAL = [
@@ -123,14 +115,13 @@ export class SqLiteWrapperProvider {
   ) 
   {
     console.log('Hello SqLiteWrapperProvider Provider');
-
-    this.dbScriptResolve().then( ()=>{
-      console.log('SCRIPT DONE',this.dbScriptDone);
-    } )
   }
 
   // returns instance SQLite DB Promise 
   getSQLiteInstance():Promise<SQLiteObject>{
+
+    console.log('database:',!!this.database);
+    
     if(!!this.database){
       return new Promise(resolve => {
         if(!!this.database)
@@ -138,19 +129,10 @@ export class SqLiteWrapperProvider {
       });
     }
 
-
-    // return this.dbScriptResolve().then( () => {
-
-      // console.log('dbScriptResolve')
-
-      return this.sqlite.create({
-        name: 'meioambiente.db',
-        location: 'default'
-      });
-
-    // })
-
-    
+    return this.sqlite.create({
+      name: 'meioambiente.db',
+      location: 'default'
+    });
 
   
   }
@@ -176,10 +158,11 @@ export class SqLiteWrapperProvider {
 
           /* BATCH TO EXECUTE IN DEVICES/EMULATORS */
           console.log('DEVICE/EMULATOR MODE');     
-          return this.database.sqlBatch(DATABASE_SCHEMA).then( () =>{
+          return this.database.sqlBatch(DATABASE_SCHEMA).then( (res) =>{
+            console.log(res);
             this.dbScriptDone = true;
-            console.log(JSON.stringify(this.dbScriptDone), 'fim de script');
-          })
+            console.log( 'fim de script' ,JSON.stringify(this.dbScriptDone));
+          });
         }
       }
     );
@@ -192,7 +175,6 @@ export class SqLiteWrapperProvider {
       if(this.dbScriptDone === true){
         resolve(this.dbScriptDone);
       }
-
     });
     
   }
@@ -405,7 +387,7 @@ export class SqLiteWrapperProvider {
   // used to mock creates simulations in browser
   private createTablesMockSQL():Promise<any>{
 
-      // this.database.executeSql(`drop table estacao;`,{});
+      // this.database.executeSql(`drop table individuo;`,{});
 
       return Promise.all([
         this.database.executeSql(`
@@ -419,20 +401,9 @@ export class SqLiteWrapperProvider {
         ,{})
         .then( (results) => {
 
+          // this.populateLocal();
           console.log('local Table created');
-
-          for(let i=0; i<POPULATE_TABLES_LOCAL.length; i++){
-
-            let insertQuery:string = POPULATE_TABLES_LOCAL[i][0] as string;
-            let params = POPULATE_TABLES_LOCAL[i][1];
-
-            this.database.executeSql(insertQuery , params)
-              .then(() => {
-                console.log('registro inserido  !');
-              })
-              .catch( (error) => console.log(insertQuery,params,'ja existe') )
-          }
-
+          
         })
         ,
         this.database.executeSql(`
@@ -444,19 +415,10 @@ export class SqLiteWrapperProvider {
           );`
         ,{})
         .then( (results) => {
+
           console.log('especie Table created');
-
-          for(let i=0; i<POPULATE_TABLES_ESPECIE.length; i++){
-
-            let insertQuery:string = POPULATE_TABLES_ESPECIE[i][0] as string;
-            let params = POPULATE_TABLES_ESPECIE[i][1];
-
-            this.database.executeSql(insertQuery , params)
-              .then((row) => {
-                console.log('registro inserido  !', row, insertQuery,params);
-              })
-              .catch( (error) => console.log(insertQuery,params,'ja existe') )
-          }
+         
+          // this.populateEspecie();
 
         }),
         // /* FIX TO DO DELETE FIELD 'descricao' AND HOLD USER DATA */
@@ -525,4 +487,50 @@ export class SqLiteWrapperProvider {
         })
       ]);
     }
-}
+
+
+
+    public populateLocal():Promise<any>{
+      
+      console.log('local Table created');
+
+      let array_promises = [];
+
+      for(let i=0; i<POPULATE_TABLES_LOCAL.length; i++){
+
+        let insertQuery:string = POPULATE_TABLES_LOCAL[i][0] as string;
+        let params = POPULATE_TABLES_LOCAL[i][1];
+        // return this.database.executeSql(insertQuery , params)
+        let aux_promise = this.database.executeSql(insertQuery , params)
+          .then(() => {
+            console.log('registro inserido  !');
+          })
+          .catch( (error) => console.log(insertQuery,params,'ja existe') );
+
+          array_promises.push(aux_promise);
+      }
+
+      return Promise.all(array_promises);
+    }
+
+    public populateEspecie():Promise<any>{
+      
+      console.log('especie Table created');
+      let array_promises = [];
+      for(let i=0; i<POPULATE_TABLES_ESPECIE.length; i++){
+
+        let insertQuery:string = POPULATE_TABLES_ESPECIE[i][0] as string;
+        let params = POPULATE_TABLES_ESPECIE[i][1];
+        // return this.database.executeSql(insertQuery , params)
+        let aux_promise = this.database.executeSql(insertQuery , params)
+          .then((row) => {
+            console.log('registro inserido  !', row, insertQuery,params);
+          })
+          .catch( (error) => console.log(insertQuery,params,'ja existe') )
+      }
+      return Promise.all(array_promises);
+    }
+
+  }
+
+  

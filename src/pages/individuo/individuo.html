@@ -11,8 +11,16 @@
       <button ion-button menuToggle icon-only>
           <ion-icon name='menu'></ion-icon>
       </button>
-    <ion-title>individuo</ion-title>
+    <ion-title>Individuos</ion-title>
+
   </ion-navbar>
+  
+  <ion-item>
+      
+    <span>Local: {{ estacao_selected.local_id }}</span>
+    <span>Estação {{ estacao_selected.codigo }}</span>
+    
+  </ion-item>
 
 </ion-header>
 
@@ -32,3 +40,18 @@
     </ion-list>
 
 </ion-content>
+
+
+<ion-footer>
+  <ion-toolbar>
+    <p>Comandos</p>
+    <ion-buttons end>
+      
+      <button ion-button full color="royal" [navPush]="pushPage" [navParams]="params" style="cursor: pointer;">
+        Adicionar
+        <ion-icon name="send"></ion-icon>
+      </button>
+      
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
