@@ -81,7 +81,7 @@ export class EstacaoPage {
   }
 
   populateEstacaos():Promise<any>{
-    return this.SQLService.getEstacaos(this.local_selected)
+    return this.SQLService.getEstacaos(this.local_selected,true)
       .then( (rows) => {
         this.estacaos = rows;
       });

@@ -15,10 +15,11 @@
 
   </ion-navbar>
   
-  <ion-item>
+  <ion-item style="font-size:12px;" center>
       
-    <span>Local: {{ estacao_selected.local_id }}</span>
-    <span>Estação {{ estacao_selected.codigo }}</span>
+    Local: <span style="font-weight: bold">{{ estacao_selected ? estacao_selected.local_descricao : 'Local não escolhido'}} </span>
+     / 
+    Estação: <span style="font-weight: bold">{{ estacao_selected ? estacao_selected.codigo : 'Estação não escolhida' }}</span>
     
   </ion-item>
 
@@ -32,7 +33,7 @@
       <button ion-item *ngFor="let individuo of individuos; index as i">
 
         <h2>Individuo {{ individuo.id }}</h2>
-        <h3>{{ individuo.especie_id }}</h3>
+        <h3 style="font-style: italic">{{ individuo.especie_descricao }}</h3>
         <p>{{ individuo.observacao }}</p>
 
       </button>

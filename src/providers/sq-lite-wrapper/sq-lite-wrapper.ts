@@ -159,7 +159,6 @@ export class SqLiteWrapperProvider {
           /* BATCH TO EXECUTE IN DEVICES/EMULATORS */
           console.log('DEVICE/EMULATOR MODE');     
           return this.database.sqlBatch(DATABASE_SCHEMA).then( (res) =>{
-            console.log(res);
             this.dbScriptDone = true;
             console.log( 'fim de script' ,JSON.stringify(this.dbScriptDone));
           });
@@ -212,20 +211,51 @@ export class SqLiteWrapperProvider {
         });
   }
 
-  getEstacaos(local_id?:number):Promise<Estacao[]>{
+  getEstacaos(local_id?:number, associations: boolean = false):Promise<Estacao[]>{
 
     return new Promise( (resolve,reject)=>{
 
       this.getSQLiteInstance()
         .then( (db: SQLiteObject) => {  // Returns Instance of SQLiteObject. To do Transactions
-              
-          let where = '';
-          if(local_id){
-            where = `WHERE local_id = ${local_id}`;
+
+          var sql:string = '';
+          var COLUMNS:string = '*';
+          var JOIN: Array<string> = [];
+          var WHERE:Array<string> = [];
+
+          if(associations === true){
+
+            COLUMNS = `
+            e.*,
+            l.codigo as local_codigo,
+            l.descricao as local_descricao,
+            l.datacriacao as local_datacriacao
+          `;
+
+            JOIN.push( `INNER JOIN local l ON l.id = e.local_id`  );
+             
           }
 
+          if(local_id){
+            WHERE.push(` WHERE e.local_id = ${local_id} `);
+          }
+
+          sql = ` SELECT ${COLUMNS} FROM estacao e
+                  ${JOIN.join(' ')}
+                  ${WHERE.join(' ')}` ;
+                  
           // Returns Promise with statament SQL executed. Equal results.rows array objects
-          return db.executeSql(`SELECT * FROM estacao ${where}` ,[])
+          // return db.executeSql(`SELECT * FROM individuo ${where}` ,[]);
+          console.log(sql);
+          return db.executeSql(sql ,[]);
+
+          // let where = '';
+          // if(local_id){
+          //   where = `WHERE local_id = ${local_id}`;
+          // }
+
+          // // Returns Promise with statament SQL executed. Equal results.rows array objects
+          // return db.executeSql(`SELECT * FROM estacao ${where}` ,[])
         })
         .then( (results) => {
             
@@ -272,21 +302,51 @@ export class SqLiteWrapperProvider {
 
   }
 
-  getIndividuos(estacao_id:number):Promise<Individuo[]>{
+  getIndividuos(estacao_id:number, associations: boolean = false):Promise<Individuo[]>{
+
+    console.log(estacao_id);
 
     return new Promise( (resolve,reject)=>{
 
       this.getSQLiteInstance()
         .then( (db: SQLiteObject) => {  // Returns Instance of SQLiteObject. To do Transactions
-              
-          let where = '';
-          if(estacao_id){
-            where = `WHERE estacao_id = ${estacao_id}`;
+
+          var sql:string = '';
+          var COLUMNS:string = '*';
+          var JOIN: Array<string> = [];
+          var WHERE:Array<string> = [];
+
+          if(associations === true){
+
+            COLUMNS = `
+            i.*,
+            e.codigo as estacao_codigo,
+            e.data as estacao_data,
+            e.parcela as estacao_parcela,
+            e.obs as estacao_obs,
+            e.datacriacao as estacao_datacriacao,
+            esp.codigo as especie_codigo,
+            esp.descricao as especie_descricao,
+            esp.datacriacao as especie_datacriacao
+          `;
+
+            JOIN.push( `INNER JOIN estacao e ON e.id = i.estacao_id`  );
+            JOIN.push( `INNER JOIN especie esp ON esp.id = i.especie_id` );
+             
           }
 
+          if(estacao_id){
+            WHERE.push(` WHERE i.estacao_id = ${estacao_id} `);
+          }
+
+          sql = ` SELECT ${COLUMNS} FROM individuo i
+                  ${JOIN.join(' ')}
+                  ${WHERE.join(' ')}` ;
+                  
           // Returns Promise with statament SQL executed. Equal results.rows array objects
           // return db.executeSql(`SELECT * FROM individuo ${where}` ,[]);
-          return db.executeSql(`SELECT * FROM individuo ${where}` ,[]);
+          console.log(sql);
+          return db.executeSql(sql ,[]);
         })
         .then( (results) => {
             
@@ -302,6 +362,7 @@ export class SqLiteWrapperProvider {
           });
         });
   }
+  
 
   storeEstacao(estacao:Estacao):Promise<Estacao>{
 

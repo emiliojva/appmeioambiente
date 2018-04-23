@@ -36,8 +36,6 @@ export class IndividuoPage {
 
       this.estacao_selected = this.navParams.get('estacao');
 
-      console.log(this.estacao_selected);
-
       this.estacao_id = this.estacao_selected.id;
 
       this.params = {
@@ -54,7 +52,8 @@ export class IndividuoPage {
   // On Active Page
   ionViewWillEnter(){
     console.log('Active Page Individuo');
-    this.reloadIndividuos();
+    if(this.estacao_selected)
+      this.reloadIndividuos();
   }
 
   getTroncos(i) {
@@ -62,7 +61,7 @@ export class IndividuoPage {
   }
 
   reloadIndividuos(){
-    this.SQLService.getIndividuos(this.estacao_id)
+    this.SQLService.getIndividuos(this.estacao_id, true)
         .then( rows => {
           this.individuos = rows;
           console.log('listando individuos',rows);
