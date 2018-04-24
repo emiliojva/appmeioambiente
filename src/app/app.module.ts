@@ -64,8 +64,8 @@ import { Individuo2Page } from '../pages/individuo2/individuo2';
     SplashScreen,
     SqLiteWrapperProvider,
     UtilityProvider,
-    // SQLite,
-    {provide: SQLite, useClass: SQLiteMock},
+    SQLite,
+    // {provide: SQLite, useClass: SQLiteMock},
     // {provide: SQLite, useFactory: factorySQLite},
     {provide: ErrorHandler, useClass: IonicErrorHandler},
   ]
