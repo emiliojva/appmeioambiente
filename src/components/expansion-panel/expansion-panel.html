@@ -1,3 +1,115 @@
 <mat-accordion>
-  
+  <mat-expansion-panel>
+
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        TRONCO 1
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    
+    <form>
+
+        <ion-list>
+
+            <!-- <ion-input type="hidden" [value]="local_selected.id" formControlName="local_id" required></ion-input> -->
+
+            <ion-item>
+              <ion-label stacked>Lacre</ion-label>
+              <ion-input type="number"  id="tronco_lacre" required></ion-input>
+            </ion-item>
+          
+            <ion-item>
+              <ion-label stacked>DAP</ion-label>
+              <ion-input type="number" id="tronco_dap" required></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label stacked>Observação</ion-label>
+              <ion-textarea id="tronco_observacao" rows="3" ></ion-textarea>
+            </ion-item>
+
+            <ion-list radio-group>
+
+                <ion-list-header>
+                    Condição:
+                </ion-list-header>
+              <ion-item>
+                  <ion-label>Vivo</ion-label>
+                  <ion-radio color="dark"></ion-radio>
+              </ion-item>
+              <ion-item>
+                  <ion-label>Morto</ion-label>
+                  <ion-radio color="dark"></ion-radio>
+              </ion-item>
+            </ion-list>
+
+            <ion-buttons padding>
+              <button ion-button>Gravar</button>
+              <button ion-button type='reset'>Limpar</button>
+            </ion-buttons>
+          
+        </ion-list>
+
+      </form>
+
+
+  </mat-expansion-panel>
+  <mat-expansion-panel (opened)="panelOpenState = true"
+                        (closed)="panelOpenState = false">
+
+
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        TRONCO 2
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <form>
+
+        <ion-list>
+
+            <!-- <ion-input type="hidden" [value]="local_selected.id" formControlName="local_id" required></ion-input> -->
+
+            <ion-item>
+              <ion-label stacked>Lacre</ion-label>
+              <ion-input type="number"  id="tronco_lacre" required></ion-input>
+            </ion-item>
+          
+            <ion-item>
+              <ion-label stacked>DAP</ion-label>
+              <ion-input type="number" id="tronco_dap" required></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label stacked>Observação</ion-label>
+              <ion-textarea id="tronco_observacao" rows="3" ></ion-textarea>
+            </ion-item>
+
+            <ion-list radio-group>
+
+                <ion-list-header>
+                    Condição:
+                </ion-list-header>
+              <ion-item>
+                  <ion-label>Vivo</ion-label>
+                  <ion-radio color="dark"></ion-radio>
+              </ion-item>
+              <ion-item>
+                  <ion-label>Morto</ion-label>
+                  <ion-radio color="dark"></ion-radio>
+              </ion-item>
+            </ion-list>
+
+            <ion-buttons padding>
+              <button ion-button>Gravar</button>
+              <button ion-button type='reset'>Limpar</button>
+            </ion-buttons>
+          
+        </ion-list>
+
+      </form>
+    
+    
+  </mat-expansion-panel>
 </mat-accordion>
+  

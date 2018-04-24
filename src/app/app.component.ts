@@ -38,7 +38,7 @@ export class MyApp {
       // { title: 'Adicionar Estação', component: AddEstacaoPage },
       // { title: 'Individuo', component: IndividuoPage },
       // { title: 'Adicionar Individuo', component: AddIndividuoPage },
-      { title: 'Adicionar Tronco', component: AddTroncoPage },
+      { title: 'Adicionar Tronco - InDev', component: AddTroncoPage },
       // { title: 'Individuo 2', component: Individuo2Page}
     ];
 
