@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 /**
  * Generated class for the ExpansionPanelComponent component.
@@ -11,6 +11,8 @@ import { Component } from '@angular/core';
   templateUrl: 'expansion-panel.html'
 })
 export class ExpansionPanelComponent {
+
+  @Input('quantidade') quantidade: number;
 
   panelOpenState: boolean = false;
 

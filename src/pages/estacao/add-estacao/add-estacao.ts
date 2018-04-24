@@ -59,14 +59,11 @@ export class AddEstacaoPage {
   
   logForm(){
 
-    
-
+    const formValid = this.estacaoForm.valid;
     const navPrevious = this.navCtrl.getPrevious();
 
-    console.log('Nav Previous',navPrevious);
-
     let nav = this.navCtrl;
-    console.log(nav.getActive());
+
     // remove current page
     const indexCurrentPage = nav.getActive().index;
 
@@ -79,16 +76,21 @@ export class AddEstacaoPage {
           text: 'OK',
           handler: function(){
 
-            if(navPrevious == null || navPrevious.index==0){
+            
+            if(formValid){
 
-              nav.push(EstacaoPage, {local: local_id}).then( () => {
-                nav.remove(indexCurrentPage,1);   
-                nav.insertPages(0,[{page: LocalPage}]);
-              });                
-                
-            } else {
-              nav.pop();
-            }
+              if(navPrevious == null || navPrevious.index==0){
+
+                nav.push(EstacaoPage, {local: local_id}).then( () => {
+                  nav.remove(indexCurrentPage,1);   
+                  nav.insertPages(0,[{page: LocalPage}]);
+                });                
+                  
+              } else {
+                nav.pop();
+              }
+
+            } 
 
           }
         }
@@ -105,8 +107,6 @@ export class AddEstacaoPage {
       // Save Estacao in the Model
       this.storeEstacao(data_to_save)
         .then( (estacao:Estacao) => {
-
-          console.log(estacao);
 
           alertEstacao
             .setTitle('Formulário Salvo com Sucesso')

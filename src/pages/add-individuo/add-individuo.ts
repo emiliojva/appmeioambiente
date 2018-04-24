@@ -106,6 +106,7 @@ export class AddIndividuoPage {
 
   logForm(){
 
+    const formValid = this.addIndividuoFormGroup.valid;
     const navPrevious = this.navCtrl.getPrevious();
 
     let nav = this.navCtrl;
@@ -124,17 +125,20 @@ export class AddIndividuoPage {
           text: 'OK',
           handler: function(){
 
-            if(navPrevious == null || navPrevious.index==0){
+            if(formValid){
 
-              nav.push(IndividuoPage, {estacao: estacao_id}).then( () => {
-                nav.remove(indexCurrentPage,1);   
-                nav.insertPages(0,[{page: LocalPage}, {page: EstacaoPage}]);
-              });                
-                
-            } else {
-              nav.pop();
+              if(navPrevious == null || navPrevious.index==0){
+
+                nav.push(IndividuoPage, {estacao: estacao_id}).then( () => {
+                  nav.remove(indexCurrentPage,1);   
+                  nav.insertPages(0,[{page: LocalPage}, {page: EstacaoPage}]);
+                });                
+                  
+              } else {
+                nav.pop();
+              }
+
             }
-
           }
         }
         
@@ -142,7 +146,7 @@ export class AddIndividuoPage {
     });
 
     // Check all fields from form
-    if(this.addIndividuoFormGroup.valid){
+    if(formValid){
       
       // Form data submited
       let data_to_save = this.addIndividuoFormGroup.value; 

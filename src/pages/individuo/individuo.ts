@@ -52,6 +52,7 @@ export class IndividuoPage {
   // On Active Page
   ionViewWillEnter(){
     console.log('Active Page Individuo');
+    
     if(this.estacao_selected)
       this.reloadIndividuos();
   }

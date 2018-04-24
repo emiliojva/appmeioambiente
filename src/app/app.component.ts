@@ -11,6 +11,7 @@ import { AddIndividuoPage } from '../pages/add-individuo/add-individuo';
 import { AddTroncoPage } from '../pages/add-tronco/add-tronco';
 import { SqLiteWrapperProvider } from '../providers/sq-lite-wrapper/sq-lite-wrapper';
 import { Individuo2Page } from '../pages/individuo2/individuo2';
+import { EstacaoPage } from '../pages/estacao/estacao';
 
 @Component({
   templateUrl: 'app.html'
@@ -32,12 +33,13 @@ export class MyApp {
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Home', component: HomePage },
-      { title: 'Local', component: LocalPage },
-      { title: 'Adicionar Estação', component: AddEstacaoPage },
-      { title: 'Individuo', component: IndividuoPage },
-      { title: 'Adicionar Individuo', component: AddIndividuoPage },
+      { title: 'Locais', component: LocalPage },
+      { title: 'Estações', component: EstacaoPage },
+      // { title: 'Adicionar Estação', component: AddEstacaoPage },
+      // { title: 'Individuo', component: IndividuoPage },
+      // { title: 'Adicionar Individuo', component: AddIndividuoPage },
       { title: 'Adicionar Tronco', component: AddTroncoPage },
-      { title: 'Individuo 2', component: Individuo2Page}
+      // { title: 'Individuo 2', component: Individuo2Page}
     ];
 
     platform.ready().then(() => {

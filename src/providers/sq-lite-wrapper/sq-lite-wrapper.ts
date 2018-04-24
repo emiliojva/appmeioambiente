@@ -215,6 +215,11 @@ export class SqLiteWrapperProvider {
 
     return new Promise( (resolve,reject)=>{
 
+      if(local_id === undefined){
+        resolve([]);
+        return;
+      }
+
       this.getSQLiteInstance()
         .then( (db: SQLiteObject) => {  // Returns Instance of SQLiteObject. To do Transactions
 

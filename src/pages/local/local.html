@@ -24,15 +24,18 @@
     
     <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l)" style="cursor: pointer">
 
-      <ion-avatar item-start >
-        <img src="assets/imgs/logo.png">
-      </ion-avatar>
-
       <h2>{{ l.descricao }}</h2>
 
       <h3>{{ l.codigo }}</h3>
 
       <p>Criado em {{ l.datacriacao | date:'dd-MM-yyyy HH:mm:ss' }}</p>
+
+      <ion-avatar item-end>
+        <img src="assets/imgs/estacao.png" style="margin: 0px auto;">
+        <p style="font-size: 12px">Ver Estações</p>
+      </ion-avatar>
+  
+        
 
     </ion-item>
 
@@ -42,15 +45,7 @@
 
 
 <ion-footer>
-  <ion-toolbar>
-    <p>Comandos</p>
-    <ion-buttons end>
-      
-      <button ion-button full color="royal" >
-        Adicionar
-        <ion-icon name="send"></ion-icon>
-      </button>
-      
-    </ion-buttons>
-  </ion-toolbar>
+    <ion-toolbar>
+      <p style="color:aquamarine; align-items: center; text-align: center">INOVUERJ - DEPARTAMENTO DE INOVAÇÃO DA UERJ</p>
+    </ion-toolbar>
 </ion-footer>
