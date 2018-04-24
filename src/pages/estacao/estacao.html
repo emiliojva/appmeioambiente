@@ -35,16 +35,21 @@
   <ion-list>
     
     <!-- <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l.id)"> -->
-    <ion-item style="cursor: pointer" *ngFor="let e of estacaos" (click)="chamarIndividuos(e)"  >
+    <ion-item style="cursor: pointer" *ngFor="let e of estacaos; index as i" (click)="chamarIndividuos(e)"  >
 
+      <ion-avatar item-start>
+          <p>{{i+1}}</p>
+      </ion-avatar>
   
+      <h2>{{e.codigo}}</h2>
+      <p>{{e.obs}}</p>
 
-      <h2>Estação {{e.id}}</h2>
+      <!-- <h3>Estação {{e.id}}</h3> -->
 
-      <h3>Estação Código {{e.codigo}}</h3>
+      <!-- <h3>Estação Código {{e.codigo}}</h3> -->
 
       <!-- <p>Criado em {{ l.datacriacao | date:'dd-MM-yyyy HH:mm:ss' }}</p> -->
-      <p>Criado em {{e.data | date:'dd-MM-yyyy' }}</p>
+      <!-- <p>Criado em {{e.data | date:'dd-MM-yyyy' }}</p> -->
 
       <ion-avatar item-end>
           <img src="assets/imgs/individuos.png" style="margin: 0px auto;">

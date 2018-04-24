@@ -43,7 +43,12 @@
       <!-- <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l.id)"> -->
       <button ion-item *ngFor="let individuo of individuos; index as i">
 
-        <h2>Individuo {{ individuo.id }}</h2>
+        <ion-avatar item-start>
+          
+          <p>{{i+1}}</p>
+        </ion-avatar>
+
+        <!-- <h2>Individuo {{ individuo.id }}</h2> -->
         <h3 style="font-style: italic">{{ individuo.especie_descricao }}</h3>
         <p>{{ individuo.observacao }}</p>
 
