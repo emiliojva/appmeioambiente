@@ -43,21 +43,28 @@
       <!-- <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l.id)"> -->
       <button ion-item *ngFor="let individuo of individuos; index as i">
 
-        <ion-avatar item-start>
-          
-          <p>{{i+1}}</p>
-        </ion-avatar>
+        <ion-grid>
+            <ion-row>
+              <ion-col col-2>
+                <p>{{i+1}}</p>
+              </ion-col>
+            
 
-        <!-- <h2>Individuo {{ individuo.id }}</h2> -->
-        <h3 style="font-style: italic">{{ individuo.especie_descricao }}</h3>
-        <p>{{ individuo.observacao }}</p>
+              <ion-col>
+                <!-- <h2>Individuo {{ individuo.id }}</h2> -->
+                <h3 style="font-style: italic">{{ individuo.especie_descricao }}</h3>
+                <p>{{ individuo.observacao }}</p>
+              </ion-col>
 
-        <ion-avatar item-end>
-            <!-- <img src="assets/imgs/logo.png"> -->
-            <!-- <img src="assets/imgs/troncos.png"> -->
-          <img src="assets/imgs/troncos_desenho.png" style="margin: 0px auto;">
-          <p style="font-size: 12px">Ver Troncos</p>
-        </ion-avatar>
+          </ion-row>
+        </ion-grid>
+            <!-- <ion-avatar item-end>
+                <img src="assets/imgs/logo.png">
+                <img src="assets/imgs/troncos.png">
+              <img src="assets/imgs/troncos_desenho.png" style="margin: 0px auto;">
+              <p style="font-size: 12px">Ver Troncos</p>
+            </ion-avatar> -->
+
 
       </button>
 
