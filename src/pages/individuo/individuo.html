@@ -4,6 +4,16 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
+
+<style>
+.vertical-align-content > *
+{
+     display: flex!important;
+     align-content: center!important;
+     align-items: center!important;
+}
+</style>
+
 <ion-header>
 
   <ion-navbar>
@@ -15,7 +25,7 @@
 
   </ion-navbar>
   
-  <ion-item style="font-size:12px;" center>
+  <ion-item style="font-size:12px;">
       
     Local: <span style="font-weight: bold">{{ estacao_selected ? estacao_selected.local_descricao : 'Local não escolhido'}} </span>
      / 
@@ -30,11 +40,19 @@
 
     <ion-list>
 
+      <!-- <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l.id)"> -->
       <button ion-item *ngFor="let individuo of individuos; index as i">
 
         <h2>Individuo {{ individuo.id }}</h2>
         <h3 style="font-style: italic">{{ individuo.especie_descricao }}</h3>
         <p>{{ individuo.observacao }}</p>
+
+        <ion-avatar item-end>
+            <!-- <img src="assets/imgs/logo.png"> -->
+            <!-- <img src="assets/imgs/troncos.png"> -->
+          <img src="assets/imgs/troncos_desenho.png" style="margin: 0px auto;">
+          <p style="font-size: 12px">Ver Troncos</p>
+        </ion-avatar>
 
       </button>
 
