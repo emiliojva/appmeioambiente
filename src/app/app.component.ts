@@ -12,6 +12,7 @@ import { AddTroncoPage } from '../pages/add-tronco/add-tronco';
 import { SqLiteWrapperProvider } from '../providers/sq-lite-wrapper/sq-lite-wrapper';
 import { Individuo2Page } from '../pages/individuo2/individuo2';
 import { EstacaoPage } from '../pages/estacao/estacao';
+import { AddParcelaPage } from '../pages/add-parcela/add-parcela';
 
 @Component({
   templateUrl: 'app.html'
@@ -40,6 +41,7 @@ export class MyApp {
       // { title: 'Adicionar Individuo', component: AddIndividuoPage },
       { title: 'Adicionar Tronco - InDev', component: AddTroncoPage },
       // { title: 'Individuo 2', component: Individuo2Page}
+      { title: 'Adicionar Parcela', component: AddParcelaPage }
     ];
 
     platform.ready().then(() => {

@@ -17,12 +17,13 @@ import { AddEstacaoPage } from '../pages/estacao/add-estacao/add-estacao';
 import { IndividuoPage } from '../pages/individuo/individuo';
 import { AddIndividuoPage } from '../pages/add-individuo/add-individuo';
 import { AddTroncoPage } from '../pages/add-tronco/add-tronco';
-import { ExpansionPanelComponent } from '../components/expansion-panel/expansion-panel';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { Individuo2Page } from '../pages/individuo2/individuo2';
+import { AddParcelaPage } from '../pages/add-parcela/add-parcela';
 // Mock SQLite
 import { SQLiteMock } from '../model/mock.sqlite';
 import { UtilityProvider } from '../providers/utility/utility';
-import { Individuo2Page } from '../pages/individuo2/individuo2';
+
 
 
 
@@ -36,8 +37,8 @@ import { Individuo2Page } from '../pages/individuo2/individuo2';
     IndividuoPage,
     AddIndividuoPage,
     AddTroncoPage,
-    ExpansionPanelComponent,
-    Individuo2Page
+    Individuo2Page,
+    AddParcelaPage
   ],
   imports: [
     MatExpansionModule,
@@ -57,15 +58,16 @@ import { Individuo2Page } from '../pages/individuo2/individuo2';
     IndividuoPage,
     AddIndividuoPage,
     AddTroncoPage,
-    Individuo2Page
+    Individuo2Page,
+    AddParcelaPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     SqLiteWrapperProvider,
     UtilityProvider,
-    SQLite,
-    // {provide: SQLite, useClass: SQLiteMock},
+    // SQLite,
+    {provide: SQLite, useClass: SQLiteMock},
     // {provide: SQLite, useFactory: factorySQLite},
     {provide: ErrorHandler, useClass: IonicErrorHandler},
   ]
