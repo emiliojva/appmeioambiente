@@ -9,11 +9,11 @@ import { Individuo } from '../../model/individuo.class';
 import { Especie } from '../../model/especie.class';
 
 const DATABASE_SCHEMA = [
-  [`DROP TABLE IF EXISTS individuo`],
-  [`DROP TABLE IF EXISTS estacao`],
-  [`DROP TABLE IF EXISTS local`],
-  [`DROP TABLE IF EXISTS especie`],
-  [`DROP TABLE IF EXISTS usuario`],
+  // [`DROP TABLE IF EXISTS individuo`],
+  // [`DROP TABLE IF EXISTS estacao`],
+  // [`DROP TABLE IF EXISTS local`],
+  // [`DROP TABLE IF EXISTS especie`],
+  // [`DROP TABLE IF EXISTS usuario`],
   /*Table local */
   [`
   CREATE TABLE IF NOT EXISTS local 
@@ -387,26 +387,19 @@ export class SqLiteWrapperProvider {
         });
   }
   
-
   storeEstacao(estacao:Estacao):Promise<Estacao>{
+
+    let obj_estacao:Estacao = this.fromJSON(estacao,Estacao);
 
     return this.getSQLiteInstance()
       .then( (db:SQLiteObject) => {
         
-        estacao.datacriacao = new Date().getTime();
-        
-        console.log('Dados prepados para query', JSON.stringify(estacao));
+        obj_estacao.datacriacao = new Date().getTime();
+        // console.log('Dados prepados para query', JSON.stringify(obj_estacao));
 
-        return db.executeSql('INSERT INTO estacao (local_id,codigo,data,parcela,obs,datacriacao) VALUES (?,?,?,?,?,?);',
-          [
-            estacao.local_id, 
-            estacao.codigo, 
-            estacao.data, 
-            estacao.parcela, 
-            estacao.obs,
-            estacao.datacriacao
-          ]);
-
+        // convert Object to  Query
+        const obj_query = obj_estacao.objectToInsertQuery();
+        return db.executeSql( obj_query.query, obj_query.values );
       })
       .then( (results) => {
         console.log(results);
@@ -444,31 +437,7 @@ export class SqLiteWrapperProvider {
 
   }
 
-  private objectToInsertQuery(object: Object):{query:string,values:any[]}{
-    
-    let array_columns = [];
-        let array_values = [];
-        let array_binds = [];
-        for(let x in object){
-          array_columns.push(x);
-          array_values.push(object[x]);
-          array_binds.push('?');
-        }
-        let string_columns = array_columns.join(',');
-        let string_binds = array_binds.join(',');
-
-        return {
-          query: `INSERT INTO individuo (${string_columns}) VALUES (${string_binds});`
-          , 
-          values: array_values
-        };
-  }
-
-  // platform plugins ready to use
-  private playPlatform(){
-    return this.platform.ready();
-  }
-
+  
   // used to mock creates simulations in browser
   private createTablesMockSQL():Promise<any>{
 
@@ -533,6 +502,23 @@ export class SqLiteWrapperProvider {
       return Promise.all(array_promises);
     }
 
+
+    /**
+     * Return Object loaded with params of another Object/json
+     * 
+     * @param json 
+     * @param classe 
+     */
+    fromJSON(json,classe) {
+      let obj = Object.create(classe.prototype);
+      return Object.assign(obj,json);
+
+      // let obj_estacao = new Estacao();
+    // for(let key in estacao){
+    //   obj_estacao[key] = estacao[key];
+    // }
+    }
+
   }
 
   
@@ -550,12 +536,38 @@ export class SqLiteWrapperProvider {
 
 
 
+  // private objectToInsertQuery(object: {}):{query:string,values:any[]}{
+
+  //   let entity = object.constructor.name;
+    
+  //   let array_columns = [];
+  //       let array_values = [];
+  //       let array_binds = [];
+  //       for(let x in object){
+  //         array_columns.push(x);
+  //         array_values.push(object[x]);
+  //         array_binds.push('?');
+  //       }
+  //       let string_columns = array_columns.join(',');
+  //       let string_binds = array_binds.join(',');
+
+  //       return {
+  //         query: `INSERT INTO ${entity} (${string_columns}) VALUES (${string_binds});`
+  //         , 
+  //         values: array_values
+  //       };
+  // }
+
+  // // platform plugins ready to use
+  // private playPlatform(){
+  //   return this.platform.ready();
+  // }
 
 
 
 
 
-
+//////////////////////////////////////
 
 
   // return Promise.all([

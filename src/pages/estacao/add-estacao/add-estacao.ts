@@ -131,7 +131,7 @@ export class AddEstacaoPage {
       local_id: [this.local_selected, Validators.required],
       codigo: ['',Validators.required],
       data: [dataAtual, Validators.required],
-      parcela: ['', Validators.required],
+      // parcela: ['', Validators.required],
       obs: ['', Validators.required]
     });
 
