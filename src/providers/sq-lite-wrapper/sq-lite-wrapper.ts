@@ -9,20 +9,20 @@ import { Individuo } from '../../model/individuo.class';
 import { Especie } from '../../model/especie.class';
 
 const DATABASE_SCHEMA = [
-  // [`DROP TABLE IF EXISTS individuo`],
-  // [`DROP TABLE IF EXISTS estacao`],
-  // [`DROP TABLE IF EXISTS local`],
-  // [`DROP TABLE IF EXISTS especie`],
-  // [`DROP TABLE IF EXISTS usuario`]
-  // ,
+  [`DROP TABLE IF EXISTS individuo`],
+  [`DROP TABLE IF EXISTS estacao`],
+  [`DROP TABLE IF EXISTS local`],
+  [`DROP TABLE IF EXISTS especie`],
+  [`DROP TABLE IF EXISTS usuario`],
   /*Table local */
   [`
   CREATE TABLE IF NOT EXISTS local 
   (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER,
     codigo	VARCHAR(200) UNIQUE,
     descricao	TEXT NOT NULL UNIQUE,
-    datacriacao	VARCHAR(50)
+    datacriacao	VARCHAR(150)
   );`
   ]
   ,
@@ -30,9 +30,10 @@ const DATABASE_SCHEMA = [
   [`
   CREATE TABLE IF NOT EXISTS especie (
      id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+     usuario_id INTEGER,
      codigo VARCHAR(200) UNIQUE,
      descricao	TEXT NOT NULL UNIQUE,
-     datacriacao	VARCHAR(50)
+     datacriacao	VARCHAR(150)
   );`
   ]
   ,
@@ -41,11 +42,27 @@ const DATABASE_SCHEMA = [
   CREATE TABLE IF NOT EXISTS estacao (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     codigo VARCHAR(200) UNIQUE,
+    usuario_id INTEGER,
     data TEXT NOT NULL,
     local_id INTEGER NOT NULL,
-    parcela	INTEGER,
     obs	TEXT,
-    datacriacao	VARCHAR(50)
+    datacriacao	VARCHAR(150),
+    FOREIGN KEY(local_id) REFERENCES local (id)
+  );`
+  ]
+  ,
+  /*Table Parcela */
+  [`
+  CREATE TABLE IF NOT EXISTS parcela (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    estacao_id INTEGER NOT NULL,
+    usuario_id INTEGER,
+    largura INTEGER NOT NULL,
+    comprimento INTEGER NOT NULL,
+    equipe	VARCHAR(254),
+    descricao	TEXT,
+    datacriacao	VARCHAR(150),
+    FOREIGN KEY (estacao_id) REFERENCES estacao (id)
   );`
   ]
   ,
@@ -55,13 +72,14 @@ const DATABASE_SCHEMA = [
   ( 
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     codigo INTEGER NOT NULL ,
-    estacao_id INTEGER NOT NULL ,
+    parcela_id INTEGER NOT NULL ,
     especie_id INTEGER NOT NULL,
+    usuario_id INTEGER,
     numero_de_troncos INTEGER NOT NULL,
     altura INTEGER NOT NULL,
     observacao TEXT,
-    datacriacao VARCHAR(50),
-    FOREIGN KEY (estacao_id) REFERENCES estacao (id),
+    datacriacao VARCHAR(150),
+    FOREIGN KEY (parcela_id) REFERENCES parcela (id),
     FOREIGN KEY (especie_id) REFERENCES especie (id)
   );`
   ]
@@ -74,7 +92,8 @@ const DATABASE_SCHEMA = [
     email VARCHAR(255) NOT NULL,
     telefone VARCHAR(255) NOT NULL,
     login_id INTEGER NOT NULL,
-    datacriacao VARCHAR(50)
+    data_modificacao VARCHAR(150),
+    datacriacao VARCHAR(150)
   )`
   ]
 ];
@@ -453,105 +472,22 @@ export class SqLiteWrapperProvider {
   // used to mock creates simulations in browser
   private createTablesMockSQL():Promise<any>{
 
-      // this.database.executeSql(`drop table individuo;`,{});
+      console.log('Starting Script Creates DB...')
+      let array_promises = [];
+      DATABASE_SCHEMA.forEach( (sql_create_table:Array<string>) => {
+        
+        let promise = this.database.executeSql(sql_create_table[0],{}).then( () => {
+          console.log(sql_create_table[0]);
+        });
 
-      return Promise.all([
-        this.database.executeSql(`
-          CREATE TABLE IF NOT EXISTS local 
-          (
-            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            codigo	VARCHAR(200) UNIQUE,
-            descricao	TEXT NOT NULL UNIQUE,
-            datacriacao	VARCHAR(50)
-          );`
-        ,{})
-        .then( (results) => {
+        array_promises.push(promise);
 
-          // this.populateLocal();
-          console.log('local Table created');
-          
-        })
-        ,
-        this.database.executeSql(`
-          CREATE TABLE IF NOT EXISTS especie (
-            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            codigo VARCHAR(200) UNIQUE,
-            descricao	TEXT NOT NULL UNIQUE,
-            datacriacao	VARCHAR(50)
-          );`
-        ,{})
-        .then( (results) => {
+      });
 
-          console.log('especie Table created');
-         
-          // this.populateEspecie();
-
-        }),
-        // /* FIX TO DO DELETE FIELD 'descricao' AND HOLD USER DATA */
-        // this.database.executeSql(`
-        //   /* BEGIN TRANSACTION;
-            
-        //     CREATE TEMPORARY TABLE estacao_backup(id,codigo,data,local_id,parcela,obs,datacriacao);
-        //     INSERT INTO estacao_backup SELECT * FROM estacao;
-        //     DROP TABLE estacao; */
-
-        //     CREATE TABLE IF NOT EXISTS estacao (
-        //       id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        //       codigo TEXT UNIQUE,
-        //       data TEXT NOT NULL,
-        //       local_id INTEGER NOT NULL,
-        //       parcela	TEXT,
-        //       obs	TEXT,
-        //       datacriacao	TEXT,
-        //       FOREIGN KEY (local_id) REFERENCES local (id)
-        //     );
-
-        //     /*
-        //     INSERT INTO estacao SELECT * FROM estacao_backup;
-        //     DROP TABLE estacao_backup;
-
-        //   COMMIT; */
-        //   `
-        // ,{})
-        // .then( (results) => {
-        //   console.log('estacao Table created');
-        // }); 
-        this.database.executeSql(`
-            CREATE TABLE IF NOT EXISTS estacao (
-              id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-              codigo TEXT UNIQUE,
-              data TEXT NOT NULL,
-              local_id INTEGER NOT NULL,
-              parcela	TEXT,
-              obs	TEXT,
-              datacriacao	TEXT,
-              FOREIGN KEY (local_id) REFERENCES local (id)
-            );
-          `
-        ,{})
-        .then( (results) => {
-          console.log('estacao Table created');
-        })
-        ,
-        this.database.executeSql(`
-          CREATE TABLE IF NOT EXISTS individuo 
-          ( 
-            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            codigo INTEGER NOT NULL ,
-            estacao_id INTEGER NOT NULL ,
-            especie_id INTEGER NOT NULL,
-            numero_de_troncos INTEGER NOT NULL,
-            altura INTEGER NOT NULL,
-            observacao TEXT,
-            datacriacao TEXT,
-            FOREIGN KEY (estacao_id) REFERENCES estacao (id),
-            FOREIGN KEY (especie_id) REFERENCES especie (id)
-          );`
-        ,{})
-        .then( (results) => {
-          console.log('individuo Table created');
-        })
-      ]);
+      return Promise.all(array_promises).then( () =>{
+        this.dbScriptDone = true;
+        console.log('End Script Creates DB! - Tables created');
+      });
     }
 
 
@@ -600,3 +536,122 @@ export class SqLiteWrapperProvider {
   }
 
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // return Promise.all([
+  //   this.database.executeSql(`
+  //     CREATE TABLE IF NOT EXISTS local 
+  //     (
+  //       id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  //       codigo	VARCHAR(200) UNIQUE,
+  //       descricao	TEXT NOT NULL UNIQUE,
+  //       datacriacao	VARCHAR(50)
+  //     );`
+  //   ,{})
+  //   .then( (results) => {
+
+  //     // this.populateLocal();
+  //     console.log('local Table created');
+      
+  //   })
+  //   ,
+  //   this.database.executeSql(`
+  //     CREATE TABLE IF NOT EXISTS especie (
+  //       id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  //       codigo VARCHAR(200) UNIQUE,
+  //       descricao	TEXT NOT NULL UNIQUE,
+  //       datacriacao	VARCHAR(50)
+  //     );`
+  //   ,{})
+  //   .then( (results) => {
+
+  //     console.log('especie Table created');
+     
+  //     // this.populateEspecie();
+
+  //   }),
+  //   // /* FIX TO DO DELETE FIELD 'descricao' AND HOLD USER DATA */
+  //   // this.database.executeSql(`
+  //   //   /* BEGIN TRANSACTION;
+        
+  //   //     CREATE TEMPORARY TABLE estacao_backup(id,codigo,data,local_id,parcela,obs,datacriacao);
+  //   //     INSERT INTO estacao_backup SELECT * FROM estacao;
+  //   //     DROP TABLE estacao; */
+
+  //   //     CREATE TABLE IF NOT EXISTS estacao (
+  //   //       id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  //   //       codigo TEXT UNIQUE,
+  //   //       data TEXT NOT NULL,
+  //   //       local_id INTEGER NOT NULL,
+  //   //       parcela	TEXT,
+  //   //       obs	TEXT,
+  //   //       datacriacao	TEXT,
+  //   //       FOREIGN KEY (local_id) REFERENCES local (id)
+  //   //     );
+
+  //   //     /*
+  //   //     INSERT INTO estacao SELECT * FROM estacao_backup;
+  //   //     DROP TABLE estacao_backup;
+
+  //   //   COMMIT; */
+  //   //   `
+  //   // ,{})
+  //   // .then( (results) => {
+  //   //   console.log('estacao Table created');
+  //   // }); 
+  //   this.database.executeSql(`
+  //       CREATE TABLE IF NOT EXISTS estacao (
+  //         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  //         codigo TEXT UNIQUE,
+  //         data TEXT NOT NULL,
+  //         local_id INTEGER NOT NULL,
+  //         parcela	TEXT,
+  //         obs	TEXT,
+  //         datacriacao	TEXT,
+  //         FOREIGN KEY (local_id) REFERENCES local (id)
+  //       );
+  //     `
+  //   ,{})
+  //   .then( (results) => {
+  //     console.log('estacao Table created');
+  //   })
+  //   ,
+  //   this.database.executeSql(`
+  //     CREATE TABLE IF NOT EXISTS individuo 
+  //     ( 
+  //       id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  //       codigo INTEGER NOT NULL ,
+  //       estacao_id INTEGER NOT NULL ,
+  //       especie_id INTEGER NOT NULL,
+  //       numero_de_troncos INTEGER NOT NULL,
+  //       altura INTEGER NOT NULL,
+  //       observacao TEXT,
+  //       datacriacao TEXT,
+  //       FOREIGN KEY (estacao_id) REFERENCES estacao (id),
+  //       FOREIGN KEY (especie_id) REFERENCES especie (id)
+  //     );`
+  //   ,{})
+  //   .then( (results) => {
+  //     console.log('individuo Table created');
+  //   })
+  // ]);
