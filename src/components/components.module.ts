@@ -1,9 +1,13 @@
 import { NgModule } from '@angular/core';
-import { ExpansionPanelComponent } from './expansion-panel/expansion-panel';
+// import { ExpansionPanelComponent } from './expansion-panel/expansion-panel';
 
 @NgModule({
-	declarations: [ExpansionPanelComponent],
+	declarations: [
+		// ExpansionPanelComponent
+	],
 	imports: [],
-	exports: [ExpansionPanelComponent]
+	exports: [
+		// ExpansionPanelComponent
+	]
 })
 export class ComponentsModule {}
