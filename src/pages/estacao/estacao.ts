@@ -6,6 +6,7 @@ import { Estacao } from '../../model/estacao.class';
 import { Local } from '../../model/local.class';
 import { Individuo } from '../../model/individuo.class';
 import { IndividuoPage } from '../individuo/individuo';
+import { ParcelaPage } from '../parcela/parcela';
 
 /**
  * Generated class for the EstacaoPage page.
@@ -56,9 +57,11 @@ export class EstacaoPage {
     this.navCtrl.push(AddEstacaoPage, {local:  this.local_selected})
   }
 
-  chamarIndividuos(estacao:Estacao){
-    this.navCtrl.push(IndividuoPage,{estacao: estacao});
+  chamarParcelas(estacao:Estacao){
+    this.navCtrl.push(ParcelaPage,{estacao: estacao});
   }
+
+  
 
   reloadPage(){
 

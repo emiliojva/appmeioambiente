@@ -1,4 +1,6 @@
-export class Individuo {
+import { Table } from "./table.class";
+
+export class Individuo extends Table {
     public id: number;
     public codigo: number;
     public estacao_id: number;

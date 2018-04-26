@@ -14,29 +14,29 @@
 
 <ion-content padding>
 
-
-  <form>
+  <form [formGroup]="parcelaForm" (ngSubmit)="logForm()">
     <ion-list>
 
+      <ion-input type="hidden" [value]="estacao_selected" formControlName="estacao_id" required></ion-input>
 
       <ion-item>
           <ion-label stacked>Largura</ion-label>
-          <ion-input type="number" required></ion-input>
+          <ion-input type="number" formControlName="largura" required></ion-input>
       </ion-item>
 
       <ion-item>
           <ion-label stacked>Comprimento</ion-label>
-          <ion-input type="number" required></ion-input>
+          <ion-input type="number" formControlName="comprimento" required></ion-input>
       </ion-item>
 
       <ion-item>
           <ion-label stacked>Equipe</ion-label>
-          <ion-input type="text" required></ion-input>
+          <ion-input type="text" formControlName="equipe" required></ion-input>
       </ion-item>
       
       <ion-item>
           <ion-label stacked>Descrição</ion-label>
-          <ion-textarea type="text" required rows="2"></ion-textarea>
+          <ion-textarea type="text" formControlName="descricao" required rows="2"></ion-textarea>
       </ion-item>
 
     </ion-list>
@@ -45,6 +45,10 @@
         <button ion-button>Gravar</button>
         <button ion-button type='reset'>Limpar</button>
     </ion-buttons>
+
+     <p>Form value: {{ parcelaForm.value | json }}</p>
+
+
   </form>
 
 </ion-content>

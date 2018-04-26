@@ -7,6 +7,7 @@ import { Local } from '../../model/local.class';
 import { UtilityProvider } from '../utility/utility';
 import { Individuo } from '../../model/individuo.class';
 import { Especie } from '../../model/especie.class';
+import { Parcela } from '../../model/parcela.class';
 
 const DATABASE_SCHEMA = [
   // [`DROP TABLE IF EXISTS individuo`],
@@ -408,19 +409,43 @@ export class SqLiteWrapperProvider {
       
 
   }
+
+  storeParcela(parcela: Parcela):Promise<Parcela>{
+
+    let obj_parcela:Parcela = this.fromJSON(parcela,Estacao);
+
+    return this.getSQLiteInstance()
+      .then( (db:SQLiteObject) => {
+        
+        obj_parcela.datacriacao = new Date().getTime();
+
+        // convert Object to  Query
+        const obj_query = obj_parcela.objectToInsertQuery();
+
+        return db.executeSql( obj_query.query, obj_query.values );
+      })
+      .then( (results) => {
+        console.log(results);
+        return parcela;
+      });
+
+  }
   
   storeIndividuo(individuo:Individuo):Promise<Individuo>{
 
     return this.getSQLiteInstance()
       .then( (db:SQLiteObject) => {
 
-        individuo.codigo =  parseInt(individuo.especie_id + '' +individuo.estacao_id);
-        individuo.datacriacao = new Date().getTime();
+        let obj_individuo:Individuo = this.fromJSON(individuo,Individuo);
+
+        obj_individuo.codigo =  parseInt(individuo.especie_id + '' +individuo.estacao_id);
+        obj_individuo.datacriacao = new Date().getTime();
         
         console.log('Dados prepados para query', JSON.stringify(individuo));
 
         // get object {query,values} formatted
-        const obj_query = this.objectToInsertQuery(individuo);
+        // convert Object to  Query
+        const obj_query = obj_individuo.objectToInsertQuery();
 
         return db.executeSql(obj_query.query, obj_query.values);
 

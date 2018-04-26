@@ -40,6 +40,7 @@ import { AddParcelaPage } from '../pages/add-parcela/add-parcela';
 import { SqLiteWrapperProvider } from '../providers/sq-lite-wrapper/sq-lite-wrapper';
 import { SQLiteMock } from '../model/mock.sqlite'; // Mock SQLite
 import { UtilityProvider } from '../providers/utility/utility';
+import { ParcelaPage } from '../pages/parcela/parcela';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { UtilityProvider } from '../providers/utility/utility';
     AddIndividuoPage,
     AddTroncoPage,
     Individuo2Page,
-    AddParcelaPage
+    AddParcelaPage,
+    ParcelaPage
   ],
   imports: [
     MatExpansionModule,
@@ -73,7 +75,8 @@ import { UtilityProvider } from '../providers/utility/utility';
     AddIndividuoPage,
     AddTroncoPage,
     Individuo2Page,
-    AddParcelaPage
+    AddParcelaPage,
+    ParcelaPage
   ],
   providers: [
     StatusBar,
