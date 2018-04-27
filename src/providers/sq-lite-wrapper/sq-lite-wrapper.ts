@@ -100,12 +100,13 @@ const DATABASE_SCHEMA = [
 ];
 
 const POPULATE_TABLES_LOCAL = [
-  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [1, 'guapi','Guapimirim',new Date().getTime()] ],
-  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [2, 'gaurai','Gauraí',new Date().getTime()] ],
-  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [3, 'caceribu','Caceribu',new Date().getTime()] ],
-  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [4, 'guaraimirim','Guaraí-Mirim',new Date().getTime()] ],
-  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [5, 'imbui','Caceribu / Imbuí',new Date().getTime()] ],
-  ['INSERT INTO local(id,codigo,descricao,datacriacao) VALUES (?,?,?,?)', [6, 'guaxindiba','Guaxindiba',new Date().getTime()] ]
+  ['INSERT INTO local(codigo,descricao,datacriacao) VALUES (?,?,?)', ['guapi','Guapimirim',new Date().getTime()] ],
+  ['INSERT INTO local(codigo,descricao,datacriacao) VALUES (?,?,?)', ['gaurai','Gauraí',new Date().getTime()] ],
+  ['INSERT INTO local(codigo,descricao,datacriacao) VALUES (?,?,?)', ['caceribu','Caceribu',new Date().getTime()] ],
+  ['INSERT INTO local(codigo,descricao,datacriacao) VALUES (?,?,?)', ['guaraimirim','Guaraí-Mirim',new Date().getTime()] ],
+  ['INSERT INTO local(codigo,descricao,datacriacao) VALUES (?,?,?)', ['imbui','Caceribu / Imbuí',new Date().getTime()] ],
+  ['INSERT INTO local(codigo,descricao,datacriacao) VALUES (?,?,?)', ['guaxindiba','Guaxindiba',new Date().getTime()] ],
+  ['INSERT INTO local(codigo,descricao,datacriacao) VALUES (?,?,?)', ['turiacu','Turiaçu',new Date().getTime()] ]
 ];
 
 const POPULATE_TABLES_ESPECIE = [

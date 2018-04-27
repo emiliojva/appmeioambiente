@@ -12,8 +12,16 @@
         </button>
         <ion-title>Adicionar Individuo</ion-title>
     </ion-navbar>
+
+    <ion-item style="font-size:12px;">
+        Parcela: <span style="font-weight: bold">{{ parcela_selected ? parcela_selected.estacao_codigo : 'Estação não escolhida' }}</span>
+        / 
+        Estação: <span style="font-weight: bold">{{ parcela_selected ? parcela_selected.descricao : 'Estação não escolhida' }}</span>
+        /
+        Local: <span style="font-weight: bold">{{ estacao_selected ? estacao_selected.local_descricao : 'Local não escolhido'}} </span>
+      </ion-item>
       
-    <ion-item>
+    <!-- <ion-item>
         
         <ion-label>Local</ion-label>
         
@@ -21,7 +29,7 @@
             <ion-option *ngFor="let l of locais" value="{{l.id}}">{{l.descricao}}</ion-option>
         </ion-select>
         
-    </ion-item>
+    </ion-item> -->
 
     
 
@@ -40,6 +48,17 @@
                 
                 <ion-select [(ngModel)]="estacao_id" formControlName="estacao_id" (ionChange)="reloadIndividuos()"  #selectEstacao   okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione uma estação" id="tronco_estacao">
                     <ion-option *ngFor="let e of estacaos" value="{{e.id}}">{{e.codigo}}</ion-option>
+                </ion-select>
+                    
+            </ion-item>
+
+
+            <ion-item>
+    
+                <ion-label stacked>Parcelas</ion-label>
+                
+                <ion-select formControlName="parcela_id" (ionChange)="reloadIndividuos()"  #selectParcela   okText="Ok" cancelText="Cancelar" attr-placeholder="Selecione uma parcela" id="parcelas">
+                    <ion-option *ngFor="let e of parcelas" value="{{e.id}}">{{e.descricao}}</ion-option>
                 </ion-select>
                     
             </ion-item>

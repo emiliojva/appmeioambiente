@@ -9,6 +9,8 @@ import { Individuo } from '../../model/individuo.class';
 import { IndividuoPage } from '../individuo/individuo';
 import { LocalPage } from '../local/local';
 import { EstacaoPage } from '../estacao/estacao';
+import { Parcela } from '../../model/parcela.class';
+import { Page } from 'ionic-angular/navigation/nav-util';
 
 /**
  * Generated class for the AddIndividuoPage page.
@@ -24,7 +26,9 @@ import { EstacaoPage } from '../estacao/estacao';
 })
 export class AddIndividuoPage {
 
-  @ViewChild('select_estacao') 
+  @ViewChild('select_estacao')
+  
+  @ViewChild('select_parcela') 
 
   locais: Local[] = [];
   local_selected: number;
@@ -35,6 +39,14 @@ export class AddIndividuoPage {
   estacao_selected: Estacao;
   estacao_id: number;
   addIndividuoFormGroup: FormGroup;
+  pushPage: Page;
+  params: Object;
+
+  parcelas: Array<Parcela> = [];
+  parcela_selected: Parcela;
+  parcela_id: number;
+  
+  
 
   constructor(
     public navCtrl: NavController, 
@@ -47,19 +59,38 @@ export class AddIndividuoPage {
     this.SQLService.getEspecies()
       .then( rows => this.especies = rows);
 
-    if(this.navParams.get('estacao')){
 
-      this.estacao_selected = this.navParams.get('estacao');
+      if(this.navParams.get('estacao')){
+        this.estacao_selected = this.navParams.get('estacao');
+        this.estacao_id = this.estacao_selected.id;
+      }
+  
+      if(this.navParams.get('parcela')){
+  
+        this.parcela_selected = this.navParams.get('parcela');
+  
+        this.parcela_id = this.parcela_selected.id;
+  
+        this.params = {
+          parcela: this.parcela_selected
+        };
+
+      }
+
+    // if(this.navParams.get('estacao')){
+
+    //   this.estacao_selected = this.navParams.get('estacao');
       
-      console.log(this.especie_selected);
-      this.estacao_id = this.estacao_selected.id;
-      this.local_id = this.estacao_selected.local_id;
+    //   console.log(this.especie_selected);
+    //   this.estacao_id = this.estacao_selected.id;
+    //   this.local_id = this.estacao_selected.local_id;
 
-      this.SQLService.getEstacaos(this.local_id)
+      this.SQLService.getParcelas(this.estacao_id)
         .then( rows => {
-            this.estacaos = rows;
+            this.parcelas = rows;
         });
-    }
+
+    // }
     
     this.createForm();
   }
@@ -95,7 +126,7 @@ export class AddIndividuoPage {
     // Compose group form 
     this.addIndividuoFormGroup = this.formBuilder.group({
       especie_id:['', Validators.required ]  , 
-      estacao_id:['',Validators.required], 
+      parcela_id:[this.parcela_id,Validators.required], 
       numero_de_troncos: ['', [ Validators.required, Validators.min(0) ] ]   ,
       altura: ['', Validators.required],
       observacao: ['', Validators.required],

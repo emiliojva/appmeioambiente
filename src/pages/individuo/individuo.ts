@@ -46,7 +46,8 @@ export class IndividuoPage {
       this.parcela_id = this.parcela_selected.id;
 
       this.params = {
-        parcela: this.parcela_selected
+        parcela: this.parcela_selected,
+        estacao: this.estacao_selected
       };
     }
 
