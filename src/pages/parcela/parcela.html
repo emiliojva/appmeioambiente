@@ -10,6 +10,12 @@
     <ion-title>Parcelas</ion-title>
   </ion-navbar>
 
+  <ion-item style="font-size:12px;">
+    Estação: <span style="font-weight: bold">{{ estacao_selected ? estacao_selected.codigo : 'Estação não escolhida' }}</span>
+    / 
+    Local: <span style="font-weight: bold">{{ estacao_selected ? estacao_selected.local_descricao : 'Local não escolhido'}} </span>
+  </ion-item>
+
 </ion-header>
 
 

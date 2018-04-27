@@ -26,11 +26,11 @@
   </ion-navbar>
   
   <ion-item style="font-size:12px;">
-      
+    Parcela: <span style="font-weight: bold">{{ parcela_selected ? parcela_selected.estacao_codigo : 'Estação não escolhida' }}</span>
+    / 
+    Estação: <span style="font-weight: bold">{{ parcela_selected ? parcela_selected.descricao : 'Estação não escolhida' }}</span>
+    /
     Local: <span style="font-weight: bold">{{ estacao_selected ? estacao_selected.local_descricao : 'Local não escolhido'}} </span>
-     / 
-    Estação: <span style="font-weight: bold">{{ estacao_selected ? estacao_selected.codigo : 'Estação não escolhida' }}</span>
-    
   </ion-item>
 
 </ion-header>

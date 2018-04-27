@@ -94,7 +94,7 @@ export class ParcelaPage {
 
 
   chamarIndividuos(parcela:Parcela){
-    this.navCtrl.push(IndividuoPage,{parcela: parcela});
+    this.navCtrl.push(IndividuoPage,{parcela: parcela, estacao: this.estacao_selected});
   }
 
   addParcela(){

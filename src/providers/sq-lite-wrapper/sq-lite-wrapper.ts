@@ -327,9 +327,9 @@ export class SqLiteWrapperProvider {
 
   }
 
-  getIndividuos(estacao_id:number, associations: boolean = false):Promise<Individuo[]>{
+  getIndividuos(parcela_id:number, associations: boolean = false):Promise<Individuo[]>{
 
-    console.log(estacao_id);
+    console.log(parcela_id);
 
     return new Promise( (resolve,reject)=>{
 
@@ -345,23 +345,23 @@ export class SqLiteWrapperProvider {
 
             COLUMNS = `
             i.*,
-            e.codigo as estacao_codigo,
-            e.data as estacao_data,
-            e.parcela as estacao_parcela,
-            e.obs as estacao_obs,
-            e.datacriacao as estacao_datacriacao,
+            p.largura as parcela_largura,
+            p.comprimento as parcela_comprimento,
+            p.equipe as parcela_equipe,
+            p.descricao as parcela_descricao,
+            p.datacriacao as parcela_datacriacao,
             esp.codigo as especie_codigo,
             esp.descricao as especie_descricao,
             esp.datacriacao as especie_datacriacao
           `;
 
-            JOIN.push( `INNER JOIN estacao e ON e.id = i.estacao_id`  );
+            JOIN.push( `INNER JOIN parcela p ON p.id = i.parcela_id`  );
             JOIN.push( `INNER JOIN especie esp ON esp.id = i.especie_id` );
              
           }
 
-          if(estacao_id){
-            WHERE.push(` WHERE i.estacao_id = ${estacao_id} `);
+          if(parcela_id){
+            WHERE.push(` WHERE i.parcela_id = ${parcela_id} `);
           }
 
           sql = ` SELECT ${COLUMNS} FROM individuo i
@@ -407,6 +407,7 @@ export class SqLiteWrapperProvider {
 
             COLUMNS = `
             p.*,
+            e.local_id as estacao_local_id,
             e.codigo as estacao_codigo,
             e.data as estacao_data,
             e.obs as estacao_obs,
