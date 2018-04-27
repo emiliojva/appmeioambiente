@@ -17,7 +17,7 @@
   <form [formGroup]="parcelaForm" (ngSubmit)="logForm()">
     <ion-list>
 
-      <ion-input type="hidden" [value]="estacao_selected" formControlName="estacao_id" required></ion-input>
+      <ion-input type="hidden" formControlName="estacao_id" required></ion-input>
 
       <ion-item>
           <ion-label stacked>Largura</ion-label>

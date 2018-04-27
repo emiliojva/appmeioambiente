@@ -387,6 +387,64 @@ export class SqLiteWrapperProvider {
           });
         });
   }
+
+
+  getParcelas(estacao_id:number, associations: boolean = false):Promise<Parcela[]>{
+
+    console.log(estacao_id);
+
+    return new Promise( (resolve,reject)=>{
+
+      this.getSQLiteInstance()
+        .then( (db: SQLiteObject) => {  // Returns Instance of SQLiteObject. To do Transactions
+
+          var sql:string = '';
+          var COLUMNS:string = '*';
+          var JOIN: Array<string> = [];
+          var WHERE:Array<string> = [];
+
+          if(associations === true){
+
+            COLUMNS = `
+            p.*,
+            e.codigo as estacao_codigo,
+            e.data as estacao_data,
+            e.obs as estacao_obs,
+            e.datacriacao as estacao_datacriacao
+          `;
+
+            JOIN.push( `INNER JOIN estacao e ON e.id = p.estacao_id`  );
+          }
+
+          if(estacao_id){
+            WHERE.push(` WHERE p.estacao_id = ${estacao_id} `);
+          }
+
+          sql = ` SELECT ${COLUMNS} FROM parcela p
+                  ${JOIN.join(' ')}
+                  ${WHERE.join(' ')}` ;
+                  
+          // Returns Promise with statament SQL executed. Equal results.rows array objects
+          // return db.executeSql(`SELECT * FROM individuo ${where}` ,[]);
+          console.log(sql);
+          return db.executeSql(sql ,[]);
+        })
+        .then( (results) => {
+            
+            let array_results: Parcela[] = [];
+
+            // iterates results rows SQL and push into 'Estacao' array 
+            for (let index = 0; index < results.rows.length; index++) {
+              // let parcela:Parcela = Object.assign(results.rows.item(index), Parcela);
+              let parcela:Parcela = this.fromJSON(results.rows.item(index),Parcela);
+              array_results.push(parcela);
+            }
+            // Resolve array of 'Individuos' objects
+            resolve(array_results);
+          });
+        });
+
+  }
   
   storeEstacao(estacao:Estacao):Promise<Estacao>{
 
@@ -412,7 +470,7 @@ export class SqLiteWrapperProvider {
 
   storeParcela(parcela: Parcela):Promise<Parcela>{
 
-    let obj_parcela:Parcela = this.fromJSON(parcela,Estacao);
+    let obj_parcela:Parcela = this.fromJSON(parcela,Parcela);
 
     return this.getSQLiteInstance()
       .then( (db:SQLiteObject) => {
@@ -426,7 +484,7 @@ export class SqLiteWrapperProvider {
       })
       .then( (results) => {
         console.log(results);
-        return parcela;
+        return obj_parcela;
       });
 
   }

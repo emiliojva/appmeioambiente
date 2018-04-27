@@ -6,6 +6,7 @@ import { EstacaoPage } from '../estacao/estacao';
 import { LocalPage } from '../local/local';
 import { Parcela } from '../../model/parcela.class';
 import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-wrapper';
+import { Estacao } from '../../model/estacao.class';
 
 /**
  * Generated class for the AddParcelaPage page.
@@ -22,8 +23,9 @@ import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-w
 export class AddParcelaPage {
 
   parcelaForm: FormGroup;
-  estacao_selected: number;
+  estacao_selected: Estacao;
   estacoes: any[] = [];
+  estacao_id: number;
   // estacao_data: string;
 
   constructor(
@@ -35,23 +37,21 @@ export class AddParcelaPage {
     
   ) {
 
-    // Start formBuilder Group with data
-    this.createForm();
-  }
-
-  ngOnInit(){
-
     if(this.navParams.get('estacao')){
-      console.log(this.navParams.get('estacao'));
+
       this.estacao_selected = this.navParams.get('estacao');
+
+      this.estacao_id = this.estacao_selected.id;
+
     }
 
+    // Start formBuilder Group with data
+    this.createForm();
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad AddParcelaPage');
   }
-
 
   logForm(){
 
@@ -63,7 +63,7 @@ export class AddParcelaPage {
     // remove current page
     const indexCurrentPage = nav.getActive().index;
 
-    let local_id = this.estacao_selected;
+    let estacao_selected = this.estacao_selected;
 
     let alertEstacao = this.alert.create({
       title: 'Complete o formulário',
@@ -71,13 +71,12 @@ export class AddParcelaPage {
         {
           text: 'OK',
           handler: function(){
-
             
             if(formValid){
 
               if(navPrevious == null || navPrevious.index==0){
 
-                nav.push(ParcelaPage, {local: local_id}).then( () => {
+                nav.push(ParcelaPage, {estacao: estacao_selected}).then( () => {
                   nav.remove(indexCurrentPage,1);   
                   nav.insertPages(0,[{page: LocalPage},{page: EstacaoPage}]);
                 });                
@@ -95,7 +94,7 @@ export class AddParcelaPage {
     });
 
     // Check all fields from form
-    if(this.parcelaForm.valid){
+    if(formValid){
       
       // Form data submited
       let data_to_save = this.parcelaForm.value; 
@@ -120,17 +119,14 @@ export class AddParcelaPage {
 
   private createForm(){
 
-    let dataAtual = this.formatDate(new Date());
-    
     // Compose group form 
     this.parcelaForm = this.formBuilder.group({
-      estacao_id: [this.estacao_selected, Validators.required],
+      estacao_id: [this.estacao_id, Validators.required],
       largura: ['',Validators.required],
-      comprimento: [dataAtual, Validators.required],
+      comprimento: ['', Validators.required],
       equipe: ['', Validators.required],
       descricao: ['', Validators.required]
     });
-
 
   }
 
