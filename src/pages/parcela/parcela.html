@@ -22,6 +22,8 @@
 <ion-content padding>
 
    <ion-list>
+
+      <ion-item *ngIf="parcelas?.length < 1">Cadastre uma nova Parcela.</ion-item>
     
       <ion-item style="cursor: pointer" *ngFor="let p of parcelas; index as i" (click)="chamarIndividuos(p)"  >
   

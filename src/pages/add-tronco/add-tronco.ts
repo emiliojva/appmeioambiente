@@ -16,6 +16,8 @@ import { Validators, FormGroup, FormControl, FormBuilder } from '@angular/forms'
 })
 export class AddTroncoPage {
 
+  troncos: Array<any> = ['tronco1','tronco2','tronco3'];
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,

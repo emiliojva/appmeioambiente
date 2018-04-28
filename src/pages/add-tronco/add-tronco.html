@@ -22,11 +22,12 @@
 
     <mat-accordion>
         
-        <mat-expansion-panel>
-      
+        <!-- <ion-item style="cursor: pointer" *ngFor="let e of estacaos; index as i" > -->
+        <mat-expansion-panel *ngFor="let tronco of troncos; index as i">
+
           <mat-expansion-panel-header>
             <mat-panel-title>
-              TRONCO 1
+              {{i+1}} - {{tronco}}
             </mat-panel-title>
           </mat-expansion-panel-header>
           
@@ -78,7 +79,59 @@
       
         </mat-expansion-panel>
 
-        <mat-expansion-panel (opened)="panelOpenState = true"
+        
+        
+    </mat-accordion>
+        
+
+</ion-content>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<mat-expansion-panel *ngIf="1>2" (opened)="panelOpenState = true"
                               (closed)="panelOpenState = false">
       
       
@@ -135,8 +188,3 @@
           
           
         </mat-expansion-panel>
-        
-      </mat-accordion>
-        
-
-</ion-content>

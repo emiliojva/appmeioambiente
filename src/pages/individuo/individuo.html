@@ -40,6 +40,8 @@
 
     <ion-list>
 
+        <ion-item *ngIf="individuos?.length < 1">Cadastre um novo Individuo.</ion-item>
+
       <!-- <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l.id)"> -->
       <button ion-item *ngFor="let individuo of individuos; index as i">
 

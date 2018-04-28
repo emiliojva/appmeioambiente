@@ -150,8 +150,9 @@ export class SqLiteWrapperProvider {
       });
     }
 
+    console.log('meioambiente-v2.0.db');
     return this.sqlite.create({
-      name: 'meioambiente.db',
+      name: 'meioambiente-v2.0.db',
       location: 'default'
     });
 
@@ -526,7 +527,8 @@ export class SqLiteWrapperProvider {
   // used to mock creates simulations in browser
   private createTablesMockSQL():Promise<any>{
 
-      console.log('Starting Script Creates DB...')
+      console.log('Starting Script Creates DB...');
+
       let array_promises = [];
       DATABASE_SCHEMA.forEach( (sql_create_table:Array<string>) => {
         
