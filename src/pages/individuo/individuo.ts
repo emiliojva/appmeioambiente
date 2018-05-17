@@ -42,7 +42,7 @@ export class IndividuoPage {
     if(this.navParams.get('parcela')){
 
       this.parcela_selected = this.navParams.get('parcela');
-
+      
       this.parcela_id = this.parcela_selected.id;
 
       this.params = {
@@ -61,8 +61,10 @@ export class IndividuoPage {
   ionViewWillEnter(){
     console.log('Active Page Individuo');
     
-    if(this.parcela_selected)
+    if(this.parcela_selected){
       this.reloadIndividuos();
+    }
+      
   }
 
   getTroncos(i) {

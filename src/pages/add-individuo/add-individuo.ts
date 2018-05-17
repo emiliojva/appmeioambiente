@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ModalController } from 'ionic-angular';
 import { Validators, FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Estacao } from '../../model/estacao.class';
 import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-wrapper';
@@ -11,6 +11,9 @@ import { LocalPage } from '../local/local';
 import { EstacaoPage } from '../estacao/estacao';
 import { Parcela } from '../../model/parcela.class';
 import { Page } from 'ionic-angular/navigation/nav-util';
+import { ParcelaPage } from '../parcela/parcela';
+import { AddTroncoPage } from '../add-tronco/add-tronco';
+import { UtilityProvider } from '../../providers/utility/utility';
 
 /**
  * Generated class for the AddIndividuoPage page.
@@ -53,7 +56,8 @@ export class AddIndividuoPage {
     public navParams: NavParams,
     private formBuilder: FormBuilder,
     private SQLService: SqLiteWrapperProvider,
-    private alert: AlertController
+    private alert: AlertController,
+    public modal: ModalController
   ) {
     
     this.SQLService.getEspecies()
@@ -137,10 +141,22 @@ export class AddIndividuoPage {
 
   logForm(){
 
-    const formValid = this.addIndividuoFormGroup.valid;
+    let formValid = this.addIndividuoFormGroup.valid;
+
+    // Form data submited
+    let data_to_save = this.addIndividuoFormGroup.value; 
+
+    // let individuo:Individuo = Object.assign(this.addIndividuoFormGroup.value, Individuo);
+    let individuo:Individuo = UtilityProvider.fromJSON(this.addIndividuoFormGroup.value, Individuo);
+
     const navPrevious = this.navCtrl.getPrevious();
 
-    let nav = this.navCtrl;
+    const nav = this.navCtrl;
+
+    // show modal with page 'addTronco'
+    let troncoModal = this.modal.create(
+      AddTroncoPage, {individuo:individuo}
+    );
     // remove current page
     const indexCurrentPage = nav.getActive().index;
 
@@ -148,7 +164,9 @@ export class AddIndividuoPage {
     if(this.estacao_id){
       estacao_id = this.estacao_id;
     }
-      
+
+    
+    // ALERT 
     let alertIndividuo = this.alert.create({
       title: 'Complete o formulário',
       buttons: [
@@ -162,11 +180,17 @@ export class AddIndividuoPage {
 
                 nav.push(IndividuoPage, {estacao: estacao_id}).then( () => {
                   nav.remove(indexCurrentPage,1);   
-                  nav.insertPages(0,[{page: LocalPage}, {page: EstacaoPage}]);
+                  nav.insertPages(0,[
+                    {page: LocalPage}, 
+                    {page: EstacaoPage},
+                    {page: ParcelaPage},
+                    {page: IndividuoPage}
+                  ]);
                 });                
                   
               } else {
-                nav.pop();
+                troncoModal.present();
+                // nav.pop();
               }
 
             }
@@ -180,9 +204,9 @@ export class AddIndividuoPage {
     if(formValid){
       
       // Form data submited
-      let data_to_save = this.addIndividuoFormGroup.value; 
+      // let data_to_save = this.addIndividuoFormGroup.value; 
 
-      const individuo:Individuo = Object.assign(this.addIndividuoFormGroup.value, Individuo);
+      // const individuo:Individuo = Object.assign(this.addIndividuoFormGroup.value, Individuo);
 
       this.SQLService.storeIndividuo(individuo).then( () => {
         

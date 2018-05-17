@@ -20,7 +20,7 @@
 
 <ion-content padding>
 
-    <mat-accordion>
+    <mat-accordion *ngIf="troncos">
         
         <!-- <ion-item style="cursor: pointer" *ngFor="let e of estacaos; index as i" > -->
         <mat-expansion-panel *ngFor="let tronco of troncos; index as i">

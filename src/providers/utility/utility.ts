@@ -26,4 +26,25 @@ export class UtilityProvider {
     return check;
   };
 
+
+  /**
+   * JSON UTILITIES
+   */
+
+   /**
+     * Return Object loaded with params of another Object/json
+     * 
+     * @param json 
+     * @param classe 
+     */
+    static fromJSON(json,classe) {
+      let obj = Object.create(classe.prototype);
+      return Object.assign(obj,json);
+
+      // let obj_estacao = new Estacao();
+    // for(let key in estacao){
+    //   obj_estacao[key] = estacao[key];
+    // }
+    }
+
 }

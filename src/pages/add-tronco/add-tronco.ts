@@ -16,12 +16,17 @@ import { Validators, FormGroup, FormControl, FormBuilder } from '@angular/forms'
 })
 export class AddTroncoPage {
 
-  troncos: Array<any> = ['tronco1','tronco2','tronco3'];
+  troncos: Array<any> = ['joao','feijo'];
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private formBuilder: FormBuilder) {
+      
+    if(this.navParams.get('individuo')){
+      console.log(this.navParams.get('individuo'));
+    }
+
   }
 
   ionViewDidLoad() {

@@ -11,6 +11,7 @@ import { Parcela } from '../../model/parcela.class';
 
 const DATABASE_SCHEMA = [
   // [`DROP TABLE IF EXISTS individuo`],
+  // [`DROP TABLE IF EXISTS parcela`],
   // [`DROP TABLE IF EXISTS estacao`],
   // [`DROP TABLE IF EXISTS local`],
   // [`DROP TABLE IF EXISTS especie`],
