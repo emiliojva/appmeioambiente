@@ -27,11 +27,13 @@
 
           <mat-expansion-panel-header>
             <mat-panel-title>
-              {{i+1}} - {{tronco}}
+              TRONCO - {{i+1}}
             </mat-panel-title>
           </mat-expansion-panel-header>
           
-          <form>
+          <form [formGroup]="troncoForm" (ngSubmit)="logForm()">
+
+            <!-- <ion-input type="hidden" [value]="tronco.individuoID" formControlName="local_id" required></ion-input> -->
       
               <ion-list>
       
@@ -39,17 +41,17 @@
       
                   <ion-item>
                     <ion-label stacked>Lacre</ion-label>
-                    <ion-input type="number"  id="tronco_lacre" required></ion-input>
+                    <ion-input formControlName="tronco_lacre" type="number"  id="tronco_lacre" required></ion-input>
                   </ion-item>
                 
                   <ion-item>
                     <ion-label stacked>DAP</ion-label>
-                    <ion-input type="number" id="tronco_dap" required></ion-input>
+                    <ion-input formControlName="tronco_dap" type="number" id="tronco_dap" required></ion-input>
                   </ion-item>
       
                   <ion-item>
                     <ion-label stacked>Observação</ion-label>
-                    <ion-textarea id="tronco_observacao" rows="3" ></ion-textarea>
+                    <ion-textarea formControlName="tronco_obs" id="tronco_observacao" rows="3" ></ion-textarea>
                   </ion-item>
       
                   <ion-list radio-group>
@@ -59,11 +61,11 @@
                       </ion-list-header>
                     <ion-item>
                         <ion-label>Vivo</ion-label>
-                        <ion-radio color="dark"></ion-radio>
+                        <ion-radio  color="dark"></ion-radio>
                     </ion-item>
                     <ion-item>
                         <ion-label>Morto</ion-label>
-                        <ion-radio color="dark"></ion-radio>
+                        <ion-radio  color="dark"></ion-radio>
                     </ion-item>
                   </ion-list>
       

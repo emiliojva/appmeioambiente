@@ -99,7 +99,7 @@ export class AddEstacaoPage {
     });
 
     // Check all fields from form
-    if(this.estacaoForm.valid){
+    if(formValid){
       
       // Form data submited
       let data_to_save = this.estacaoForm.value; 

@@ -152,11 +152,9 @@ export class AddIndividuoPage {
     const navPrevious = this.navCtrl.getPrevious();
 
     const nav = this.navCtrl;
+    const modal = this.modal;
 
-    // show modal with page 'addTronco'
-    let troncoModal = this.modal.create(
-      AddTroncoPage, {individuo:individuo}
-    );
+    
     // remove current page
     const indexCurrentPage = nav.getActive().index;
 
@@ -176,6 +174,8 @@ export class AddIndividuoPage {
 
             if(formValid){
 
+              alert(formValid);
+
               if(navPrevious == null || navPrevious.index==0){
 
                 nav.push(IndividuoPage, {estacao: estacao_id}).then( () => {
@@ -189,6 +189,10 @@ export class AddIndividuoPage {
                 });                
                   
               } else {
+                // show modal with page 'addTronco'
+                let troncoModal = modal.create(
+                  AddTroncoPage, {individuo:individuo}
+                );
                 troncoModal.present();
                 // nav.pop();
               }
