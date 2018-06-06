@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Validators, FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Individuo } from '../../model/individuo.class';
@@ -17,15 +17,18 @@ import { Individuo } from '../../model/individuo.class';
 })
 export class AddTroncoPage {
 
-  troncos: Array<any> = [];
+  troncos: Array<any> = [1,2];
   troncoFormArray: Array<FormGroup> = [];
   troncoForm: FormGroup;
   individuo: Individuo;
+  condicao: number;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    @Inject(FormBuilder) fb: FormBuilder
+  ) {
 
       
     if(this.navParams.get('individuo')){
@@ -34,7 +37,16 @@ export class AddTroncoPage {
       for (let i = 0; i < this.individuo.numero_de_troncos; i++ ) {
         this.troncos.push(
           { 
-            individuoID: 1 //this.individuo.id 
+            individuoID: 1, //this.individuo.id 
+            formGroup: fb.group(
+              {
+                individuo_id: [1,Validators.required],
+                tronco_lacre: ['', Validators.required],
+                tronco_dap: ['',Validators.required],
+                tronco_obs: ['', Validators.required],
+                tronco_cond: ['', Validators.required]
+              }
+            )
           }
         );
       }
@@ -52,41 +64,79 @@ export class AddTroncoPage {
 
     for (let i = 0; i < this.troncos.length; i++) {
 
-      this.troncoForm = this.formBuilder.group({
-        // individuo_id: [],
-        tronco_lacre: ['', Validators.required],
-        tronco_dap: ['',Validators.required],
-        tronco_obs: ['', Validators.required],
-        tronco_cond: ['', Validators.required]
-      });
+      // this.troncoForm = this.formBuilder.group({
+      //   // individuo_id: [],
+      //   tronco_lacre: ['', Validators.required],
+      //   tronco_dap: ['',Validators.required],
+      //   tronco_obs: ['', Validators.required],
+      //   tronco_cond: ['', Validators.required]
+      // });
 
-      this.troncoFormArray.push(this.troncoForm);
+      let form =  this.formBuilder.group(
+        {
+          individuo_id: [1,Validators.required],
+          tronco_lacre: ['', Validators.required],
+          tronco_dap: ['',Validators.required],
+          tronco_obs: ['', Validators.required],
+          tronco_cond: ['', Validators.required]
+        }
+      );
+
+      this.troncoFormArray.push(form);
+
+      // this.troncoFormArray.push(this.troncoForm);
     }
 
     console.log(this.troncoFormArray);
   }
 
-  private logForm() {
+  private logForm(posicao: number) {
 
-    for (let i = 0; i < this.troncoFormArray.length; i++) {
+      let troncoForm = this.troncoFormArray[posicao];
+      let formValid = troncoForm.valid;
 
-      let tronco = this.troncoFormArray[i];
-      let formValid = tronco.valid;
+      if(formValid){
+
+        // to do save 'tronco' service
+
+        // save alert         
+        alert('Formulário Salvo');
       
+        // disable
 
-      // if(formValid) {
-      
-      //   let data_to_save = tronco.value; 
-        
-      //   console.log(tronco);
-      //   // store tronco in Database
-      // }
-      // else {
+        // next item accordion
 
-      //   // alert the user
-      // }
+      }
+     
       console.log(formValid);
     }
+
+
+    private closeForm() {
+
+      let allFormsClosed = false;
+      for (let i = 0; i < this.troncoFormArray.length; i++) {
+  
+        let tronco = this.troncoFormArray[i];
+        let formValid = tronco.valid;
+  
+        if(formValid) {
+        
+          let data_to_save = tronco.value; 
+          
+          //console.log(tronco);
+          // store tronco in Database
+        }
+        else { 
+
+          alert('Faltando preencher Formulário n°'+ (i+1) );
+          allFormsClosed = false;
+
+          return false;
+          // alert the user
+        }
+        console.log(tronco.value,formValid);
+      }
 
   }
 }

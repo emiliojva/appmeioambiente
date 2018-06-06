@@ -19,6 +19,8 @@
 
 
 <ion-content padding>
+  
+    <!-- <form-tronco></form-tronco> -->
 
     <mat-accordion *ngIf="troncos">
         
@@ -30,8 +32,8 @@
               TRONCO - {{i+1}}
             </mat-panel-title>
           </mat-expansion-panel-header>
-          
-          <form [formGroup]="troncoForm" (ngSubmit)="logForm()">
+
+          <form [formGroup]="troncoFormArray[i]" (ngSubmit)="logForm(i)">
 
             <!-- <ion-input type="hidden" [value]="tronco.individuoID" formControlName="local_id" required></ion-input> -->
       
@@ -54,32 +56,45 @@
                     <ion-textarea formControlName="tronco_obs" id="tronco_observacao" rows="3" ></ion-textarea>
                   </ion-item>
       
-                  <ion-list radio-group>
+
+                  <!-- <ion-input type="hidden" formControlName="tronco_cond" value="1"></ion-input> -->
+
+                  <ion-list radio-group formControlName="tronco_cond">
       
                       <ion-list-header>
                           Condição:
                       </ion-list-header>
                     <ion-item>
                         <ion-label>Vivo</ion-label>
-                        <ion-radio  color="dark"></ion-radio>
+                        <ion-radio value="1" color="dark"></ion-radio>
                     </ion-item>
                     <ion-item>
                         <ion-label>Morto</ion-label>
-                        <ion-radio  color="dark"></ion-radio>
+                        <ion-radio value="0" color="dark"></ion-radio>
                     </ion-item>
                   </ion-list>
       
-                  <ion-buttons padding>
-                    <button ion-button>Gravar</button>
+                  <ion-buttons padding >
+                    <button ion-button [disabled]="!troncoFormArray[i].valid">Gravar</button>
                     <button ion-button type='reset'>Limpar</button>
                   </ion-buttons>
                 
               </ion-list>
-      
+
+
+              
+
+              {{troncoFormArray[i].value | json}}
+
+              {{troncoFormArray[i].valid | json}}
             </form>
       
       
         </mat-expansion-panel>
+
+        <ion-buttons padding >
+            <button ion-button (click)="closeForm()">Gravar</button>
+        </ion-buttons>
 
         
         

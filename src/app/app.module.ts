@@ -41,6 +41,7 @@ import { SqLiteWrapperProvider } from '../providers/sq-lite-wrapper/sq-lite-wrap
 import { SQLiteMock } from '../model/mock.sqlite'; // Mock SQLite
 import { UtilityProvider } from '../providers/utility/utility';
 import { ParcelaPage } from '../pages/parcela/parcela';
+import { ComponentsModule } from '../components/components.module';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { ParcelaPage } from '../pages/parcela/parcela';
     BrowserAnimationsModule,
     MatButtonModule,
     MatCheckboxModule,
+    ComponentsModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
