@@ -17,11 +17,12 @@ import { Individuo } from '../../model/individuo.class';
 })
 export class AddTroncoPage {
 
-  troncos: Array<any> = [1,2];
+  troncos: Array<any> = [1,2,3];
   troncoFormArray: Array<FormGroup> = [];
   troncoForm: FormGroup;
   individuo: Individuo;
   condicao: number;
+  step = 0;
 
   constructor(
     public navCtrl: NavController,
@@ -105,7 +106,7 @@ export class AddTroncoPage {
         // disable
 
         // next item accordion
-
+        this.nextStep();
       }
      
       console.log(formValid);
@@ -132,11 +133,29 @@ export class AddTroncoPage {
           alert('Faltando preencher Formulário n°'+ (i+1) );
           allFormsClosed = false;
 
+          this.setStep(i);
+
           return false;
           // alert the user
         }
         console.log(tronco.value,formValid);
+        
       }
 
   }
+
+  public setStep(pos: number){
+    console.log(pos);
+    this.step = pos;
+  }
+
+  public nextStep(){
+    ++this.step;
+  }
+  
+  public prevStep(){
+    if(this.step>0)
+      --this.step;
+  }
+
 }

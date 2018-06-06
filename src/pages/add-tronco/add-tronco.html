@@ -25,7 +25,7 @@
     <mat-accordion *ngIf="troncos">
         
         <!-- <ion-item style="cursor: pointer" *ngFor="let e of estacaos; index as i" > -->
-        <mat-expansion-panel *ngFor="let tronco of troncos; index as i">
+        <mat-expansion-panel [expanded]="step===i" (opened)="setStep(i)" *ngFor="let tronco of troncos; index as i">
 
           <mat-expansion-panel-header>
             <mat-panel-title>
@@ -78,6 +78,12 @@
                     <button ion-button [disabled]="!troncoFormArray[i].valid">Gravar</button>
                     <button ion-button type='reset'>Limpar</button>
                   </ion-buttons>
+
+                  <mat-action-row>
+                    <button [style.display]="i > 0 ? '' : 'none'" mat-button color="warn" (click)="prevStep()">Anterior</button>|
+                    <button [style.display]="(i+1) < troncos.length  ? '' : 'none'" mat-button color="primary" (click)="nextStep()">Próximo</button>
+                  </mat-action-row>
+              
                 
               </ion-list>
 
