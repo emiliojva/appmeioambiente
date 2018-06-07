@@ -31,6 +31,14 @@ export abstract class Table {
             };
       }
 
+      toGetQueryMaxID(){
+        let entity = this.constructor.name;
+
+        let query = `SELECT MAX(id)+1 as maxID FROM ${entity}`;
+        
+        return query;
+      }
+
 
       
 

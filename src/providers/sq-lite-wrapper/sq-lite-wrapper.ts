@@ -8,8 +8,10 @@ import { UtilityProvider } from '../utility/utility';
 import { Individuo } from '../../model/individuo.class';
 import { Especie } from '../../model/especie.class';
 import { Parcela } from '../../model/parcela.class';
+import { Tronco } from '../../model/tronco.class';
 
 const DATABASE_SCHEMA = [
+  // [`DROP TABLE IF EXISTS tronco`],
   // [`DROP TABLE IF EXISTS individuo`],
   // [`DROP TABLE IF EXISTS parcela`],
   // [`DROP TABLE IF EXISTS estacao`],
@@ -83,6 +85,25 @@ const DATABASE_SCHEMA = [
     datacriacao VARCHAR(150),
     FOREIGN KEY (parcela_id) REFERENCES parcela (id),
     FOREIGN KEY (especie_id) REFERENCES especie (id)
+  );`
+  ]
+  ,
+  /* Table Tronco */
+  [`
+  CREATE TABLE IF NOT EXISTS tronco (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    individuo_id INTEGER NOT NULL ,
+    lacre VARCHAR(150) UNIQUE,
+    dap VARCHAR(150),
+    telemetro VARCHAR(150),
+    vara VARCHAR(150),
+    regua VARCHAR(150),
+    alt_correcao VARCHAR(150),
+    condicao BOOLEAN,
+    flag VARCHAR(150),
+    observacao TEXT,
+    datacriacao VARCHAR(150),
+    FOREIGN KEY (individuo_id) REFERENCES individuo (id)
   );`
   ]
   ,
@@ -391,6 +412,67 @@ export class SqLiteWrapperProvider {
         });
   }
 
+  getTroncos(individuo_id:number, associations: boolean = false):Promise<Tronco[]>{
+
+    console.log(individuo_id);
+
+    return new Promise( (resolve,reject)=>{
+
+      this.getSQLiteInstance()
+        .then( (db: SQLiteObject) => {  // Returns Instance of SQLiteObject. To do Transactions
+
+          var sql:string = '';
+          var COLUMNS:string = '*';
+          var JOIN: Array<string> = [];
+          var WHERE:Array<string> = [];
+
+          if(associations === true){
+
+            COLUMNS = `
+            t.*,
+            i.numero_de_troncos as individuo_numero_de_troncos,
+            i.altura as individuo_altura,
+            i.especie_id as individuo_especie_id,
+            i.parcela_id as individuo_parcela_id,
+            i.observacao as individuo_observacao,
+            i.datacriacao as individuo_datacriacao,
+          `;
+
+            JOIN.push( `INNER JOIN individuo i ON i.id = t.individuo_id` );
+             
+          }
+
+          if(individuo_id){
+            WHERE.push(` WHERE t.individuo_id = ${individuo_id} `);
+          }
+
+          sql = ` SELECT ${COLUMNS} FROM tronco t
+                  ${JOIN.join(' ')}
+                  ${WHERE.join(' ')}` ;
+                  
+          // Returns Promise with statament SQL executed. Equal results.rows array objects
+          // return db.executeSql(`SELECT * FROM individuo ${where}` ,[]);
+          console.log(sql);
+          return db.executeSql(sql ,[]);
+        })
+        .then( (results) => {
+            
+            let array_results: Tronco[] = [];
+
+            // iterates results rows SQL and push into '' array 
+            for (let index = 0; index < results.rows.length; index++) {
+              let tronco:Tronco = Object.assign(results.rows.item(index), Tronco);
+              array_results.push(tronco);
+            }
+            // Resolve array of 'troncos' objects
+            resolve(array_results);
+          });
+        });
+  }
+
+
+  
+
 
   getParcelas(estacao_id:number, associations: boolean = false):Promise<Parcela[]>{
 
@@ -520,6 +602,71 @@ export class SqLiteWrapperProvider {
 
         return individuo;
       });
+      
+
+  }
+
+  storeTronco(tronco:Tronco):Promise<Tronco>{
+
+    var obj_tronco:Tronco = new Tronco();
+
+    return this.getSQLiteInstance()
+      .then( (db:SQLiteObject) => {
+
+        // return db.executeSql(obj_tronco.toGetQueryMaxID(),[]).then(res => {
+          
+          // console.log(JSON.stringify(tronco));
+
+          // let maxID = res.rows.item(0).maxID == null ? 0 : res.rows.item(0).lastID;
+          
+          // console.log(res);
+          // console.log('tentativa 1 de pegar ID', maxID);
+          
+          // tronco.id = maxID;
+
+          obj_tronco = this.fromJSON(tronco,Tronco);
+
+          // obj_tronco.codigo =  parseInt(tronco.especie_id + '' +tronco.estacao_id);
+          obj_tronco.datacriacao = new Date().getTime();
+        
+          console.log('Dados prepados para query', JSON.stringify(obj_tronco));
+
+          // get object {query,values} formatted
+          
+        // })
+      
+      })
+      .then( () => {
+        // convert Object to  Query
+        const obj_query = obj_tronco.objectToInsertQuery();
+        // console.log(obj_query);
+        return this.database.executeSql(obj_query.query, obj_query.values);
+      })
+      // .then( (result) => {
+
+      //   if(result.rows.length>0){
+
+      //     tronco.id = result.rows[0].id;
+
+      //     console.log('tentativa 1 de pegar ID', tronco.id);
+
+      //     return tronco;
+
+      //   } else {
+
+
+      //     // return this.database.executeSql(obj_tronco.lastID(),[]).then(res => {
+      //     //     // console.log(res);
+      //     //     console.log('tentativa 2 de pegar ID', res.rows.item(0).lastID);
+
+      //     //     return res.rows.item(0).lastID;
+      //     //   });
+      //     return tronco;
+
+      //   }
+
+        
+      // });
       
 
   }

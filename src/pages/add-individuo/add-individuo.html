@@ -73,14 +73,14 @@
               <ion-input type="number" formControlName="numero_de_troncos" id="numero_troncos" required></ion-input>
             </ion-item>
           
-            <ion-item>
-              <ion-label stacked>Altura</ion-label>
-              <ion-input formControlName="altura" type="number"  id="individuo_altura" required></ion-input>
-            </ion-item>
+            <!-- <ion-item [style.display]="none"> -->
+              <!-- <ion-label stacked>Altura</ion-label> -->
+              <ion-input type="hidden" formControlName="altura" id="individuo_altura" value="0"></ion-input>
+            <!-- </ion-item> -->
 
             <ion-item>
               <ion-label stacked>Observação</ion-label>
-              <ion-textarea formControlName="observacao"  id="individuo_observacao" rows="3" required></ion-textarea>
+              <ion-textarea formControlName="observacao"  id="individuo_observacao" rows="3"></ion-textarea>
             </ion-item>
 
             <!-- <ion-input type="hidden"  [value]="especie_selected"></ion-input> -->

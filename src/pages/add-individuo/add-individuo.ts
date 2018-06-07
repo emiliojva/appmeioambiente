@@ -133,7 +133,7 @@ export class AddIndividuoPage {
       parcela_id:[this.parcela_id,Validators.required], 
       numero_de_troncos: ['', [ Validators.required, Validators.min(0) ] ]   ,
       altura: ['', Validators.required],
-      observacao: ['', Validators.required],
+      observacao: ['', []],
     });
 
 

@@ -1,7 +1,14 @@
 import { Component, Inject } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ViewController } from 'ionic-angular';
 import { Validators, FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Individuo } from '../../model/individuo.class';
+import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-wrapper';
+import { Tronco } from '../../model/tronco.class';
+import { UtilityProvider } from '../../providers/utility/utility';
+import { IndividuoPage } from '../individuo/individuo';
+import { LocalPage } from '../local/local';
+import { EstacaoPage } from '../estacao/estacao';
+import { ParcelaPage } from '../parcela/parcela';
 
 /**
  * Generated class for the AddTroncoPage page.
@@ -17,20 +24,24 @@ import { Individuo } from '../../model/individuo.class';
 })
 export class AddTroncoPage {
 
-  troncos: Array<any> = [1,2,3];
+  troncos: Array<any> = [];
+  // troncos: Array<any> = [1,2,3];
   troncoFormArray: Array<FormGroup> = [];
-  troncoForm: FormGroup;
+  // troncoForm: FormGroup;
   individuo: Individuo;
-  condicao: number;
+  altura: number;
   step = 0;
+
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private formBuilder: FormBuilder,
-    @Inject(FormBuilder) fb: FormBuilder
+    private SQLService: SqLiteWrapperProvider,
+    private UtilityProvider: UtilityProvider,
+    public alert: AlertController,
+    public viewCtrl: ViewController
   ) {
-
       
     if(this.navParams.get('individuo')){
       console.log(this.navParams.get('individuo'));
@@ -38,27 +49,17 @@ export class AddTroncoPage {
       for (let i = 0; i < this.individuo.numero_de_troncos; i++ ) {
         this.troncos.push(
           { 
-            individuoID: 1, //this.individuo.id 
-            formGroup: fb.group(
-              {
-                individuo_id: [1,Validators.required],
-                tronco_lacre: ['', Validators.required],
-                tronco_dap: ['',Validators.required],
-                tronco_obs: ['', Validators.required],
-                tronco_cond: ['', Validators.required]
-              }
-            )
+            individuoID: this.individuo.id || 1 , //this.individuo.id 
           }
         );
       }
     }
 
     this.createForm();
-
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad AddTroncoPage');
+    // console.log('ionViewDidLoad AddTroncoPage');
   }
 
   private createForm() {
@@ -75,11 +76,12 @@ export class AddTroncoPage {
 
       let form =  this.formBuilder.group(
         {
-          individuo_id: [1,Validators.required],
-          tronco_lacre: ['', Validators.required],
-          tronco_dap: ['',Validators.required],
-          tronco_obs: ['', Validators.required],
-          tronco_cond: ['', Validators.required]
+          //individuo_id: [1,Validators.required], //test
+          individuo_id: [this.individuo.id || 1,Validators.required],
+          lacre: ['', Validators.required],
+          dap: ['',Validators.required],
+          observacao: ['', [] ],
+          condicao: ['', Validators.required]
         }
       );
 
@@ -88,64 +90,167 @@ export class AddTroncoPage {
       // this.troncoFormArray.push(this.troncoForm);
     }
 
-    console.log(this.troncoFormArray);
+    // console.log(this.troncoFormArray);
   }
 
-  private logForm(posicao: number) {
+  // private logForm(posicao: number) {
 
-      let troncoForm = this.troncoFormArray[posicao];
-      let formValid = troncoForm.valid;
+  //   let troncoForm = this.troncoFormArray[posicao];
+  //   let formValid = troncoForm.valid;
 
-      if(formValid){
+  //   if(formValid){
 
-        // to do save 'tronco' service
 
-        // save alert         
-        alert('Formulário Salvo');
+  //     let tronco:Tronco = UtilityProvider.fromJSON(troncoForm.value, Tronco);
+  //     // to do save 'tronco' service
+  //     this.SQLService.storeTronco(tronco).then(result => {
+
+  //       console.log(result);
+  //       troncoForm.disable();
+
+  //       // save alert         
+  //     alert('Formulário Salvo');
+
       
-        // disable
+    
+  //     // disable
 
-        // next item accordion
-        this.nextStep();
-      }
+  //     // next item accordion
+  //     this.nextStep();
+
+  //     });
+
+      
+  //   }
+    
+  //   console.log(formValid);
+  // }
+
+
+  toValidateForms(): boolean{
+    
+    for (let i = 0; i < this.troncoFormArray.length; i++) {
+
+      let troncoForm = this.troncoFormArray[i];
+      let formValid = troncoForm.valid;
+      
+      // console.log(troncoForm.value,formValid);
      
-      console.log(formValid);
+      if(!formValid && troncoForm.enabled) { 
+
+        alert('Faltando preencher Formulário n°'+ (i+1) );
+
+        this.setStep(i);
+
+        return false;
+      } 
     }
 
+    // Só permite passar para gravação se tiver digitado altura
+    if(!this.altura){
+      alert("Escolha a altura de um tronco");
+      return false;
+    }
+    
+    // se conseguir passar pelo loop, considera-se que os forms estão aptos 
+    return true;
+  }
+    
 
-    private closeForm() {
+  private closeForm() {
 
-      let allFormsClosed = false;
+    var viewCtrl = this.viewCtrl;
+    var nav = this.navCtrl;
+    const indexCurrentPage = nav.getActive().index;
+    var arr_promises = [];
+    // validando
+    if(this.toValidateForms()){
+
       for (let i = 0; i < this.troncoFormArray.length; i++) {
-  
-        let tronco = this.troncoFormArray[i];
-        let formValid = tronco.valid;
-  
-        if(formValid) {
+
+        let troncoForm = this.troncoFormArray[i];
+        let formValid = troncoForm.valid;
         
-          let data_to_save = tronco.value; 
+        // console.log(troncoForm.value,formValid);
+        
+        if(formValid && troncoForm.enabled) {
+
+          troncoForm.disable();
           
-          //console.log(tronco);
-          // store tronco in Database
+          let data_to_save = troncoForm.value;
+  
+          // console.log('dados para salvar',data_to_save)
+          
+          let tronco:Tronco = UtilityProvider.fromJSON(troncoForm.value, Tronco);
+
+          console.log('A PORRA DO TRONCO', tronco);
+
+
+          arr_promises.push( 
+            
+            new Promise(resolve => {
+
+              // to do save 'tronco' service
+              this.SQLService.storeTronco(tronco)
+              .then(result => {
+                resolve(true);
+                console.log('voltoi');
+              }).catch(reject => {
+                troncoForm.enable();
+              })
+              //console.log(tronco);
+              // store tronco in Database
+
+            })
+          );
+          
+         
         }
-        else { 
-
-          alert('Faltando preencher Formulário n°'+ (i+1) );
-          allFormsClosed = false;
-
-          this.setStep(i);
-
-          return false;
-          // alert the user
-        }
-        console.log(tronco.value,formValid);
-        
       }
 
+
+      Promise.all(arr_promises).then( () => {
+
+        let alertTronco = this.alert.create({
+          title: 'Troncos Salvos com sucesso',
+          buttons: [
+            {
+              text: 'OK',
+              handler: function(){
+                
+                viewCtrl.dismiss();
+                nav.remove(indexCurrentPage,1)
+
+    
+              }
+            }
+            
+          ]
+        });
+
+        alertTronco.present();
+
+      });
+
+      
+
+      
+
+
+      // if(this.individuo){
+        // this.SQLService.getTroncos(1).then(rows => {
+        //   console.log(rows,'ok');
+
+        //   // for(results.rows)
+        // });
+      // }
+    }
+   
   }
 
+ 
+
   public setStep(pos: number){
-    console.log(pos);
     this.step = pos;
   }
 
