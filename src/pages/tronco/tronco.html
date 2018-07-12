@@ -1,0 +1,90 @@
+<!--
+  Generated template for the IndividuoPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
+<style>
+    .vertical-align-content > *
+    {
+         display: flex!important;
+         align-content: center!important;
+         align-items: center!important;
+    }
+    </style>
+    
+    <ion-header>
+    
+      <ion-navbar>
+          <button ion-button menuToggle icon-only>
+              <ion-icon name='menu'></ion-icon>
+          </button>
+        <ion-title>Troncos</ion-title>
+    
+      </ion-navbar>
+      
+      <ion-item style="font-size:12px;">
+        Local: <span style="font-weight: bold">{{ estacao_selected ? estacao_selected.local_descricao : 'Local não escolhido'}} </span>
+        / 
+        Estação: <span style="font-weight: bold">{{ parcela_selected ? parcela_selected.estacao_codigo : 'Estação não escolhida' }}</span>
+        /
+        Parcela: <span style="font-weight: bold">{{ parcela_selected ? parcela_selected.descricao : 'Parcela não escolhida' }}</span>
+        /
+        Individuo: <span style="font-weight: bold">{{ individuo_selected ? parcela_selected.descricao : 'Individuo não escolhida' }}</span>
+      </ion-item>
+    
+    </ion-header>
+    
+    
+    <ion-content padding>
+    
+        <ion-list>
+    
+            <ion-item *ngIf="troncos?.length < 1">Adicionar Troncos.</ion-item>
+    
+          <!-- <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l.id)"> -->
+          <button ion-item *ngFor="let tronco of troncos; index as i">
+    
+            <ion-grid>
+                <ion-row>
+                  <ion-col col-2>
+                    <p>{{i+1}}</p>
+                  </ion-col>
+                    
+                  <ion-col (click)="chamarTronco(tronco.id)">
+                    <!-- <h2>Individuo {{ individuo.id }}</h2> -->
+                    <h3 style="font-style: italic">{{ individuo.especie_descricao }}</h3>
+                    <p>Com {{ individuo.numero_de_troncos }} Troncos - Criado em {{individuo.datacriacao | date:'dd-MM-yyyy HH:mm:ss'}}</p>
+                  </ion-col>
+                  <ion-icon name="ios-information-circle-outline"></ion-icon>
+    
+              </ion-row>
+            </ion-grid>
+                <!-- <ion-avatar item-end>
+                    <img src="assets/imgs/logo.png">
+                    <img src="assets/imgs/troncos.png">
+                  <img src="assets/imgs/troncos_desenho.png" style="margin: 0px auto;">
+                  <p style="font-size: 12px">Ver Troncos</p>
+                </ion-avatar> -->
+          </button>
+    
+        </ion-list>
+    
+    </ion-content>
+    
+    
+    <ion-footer>
+      <ion-toolbar>
+        <p>Comandos</p>
+        <ion-buttons end>
+          
+          <button ion-button full color="royal" [navPush]="pushPage" [navParams]="params" style="cursor: pointer;">
+            Adicionar
+            <ion-icon name="send"></ion-icon>
+          </button>
+          
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-footer>
+    

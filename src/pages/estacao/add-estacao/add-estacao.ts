@@ -6,6 +6,8 @@ import { Local } from '../../../model/local.class';
 import { Estacao } from '../../../model/estacao.class';
 import { EstacaoPage } from '../estacao';
 import { LocalPage } from '../../local/local';
+import { IndividuoPage } from '../../individuo/individuo';
+import { ParcelaPage } from '../../parcela/parcela';
 
 /**
  * Generated class for the AddPage page.
@@ -25,7 +27,9 @@ export class AddEstacaoPage {
   local_selected: number;
   locais: any[] = [];
   estacao_data: string;
+  novaEstacao: Estacao;
 
+  
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -57,10 +61,13 @@ export class AddEstacaoPage {
       console.log('ionViewDidLoad AddPage');
   }
   
+  
   logForm(){
 
     const formValid = this.estacaoForm.valid;
     const navPrevious = this.navCtrl.getPrevious();
+    const $this = this;
+    
 
     let nav = this.navCtrl;
 
@@ -75,19 +82,40 @@ export class AddEstacaoPage {
         {
           text: 'OK',
           handler: function(){
-
             
             if(formValid){
 
               if(navPrevious == null || navPrevious.index==0){
 
-                nav.push(EstacaoPage, {local: local_id}).then( () => {
-                  nav.remove(indexCurrentPage,1);   
-                  nav.insertPages(0,[{page: LocalPage}]);
-                });                
-                  
+                console.log($this.novaEstacao);
+                if($this.novaEstacao){
+
+                  // Go to page 'Parcelas'
+                  nav.push(ParcelaPage, {estacao: $this.novaEstacao}).then( () => {
+                    nav.remove(indexCurrentPage,1);   
+                    nav.insertPages(0,[{page: LocalPage}]);
+                  });                
+
+                }
+                                  
               } else {
-                nav.pop();
+                
+                
+
+                if($this.novaEstacao){
+
+                  nav.pop().then( () => {
+
+                    nav.push(ParcelaPage, {estacao: $this.novaEstacao}).then( () => {
+                    
+                    });                
+  
+                  });
+
+                }
+                
+
+
               }
 
             } 
@@ -101,6 +129,8 @@ export class AddEstacaoPage {
     // Check all fields from form
     if(formValid){
       
+      let estacao_data = this.estacao_data;
+      
       // Form data submited
       let data_to_save = this.estacaoForm.value; 
       
@@ -108,13 +138,20 @@ export class AddEstacaoPage {
       this.storeEstacao(data_to_save)
         .then( (estacao:Estacao) => {
 
+          console.log('estacao - gravada - ',estacao);
+
+          $this.novaEstacao = estacao;
+
           alertEstacao
             .setTitle('Formulário Salvo com Sucesso')
             .present()
+
+                              
+          
         })
         .catch( (error) => {
           console.log('erro ao gravar estação',data_to_save,error);
-        })
+        });
 
     } else {
       alertEstacao.present();
@@ -132,7 +169,7 @@ export class AddEstacaoPage {
       codigo: ['',Validators.required],
       data: [dataAtual, Validators.required],
       // parcela: ['', Validators.required],
-      obs: ['', Validators.required]
+      obs: ['', [] ]
     });
 
 

@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ViewController, ModalController } from 'ionic-angular';
 import { Validators, FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Individuo } from '../../model/individuo.class';
 import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-wrapper';
@@ -9,6 +9,7 @@ import { IndividuoPage } from '../individuo/individuo';
 import { LocalPage } from '../local/local';
 import { EstacaoPage } from '../estacao/estacao';
 import { ParcelaPage } from '../parcela/parcela';
+import { TroncoPage } from '../tronco/tronco';
 
 /**
  * Generated class for the AddTroncoPage page.
@@ -40,7 +41,8 @@ export class AddTroncoPage {
     private SQLService: SqLiteWrapperProvider,
     private UtilityProvider: UtilityProvider,
     public alert: AlertController,
-    public viewCtrl: ViewController
+    public viewCtrl: ViewController,
+    public modalCtrl: ModalController
   ) {
       
     if(this.navParams.get('individuo')){
@@ -185,7 +187,6 @@ export class AddTroncoPage {
 
           console.log('A PORRA DO TRONCO', tronco);
 
-
           arr_promises.push( 
             
             new Promise(resolve => {
@@ -194,7 +195,6 @@ export class AddTroncoPage {
               this.SQLService.storeTronco(tronco)
               .then(result => {
                 resolve(true);
-                console.log('voltoi');
               }).catch(reject => {
                 troncoForm.enable();
               })
@@ -246,6 +246,18 @@ export class AddTroncoPage {
       // }
     }
    
+  }
+
+  private chamarTroncos(individuo){
+    
+    let modal = this.modalCtrl;
+
+    // show modal with page 'addTronco'
+    let troncoModal = modal.create(
+      TroncoPage, {individuo:individuo}
+    );
+    troncoModal.present();
+
   }
 
  

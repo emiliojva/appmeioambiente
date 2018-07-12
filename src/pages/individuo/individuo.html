@@ -26,11 +26,11 @@
   </ion-navbar>
   
   <ion-item style="font-size:12px;">
-    Parcela: <span style="font-weight: bold">{{ parcela_selected ? parcela_selected.descricao : 'Parcela não escolhida' }}</span>
+    Local: <span style="font-weight: bold">{{ estacao_selected ? estacao_selected.local_descricao : 'Local não escolhido'}} </span>
     / 
     Estação: <span style="font-weight: bold">{{ parcela_selected ? parcela_selected.estacao_codigo : 'Estação não escolhida' }}</span>
     /
-    Local: <span style="font-weight: bold">{{ estacao_selected ? estacao_selected.local_descricao : 'Local não escolhido'}} </span>
+    Parcela: <span style="font-weight: bold">{{ parcela_selected ? parcela_selected.descricao : 'Parcela não escolhida' }}</span>
   </ion-item>
 
 </ion-header>
@@ -52,7 +52,7 @@
               </ion-col>
             
 
-              <ion-col>
+              <ion-col (click)="chamarTroncos(individuo)">
                 <!-- <h2>Individuo {{ individuo.id }}</h2> -->
                 <h3 style="font-style: italic">{{ individuo.especie_descricao }}</h3>
                 <p>Com {{ individuo.numero_de_troncos }} Troncos - Criado em {{individuo.datacriacao | date:'dd-MM-yyyy HH:mm:ss'}}</p>

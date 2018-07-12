@@ -6,6 +6,7 @@ import { IndividuoPage } from '../individuo/individuo';
 import { Parcela } from '../../model/parcela.class';
 import { AddParcelaPage } from '../add-parcela/add-parcela';
 import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-wrapper';
+import { Local } from '../../model/local.class';
 
 /**
  * Generated class for the ParcelaPage page.
@@ -27,6 +28,7 @@ export class ParcelaPage {
   pushPage: Page;
   params: Object;
   loading: any;
+  local : Local;
 
   constructor(
     public navCtrl: NavController, 
@@ -46,6 +48,14 @@ export class ParcelaPage {
       this.params = {
         estacao: this.estacao_selected
       };
+
+      this.SQLService.getLocais(this.estacao_selected.local_id).then( local => {
+
+        if(local[0])
+          this.local = local[0];
+
+      })
+
     }
 
   }

@@ -547,9 +547,19 @@ export class SqLiteWrapperProvider {
         return db.executeSql( obj_query.query, obj_query.values );
       })
       .then( (results) => {
-        console.log(results);
+        
+        return this.database.executeSql('SELECT max(id) as maxID FROM estacao WHERE local_id = ?',[estacao.local_id]);
+        
+      })
+      .then( (dataset) => {
+        console.log(dataset.rows.item(0));
+        
+        if(dataset.rows.item(0).maxID>0){
+          estacao.id = dataset.rows.item(0).maxID;
+        }
+          
         return estacao;
-      });
+      })
       
 
   }
