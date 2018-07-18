@@ -7,6 +7,9 @@ import { LocalPage } from '../local/local';
 import { Parcela } from '../../model/parcela.class';
 import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-wrapper';
 import { Estacao } from '../../model/estacao.class';
+import { Individuo } from '../../model/individuo.class';
+import { IndividuoPage } from '../individuo/individuo';
+import { Table } from '../../model/table.class';
 
 /**
  * Generated class for the AddParcelaPage page.
@@ -26,6 +29,7 @@ export class AddParcelaPage {
   estacao_selected: Estacao;
   estacoes: any[] = [];
   estacao_id: number;
+  novaParcela: {};
   // estacao_data: string;
 
   constructor(
@@ -55,6 +59,8 @@ export class AddParcelaPage {
 
   logForm(){
 
+    const $this = this;
+
     const formValid = this.parcelaForm.valid;
     const navPrevious = this.navCtrl.getPrevious();
 
@@ -64,6 +70,7 @@ export class AddParcelaPage {
     const indexCurrentPage = nav.getActive().index;
 
     let estacao_selected = this.estacao_selected;
+
 
     let alertEstacao = this.alert.create({
       title: 'Complete o formulário',
@@ -83,6 +90,16 @@ export class AddParcelaPage {
                   
               } else {
                 nav.pop();
+
+                if($this.novaParcela){
+
+                  nav.pop().then( () => {});
+
+                  // Empilhar pagina 'individuo' levando 'parcela' como param
+                  nav.push(IndividuoPage, {parcela: $this.novaParcela}).then( () => {});                
+
+                }
+
               }
 
             } 
@@ -102,6 +119,9 @@ export class AddParcelaPage {
       // Save Estacao in the Model
       this.storeParcela(data_to_save)
         .then( (parcela:Parcela) => {
+
+          this.novaParcela = parcela;
+          this.novaParcela.local_descricao = this.estacao_selected.local_descricao;
 
           alertEstacao
             .setTitle('Formulário Salvo com Sucesso')

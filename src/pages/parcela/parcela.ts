@@ -101,14 +101,18 @@ export class ParcelaPage {
       });
   }
 
-
-
   chamarIndividuos(parcela:Parcela){
     this.navCtrl.push(IndividuoPage,{parcela: parcela, estacao: this.estacao_selected});
   }
 
   addParcela(){
-    this.navCtrl.push(AddParcelaPage, {estacao:  this.estacao_selected})
+
+    let estacao = JSON.stringify(this.estacao_selected);
+    let param = JSON.parse(estacao);
+
+    param.local_descricao = this.local.descricao;
+    this.navCtrl.push(AddParcelaPage, {estacao: param});
+
   }
 
 }

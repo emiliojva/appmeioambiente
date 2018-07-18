@@ -7,6 +7,7 @@ import { Page } from 'ionic-angular/navigation/nav-util';
 import { AddIndividuoPage } from '../add-individuo/add-individuo';
 import { Estacao } from '../../model/estacao.class';
 import { Parcela } from '../../model/parcela.class';
+import { Local } from '../../model/local.class';
 
 /**
  * Generated class for the IndividuoPage page.
@@ -25,6 +26,7 @@ export class IndividuoPage {
   individuos: Individuo[] = [];
   estacao_selected: Estacao;
   parcela_selected: Parcela;
+  local_selected: Local;
   parcela_id: number;
   pushPage: Page;
   params: Object;
@@ -32,23 +34,61 @@ export class IndividuoPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public SQLService: SqLiteWrapperProvider) {
 
+    // Formulario para adicionar Individuo
     this.pushPage = AddIndividuoPage;
 
+    // if(this.navParams.get('estacao')){
+    //   this.estacao_selected = this.navParams.get('estacao');
+    // }
 
-    if(this.navParams.get('estacao')){
-      this.estacao_selected = this.navParams.get('estacao');
-    }
+    //console.log('Parcela',this.navParams.get('parcela'));
 
     if(this.navParams.get('parcela')){
 
-      this.parcela_selected = this.navParams.get('parcela');
-      
-      this.parcela_id = this.parcela_selected.id;
 
-      this.params = {
-        parcela: this.parcela_selected,
-        estacao: this.estacao_selected
-      };
+
+      let id_parcela = this.navParams.get('parcela').id;
+      
+      let parcela_active = new Parcela(id_parcela);
+
+      parcela_active.get().then( (row_parcela)=>{
+
+        
+        this.parcela_selected = row_parcela;
+
+        console.log(this.parcela_selected.descricao);
+
+        this.parcela_id = this.parcela_selected.id;
+
+        row_parcela.getEstacao().then( (row_estacao: Estacao)=>{
+        
+          this.estacao_selected = row_estacao;
+
+
+          row_estacao.getLocal().then( (row_local: Local)=>{
+             this.local_selected = row_local;
+          });
+
+
+          console.log(this.estacao_selected.codigo);
+
+          this.params = {
+            parcela: this.parcela_selected,
+            estacao: this.estacao_selected
+          };
+
+        })
+
+        
+      })
+
+      
+
+      // this.parcela_selected = this.navParams.get('parcela');
+      
+      
+
+     
     }
 
   }

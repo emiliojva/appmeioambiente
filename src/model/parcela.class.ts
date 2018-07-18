@@ -1,4 +1,5 @@
 import { Table } from "./table.class";
+import { Estacao } from "./estacao.class";
 
 export class Parcela extends Table {
     public id: number;
@@ -9,8 +10,14 @@ export class Parcela extends Table {
     public descricao: string;
     public datacriacao: number;
 
-    constructor(){
-      super();
+    constructor(id?:number){
+      super(id);
     }
+
+    public getEstacao(){
+      return new Estacao(this.estacao_id).get();
+    }
+    
+   
     
   }

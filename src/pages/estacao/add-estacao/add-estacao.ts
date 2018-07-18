@@ -8,6 +8,7 @@ import { EstacaoPage } from '../estacao';
 import { LocalPage } from '../../local/local';
 import { IndividuoPage } from '../../individuo/individuo';
 import { ParcelaPage } from '../../parcela/parcela';
+import { Table } from '../../../model/table.class';
 
 /**
  * Generated class for the AddPage page.
@@ -48,12 +49,23 @@ export class AddEstacaoPage {
 
   ngOnInit(){
 
-    if(this.navParams.get('local')){
-      console.log(this.navParams.get('local'));
-      this.local_selected = this.navParams.get('local');
-    }
-
     
+    
+    if(this.navParams.get('local')){
+      
+      this.local_selected = this.navParams.get('local');
+
+      console.log('params local',this.local_selected);
+
+      let local_active = new Local(this.local_selected);
+
+      local_active.get().then( row => {
+        console.log(row);
+      })
+
+      
+
+    }
 
   }
 
@@ -138,16 +150,12 @@ export class AddEstacaoPage {
       this.storeEstacao(data_to_save)
         .then( (estacao:Estacao) => {
 
-          console.log('estacao - gravada - ',estacao);
-
           $this.novaEstacao = estacao;
 
           alertEstacao
             .setTitle('Formulário Salvo com Sucesso')
             .present()
-
-                              
-          
+                                        
         })
         .catch( (error) => {
           console.log('erro ao gravar estação',data_to_save,error);

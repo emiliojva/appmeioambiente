@@ -9,6 +9,7 @@ import { Individuo } from '../../model/individuo.class';
 import { Especie } from '../../model/especie.class';
 import { Parcela } from '../../model/parcela.class';
 import { Tronco } from '../../model/tronco.class';
+import { Table } from '../../model/table.class';
 
 const DATABASE_SCHEMA = [
   // [`DROP TABLE IF EXISTS tronco`],
@@ -120,7 +121,7 @@ const DATABASE_SCHEMA = [
   )`
   ]
 ];
-
+/* Carregar do banco todas os locais e atualizaar banco local */
 const POPULATE_TABLES_LOCAL = [
   ['INSERT INTO local(codigo,descricao,datacriacao) VALUES (?,?,?)', ['guapi','Guapimirim',new Date().getTime()] ],
   ['INSERT INTO local(codigo,descricao,datacriacao) VALUES (?,?,?)', ['gaurai','Gauraí',new Date().getTime()] ],
@@ -149,6 +150,8 @@ export class SqLiteWrapperProvider {
   database: SQLiteObject;
 
   dbScriptDone: boolean = false;
+
+  static instanceDB: SQLiteObject;
   
   constructor(
     //public http: HttpClient, 
@@ -171,6 +174,7 @@ export class SqLiteWrapperProvider {
           resolve(this.database);
       });
     }
+    
 
     console.log('meioambiente-v2.0.db');
     return this.sqlite.create({
@@ -579,8 +583,18 @@ export class SqLiteWrapperProvider {
         return db.executeSql( obj_query.query, obj_query.values );
       })
       .then( (results) => {
-        console.log(results);
-        return obj_parcela;
+        
+        return this.database.executeSql('SELECT max(id) as maxID FROM parcela WHERE estacao_id = ?',[parcela.estacao_id]);
+        
+      })
+      .then( (dataset) => {
+        console.log(dataset.rows.item(0));
+        
+        if(dataset.rows.item(0).maxID>0){
+          parcela.id = dataset.rows.item(0).maxID;
+        }
+          
+        return parcela;
       });
 
   }

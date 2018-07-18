@@ -1,4 +1,5 @@
 import { Table } from "./table.class";
+import { Local } from "./local.class";
 
 export class Estacao extends Table {
     public id: number;
@@ -9,8 +10,12 @@ export class Estacao extends Table {
     public obs: string;
     public datacriacao: number;
 
-    constructor(){
-      super();
+    constructor(id?){
+      super(id);
+    }
+
+    public getLocal(){
+      return new Local(this.local_id).get();
     }
     
   }

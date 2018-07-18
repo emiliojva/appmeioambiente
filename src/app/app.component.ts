@@ -13,6 +13,7 @@ import { SqLiteWrapperProvider } from '../providers/sq-lite-wrapper/sq-lite-wrap
 import { Individuo2Page } from '../pages/individuo2/individuo2';
 import { EstacaoPage } from '../pages/estacao/estacao';
 import { AddParcelaPage } from '../pages/add-parcela/add-parcela';
+import { Table } from '../model/table.class';
 
 @Component({
   templateUrl: 'app.html'
@@ -62,6 +63,9 @@ export class MyApp {
             console.log('### TABLES CREATED ###');
             //this.getLocais();
 
+
+            // Instancia do SQLiteObject
+            Table.instanceDB = this.SQLService.database;
 
           })
           .catch( (error) => {
