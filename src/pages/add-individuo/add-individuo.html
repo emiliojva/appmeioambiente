@@ -38,7 +38,8 @@
 
 <ion-content padding>
 
-    <form [formGroup]="addIndividuoFormGroup" (ngSubmit)="logForm()">
+    <!-- <form [formGroup]="addIndividuoFormGroup" (ngSubmit)="logForm()"> -->
+    <form [formGroup]="individuoFrmGroup" (ngSubmit)="logForm()">
 
         <ion-list>
 
@@ -51,7 +52,6 @@
                 </ion-select>
                     
             </ion-item>
-
 
             <ion-item>
     

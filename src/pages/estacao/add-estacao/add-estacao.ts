@@ -48,7 +48,6 @@ export class AddEstacaoPage {
   }
 
   ngOnInit(){
-
     
     
     if(this.navParams.get('local')){
@@ -59,8 +58,9 @@ export class AddEstacaoPage {
 
       let local_active = new Local(this.local_selected);
 
-      local_active.get().then( row => {
-        console.log(row);
+      local_active.get()
+        .then( row => {
+          console.log(row);
       })
 
       

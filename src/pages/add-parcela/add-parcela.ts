@@ -121,8 +121,9 @@ export class AddParcelaPage {
         .then( (parcela:Parcela) => {
 
           this.novaParcela = parcela;
-          this.novaParcela.local_descricao = this.estacao_selected.local_descricao;
 
+          
+          
           alertEstacao
             .setTitle('Formulário Salvo com Sucesso')
             .present()

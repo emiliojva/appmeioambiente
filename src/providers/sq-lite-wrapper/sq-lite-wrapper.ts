@@ -716,7 +716,7 @@ export class SqLiteWrapperProvider {
         this.dbScriptDone = true;
         console.log('End Script Creates DB! - Tables created');
       });
-    }
+  }
 
 
 

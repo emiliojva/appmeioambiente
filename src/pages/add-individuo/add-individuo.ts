@@ -14,6 +14,8 @@ import { Page } from 'ionic-angular/navigation/nav-util';
 import { ParcelaPage } from '../parcela/parcela';
 import { AddTroncoPage } from '../add-tronco/add-tronco';
 import { UtilityProvider } from '../../providers/utility/utility';
+import { PaginaBase } from '../../infraestrutura/PaginaBase';
+import { ComunsValidadores } from '../../validadores/ComunsValidadores';
 
 /**
  * Generated class for the AddIndividuoPage page.
@@ -27,10 +29,9 @@ import { UtilityProvider } from '../../providers/utility/utility';
   selector: 'page-add-individuo',
   templateUrl: 'add-individuo.html',
 })
-export class AddIndividuoPage {
+export class AddIndividuoPage extends PaginaBase {
 
   @ViewChild('select_estacao')
-  
   @ViewChild('select_parcela') 
 
   locais: Local[] = [];
@@ -48,17 +49,25 @@ export class AddIndividuoPage {
   parcelas: Array<Parcela> = [];
   parcela_selected: Parcela;
   parcela_id: number;
-  
-  
+
+
+  // depois de criar interface cpb
+  foiSubmetido: boolean;
+  individuoFrmGroup: FormGroup;
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
-    private formBuilder: FormBuilder,
+    public formBuilder: FormBuilder,
     private SQLService: SqLiteWrapperProvider,
     private alert: AlertController,
     public modal: ModalController
   ) {
+
+    super({ formBuilder: formBuilder });
+    this.foiSubmetido = false;
+
+
     
     this.SQLService.getEspecies()
       .then( rows => this.especies = rows);
@@ -109,6 +118,19 @@ export class AddIndividuoPage {
     this.populateLocais();
   }
 
+  public doCarregarValidadores():void{
+    
+    this.individuoFrmGroup = this._formBuilder.group({
+      especie_id:['', Validators.required ], 
+      parcela_id:[this.parcela_id,Validators.required], 
+      numero_de_troncos: ['', [ Validators.required, Validators.min(0) ] ],
+      altura: ['', Validators.required],
+      observacao: ['', []],
+      // email: ['', Validators.compose( [Validators.required, ComunsValidadores.email] )],
+      // senha: ['', Validators.compose( [Validators.required, Validators.minLength(3)] )]
+     });
+  }
+
   private populateLocais():Promise<any>{
     return this.SQLService.getLocais()          
         .then( (rows) => {
@@ -128,14 +150,16 @@ export class AddIndividuoPage {
   private createForm(){
 
     // Compose group form 
-    this.addIndividuoFormGroup = this.formBuilder.group({
-      especie_id:['', Validators.required ]  , 
-      parcela_id:[this.parcela_id,Validators.required], 
-      numero_de_troncos: ['', [ Validators.required, Validators.min(0) ] ]   ,
-      altura: ['', Validators.required],
-      observacao: ['', []],
-    });
-
+    this.addIndividuoFormGroup = this.formBuilder.group(
+      {
+        especie_id:['', Validators.required ]  , 
+        parcela_id:[this.parcela_id,Validators.required], 
+        numero_de_troncos: ['', [ Validators.required, Validators.min(0) ] ],
+        altura: ['', Validators.required],
+        observacao: ['', []],
+  
+      }
+    );
 
   }
 

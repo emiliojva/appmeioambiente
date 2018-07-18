@@ -45,41 +45,28 @@ export class IndividuoPage {
 
     if(this.navParams.get('parcela')){
 
-
-
       let id_parcela = this.navParams.get('parcela').id;
-      
       let parcela_active = new Parcela(id_parcela);
 
+
       parcela_active.get().then( (row_parcela)=>{
-
-        
         this.parcela_selected = row_parcela;
-
-        console.log(this.parcela_selected.descricao);
-
         this.parcela_id = this.parcela_selected.id;
 
-        row_parcela.getEstacao().then( (row_estacao: Estacao)=>{
-        
+        row_parcela.getEstacao().then( (row_estacao)=>{
           this.estacao_selected = row_estacao;
-
-
+        
           row_estacao.getLocal().then( (row_local: Local)=>{
              this.local_selected = row_local;
+
+             this.params = {
+              parcela: this.parcela_selected,
+              estacao: this.estacao_selected
+            };
+
           });
 
-
-          console.log(this.estacao_selected.codigo);
-
-          this.params = {
-            parcela: this.parcela_selected,
-            estacao: this.estacao_selected
-          };
-
         })
-
-        
       })
 
       
