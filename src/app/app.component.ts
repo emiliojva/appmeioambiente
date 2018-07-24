@@ -42,7 +42,8 @@ export class MyApp {
       // { title: 'Adicionar Individuo', component: AddIndividuoPage },
       { title: 'Adicionar Tronco - InDev', component: AddTroncoPage },
       // { title: 'Individuo 2', component: Individuo2Page}
-      { title: 'Adicionar Parcela', component: AddParcelaPage },
+      // { title: 'Adicionar Parcela', component: AddParcelaPage },
+      { title: 'Individuos', component: IndividuoPage },
       { title: 'Troncos', component: TroncoPage },
     ];
 

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Form, ModalController } from 'ionic-angular';
-import { FormGroup, FormControl } from '@angular/forms';
+import { IonicPage, NavController, NavParams, Form, ModalController, LoadingController, Modal } from 'ionic-angular';
+import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Individuo } from '../../model/individuo.class';
 import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-wrapper';
 import { Page } from 'ionic-angular/navigation/nav-util';
@@ -9,6 +9,7 @@ import { Estacao } from '../../model/estacao.class';
 import { Parcela } from '../../model/parcela.class';
 import { Local } from '../../model/local.class';
 import { TroncoPage } from '../tronco/tronco';
+import { PaginaBase } from '../../infraestrutura/PaginaBase';
 
 /**
  * Generated class for the IndividuoPage page.
@@ -22,7 +23,7 @@ import { TroncoPage } from '../tronco/tronco';
   selector: 'page-individuo',
   templateUrl: 'individuo.html',
 })
-export class IndividuoPage {
+export class IndividuoPage extends PaginaBase {
 
   individuos: Individuo[] = [];
   estacao_selected: Estacao;
@@ -31,29 +32,61 @@ export class IndividuoPage {
   parcela_id: number;
   pushPage: Page;
   params: Object;
+  foiCarregado:boolean = false;
+  loading: any;
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
     public SQLService: SqLiteWrapperProvider,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
+    public loadingCtrl: LoadingController,
   ) {
+    
+    super({
+      loadingCtrl: loadingCtrl,
+      navParams: navParams
+    });
+
+    this.foiCarregado = false;
 
     // Formulario para adicionar Individuo
     this.pushPage = AddIndividuoPage;
 
-
-    
-    // if(this.navParams.get('estacao')){
-    //   this.estacao_selected = this.navParams.get('estacao');
-    // }
-
-    //console.log('Parcela',this.navParams.get('parcela'));
-
+    // se tela for carregada por chamada da view Parcela
     if(this.navParams.get('parcela')){
+      let parcela_id = this.navParams.get('parcela').id;
+      this.populateItemsNav(parcela_id);
+    } else {
+      
+      // teste
+      this.populateItemsNav(1);
 
-      let id_parcela = this.navParams.get('parcela').id;
-      let parcela_active = new Parcela(id_parcela);
+    }
+
+  }
+
+  doCarregarValidadores():void{
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad IndividuoPage');
+  }
+
+  // On Active Page
+  ionViewWillEnter(){
+    console.log('Active Page Individuo');
+    
+    if(this.parcela_selected){
+      this.reloadIndividuos();
+    }
+      
+  }
+
+  populateItemsNav(parcela_id:number){
+      
+      
+      let parcela_active = new Parcela(parcela_id);
 
 
       parcela_active.get().then( (row_parcela)=>{
@@ -75,50 +108,49 @@ export class IndividuoPage {
 
         })
       })
-     
-    }
-
   }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad IndividuoPage');
-  }
-
-  // On Active Page
-  ionViewWillEnter(){
-    console.log('Active Page Individuo');
-    
-    if(this.parcela_selected){
-      this.reloadIndividuos();
-    }
-      
-  }
-
-  getTroncos(i) {
-    
-  }
-
-  
 
   reloadIndividuos(){
     this.SQLService.getIndividuos(this.parcela_id, true)
         .then( rows => {
+
           this.individuos = rows;
           console.log('listando individuos',rows);
+
+          this.foiCarregado = true;
+          
         });
   }
 
   chamarTroncos(individuo:Individuo){
 
-     //   // show modal with page 'addTronco'
-      let troncoModal = this.modalCtrl.create(TroncoPage, {individuo: individuo});
-      troncoModal.present();
+    console.log(individuo);
+    
+    let troncoModal:Modal = this.modalCtrl.create(TroncoPage, {individuo: individuo});
 
+    
+
+    let msg = "Carregando Troncos do individuo - "+individuo.id;
+    this.mostrarLoading(msg).then( ()=>{
+  
+      troncoModal.present().then( ()=>{
+        this.esconderLoading();
+      });
+  
+    })
+
+    
+    
+
+    
+      // .then( ()=>{
+        // show modal with page 'addTronco'
+      //   troncoModal.present().then( ()=>{
+      //     this.esconderLoading();
+      //   });
+      // // });
 
     // new Individuo(individuo_id).get().then( individuo_active=>{
-    
-   
-
     // });
   }
 }

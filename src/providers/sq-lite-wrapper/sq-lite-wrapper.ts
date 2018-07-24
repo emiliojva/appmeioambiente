@@ -19,7 +19,7 @@ const DATABASE_SCHEMA = [
   // [`DROP TABLE IF EXISTS local`],
   // [`DROP TABLE IF EXISTS especie`],
   // [`DROP TABLE IF EXISTS usuario`],
-  /*Table local */
+  // /*Table local */
   [`
   CREATE TABLE IF NOT EXISTS local 
   (

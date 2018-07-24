@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, Loading } from 'ionic-angular';
 import { Individuo } from '../../model/individuo.class';
 import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-wrapper';
 import { Tronco } from '../../model/tronco.class';
@@ -32,16 +32,19 @@ export class TroncoPage extends PaginaBase {
   individuo: Individuo;
   altura: number;
   step = 0;
+  loading: Loading;
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
     private SQLService: SqLiteWrapperProvider,
-    public formBuilder: FormBuilder
+    public formBuilder: FormBuilder,
+    public loadingCtrl: LoadingController
    ) {
     super({
       formBuilder: formBuilder,
-      navParams: navParams
+      navParams: navParams,
+      loadingCtrl: loadingCtrl
     });
   }
 
@@ -67,6 +70,8 @@ export class TroncoPage extends PaginaBase {
     }
 
     let individuo = new Individuo(individuo_id);
+
+    console.log(individuo);
 
     individuo.get().then( individuo_active => {
 
@@ -95,6 +100,9 @@ export class TroncoPage extends PaginaBase {
           this.troncoFormArray.push(form);
 
         }
+
+        // loading.dismiss();
+        // this.esconderLoading();
 
       })
     
@@ -131,7 +139,6 @@ export class TroncoPage extends PaginaBase {
     // se conseguir passar pelo loop, considera-se que os forms estão aptos 
     return true;
   }
-
   
   public setStep(pos: number){
     this.step = pos;

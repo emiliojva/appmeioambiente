@@ -90,14 +90,6 @@ export class AddIndividuoPage extends PaginaBase {
     }
 
     this.doCarregarValidadores();
-
-    // this.createForm();
-
-    
-
-
-
-
   }
 
   ionViewDidLoad() {
@@ -123,10 +115,7 @@ export class AddIndividuoPage extends PaginaBase {
      });
   }
 
-  popView(){
-    this.navCtrl.pop();
-  }
-
+  
   private populateLocais():Promise<any>{
     return this.SQLService.getLocais()          
         .then( (rows) => {
@@ -138,30 +127,15 @@ export class AddIndividuoPage extends PaginaBase {
     return this.SQLService.getEstacaos(this.local_id)
     .then( (rows) => {
       this.estacaos = rows;
-      console.log('estacoes',this.estacaos);
-      
     });
-  }
-
-  private createForm(){
-
-    // Compose group form 
-    this.individuoFrmGroup = this.formBuilder.group(
-      {
-        especie_id:['', Validators.required ]  , 
-        parcela_id:[this.parcela_id,Validators.required], 
-        numero_de_troncos: ['', [ Validators.required, Validators.min(0) ] ],
-        altura: ['', Validators.required],
-        observacao: ['', []],
-  
-      }
-    );
-
   }
 
   logForm(){
 
     const $this = this;
+    const nav = this.navCtrl;
+    const modal = this.modal;
+    const navPrevious = this.navCtrl.getPrevious();
 
     let formValid = this.individuoFrmGroup.valid;
 
@@ -170,12 +144,6 @@ export class AddIndividuoPage extends PaginaBase {
 
     // let individuo:Individuo = Object.assign(this.addIndividuoFormGroup.value, Individuo);
     let individuo:Individuo = UtilityProvider.fromJSON(this.individuoFrmGroup.value, Individuo);
-
-    const navPrevious = this.navCtrl.getPrevious();
-
-    const nav = this.navCtrl;
-    const modal = this.modal;
-
     
     // remove current page
     const indexCurrentPage = nav.getActive().index;
@@ -185,7 +153,6 @@ export class AddIndividuoPage extends PaginaBase {
       estacao_id = this.estacao_id;
     }
 
-    
     // ALERT 
     let alertIndividuo = this.alert.create({
       title: 'Complete o formulário',
@@ -237,17 +204,12 @@ export class AddIndividuoPage extends PaginaBase {
 
       this.SQLService.storeIndividuo(individuo).then( () => {
         
-        console.log('SAVE');
-
         this.foiSubmetido = true;
-
-        console.log(individuo);
-
         alertIndividuo
           .setTitle('Formulário Salvo com Sucesso')
           .present()
 
-      }).catch( error => {
+        }).catch( error => {
         this.foiSubmetido = true;
         console.log(error)
         console.log('erro ao gravar estação',data_to_save,error);
@@ -258,11 +220,13 @@ export class AddIndividuoPage extends PaginaBase {
     }
   }
 
-
   reloadIndividuos(){
-
     this.SQLService.getIndividuos(this.estacao_id)
         .then( rows => console.log(rows) );
-    
   }
+
+  popView(){
+    this.navCtrl.pop();
+  }
+
 }
