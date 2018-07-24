@@ -5,11 +5,12 @@ export class Tronco extends Table {
     public individuo_id: number;
     public lacre: string;
     public dap: string;
-    public telemetro: string;
-    public vara: string;
-    public regua: string;
-    public alt_correcao: string;
-    public condicao: string;
-    public flag: string;
+    public condicao: boolean;
+    public observacao?: string;
+    public telemetro?: string;
+    public vara?: string;
+    public regua?: string;
+    public alt_correcao?: string;
+    public flag?: string;
     public datacriacao: number;
   }

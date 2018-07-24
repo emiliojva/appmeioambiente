@@ -4,7 +4,6 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-
 <style>
     .vertical-align-content > *
     {
@@ -17,6 +16,7 @@
     <ion-header>
     
       <ion-navbar>
+    
           <button ion-button menuToggle icon-only>
               <ion-icon name='menu'></ion-icon>
           </button>
@@ -25,51 +25,95 @@
       </ion-navbar>
       
       <ion-item style="font-size:12px;">
-        Local: <span style="font-weight: bold">{{ estacao_selected ? estacao_selected.local_descricao : 'Local não escolhido'}} </span>
+        Local: <span style="font-weight: bold">{{ local_selected ? local_selected.descricao : 'Local não escolhido'}} </span>
         / 
-        Estação: <span style="font-weight: bold">{{ parcela_selected ? parcela_selected.estacao_codigo : 'Estação não escolhida' }}</span>
+        Estação: <span style="font-weight: bold">{{ estacao_selected ? estacao_selected.codigo : 'Estação não escolhida' }}</span>
         /
         Parcela: <span style="font-weight: bold">{{ parcela_selected ? parcela_selected.descricao : 'Parcela não escolhida' }}</span>
         /
-        Individuo: <span style="font-weight: bold">{{ individuo_selected ? parcela_selected.descricao : 'Individuo não escolhida' }}</span>
+        Parcela: <span style="font-weight: bold">{{ parcela_selected ? parcela_selected.descricao : 'Parcela não escolhida' }}</span>
+        /
+        Parcela: <span style="font-weight: bold">{{ parcela_selected ? parcela_selected.descricao : 'Parcela não escolhida' }}</span>
       </ion-item>
     
     </ion-header>
     
     
     <ion-content padding>
+
+        <ion-item *ngIf="troncos?.length < 1">Cadastre um novo Tronco.</ion-item>
+
+        <mat-accordion *ngIf="troncoFormArray">
+        
+            <!-- <ion-item style="cursor: pointer" *ngFor="let e of estacaos; index as i" > -->
+            <mat-expansion-panel [expanded]="step===i" (opened)="setStep(i)" *ngFor="let tronco of troncos; index as i">
     
-        <ion-list>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  TRONCO - {{i+1}}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
     
-            <ion-item *ngIf="troncos?.length < 1">Adicionar Troncos.</ion-item>
+              <!-- <form [formGroup]="troncoFormArray[i]" (ngSubmit)="logForm(i)"> -->
+              <form [formGroup]="troncoFormArray[i]">
     
-          <!-- <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l.id)"> -->
-          <button ion-item *ngFor="let tronco of troncos; index as i">
-    
-            <ion-grid>
-                <ion-row>
-                  <ion-col col-2>
-                    <p>{{i+1}}</p>
-                  </ion-col>
+                <!-- <ion-input type="hidden" [value]="tronco.individuoID" formControlName="local_id" required></ion-input> -->
+                <!-- <ion-input type="hidden" formControlName="" required></ion-input> -->
+          
+                  <ion-list>
+          
+                      <!-- <ion-input type="hidden" [value]="local_selected.id" formControlName="local_id" required></ion-input> -->
+          
+                      <ion-item>
+                        <ion-label stacked>Lacre</ion-label>
+                        <ion-input formControlName="lacre" type="number"  id="lacre" required value="{{tronco.lacre}}"></ion-input>
+                      </ion-item>
                     
-                  <ion-col (click)="chamarTronco(tronco.id)">
-                    <!-- <h2>Individuo {{ individuo.id }}</h2> -->
-                    <h3 style="font-style: italic">{{ individuo.especie_descricao }}</h3>
-                    <p>Com {{ individuo.numero_de_troncos }} Troncos - Criado em {{individuo.datacriacao | date:'dd-MM-yyyy HH:mm:ss'}}</p>
-                  </ion-col>
-                  <ion-icon name="ios-information-circle-outline"></ion-icon>
+                      <ion-item>
+                        <ion-label stacked>DAP</ion-label>
+                        <ion-input formControlName="dap" type="number" id="dap" required value="{{tronco.dap}}"></ion-input>
+                      </ion-item>
+          
+                      <ion-item>
+                        <ion-label stacked>Observação</ion-label>
+                        <ion-textarea formControlName="observacao" id="observacao" rows="3" value="{{tronco.observacao}}"></ion-textarea>
+                      </ion-item>
+          
     
-              </ion-row>
-            </ion-grid>
-                <!-- <ion-avatar item-end>
-                    <img src="assets/imgs/logo.png">
-                    <img src="assets/imgs/troncos.png">
-                  <img src="assets/imgs/troncos_desenho.png" style="margin: 0px auto;">
-                  <p style="font-size: 12px">Ver Troncos</p>
-                </ion-avatar> -->
-          </button>
+                      <!-- <ion-input type="hidden" formControlName="tronco_cond" value="1"></ion-input> -->
     
-        </ion-list>
+                      <ion-list radio-group formControlName="condicao">
+          
+                          <ion-list-header>
+                              Condição:
+                          </ion-list-header>
+                        <ion-item>
+                            <ion-label>Vivo</ion-label>
+                            <ion-radio value="1" color="dark" [disabled]="troncoFormArray[i].disabled"></ion-radio>
+                        </ion-item>
+                        <ion-item>
+                            <ion-label>Morto</ion-label>
+                            <ion-radio value="0" color="dark" [disabled]="troncoFormArray[i].disabled"></ion-radio>
+                        </ion-item>
+                      </ion-list>
+          
+                      <mat-action-row>
+                        <button type="button" [style.display]="i > 0 ? '' : 'none'" mat-button color="warn" (click)="prevStep();">Anterior</button>
+                        <button type="button" [style.display]="(i+1) < troncos.length  ? '' : 'none'" mat-button color="primary" (click)="nextStep();">Próximo</button>
+                      </mat-action-row>
+                  
+                    
+                  </ion-list>
+    
+                  <!-- {{troncoFormArray[i].value | json}} -->
+    
+                  <!-- {{troncoFormArray[i].valid | json}} -->
+    
+                </form>
+          
+            </mat-expansion-panel>
+            
+        </mat-accordion>
     
     </ion-content>
     
@@ -79,7 +123,7 @@
         <p>Comandos</p>
         <ion-buttons end>
           
-          <button ion-button full color="royal" [navPush]="pushPage" [navParams]="params" style="cursor: pointer;">
+          <button ion-button full color="royal" [navPush]="navPage" [navParams]="navPageParams" style="cursor: pointer;">
             Adicionar
             <ion-icon name="send"></ion-icon>
           </button>

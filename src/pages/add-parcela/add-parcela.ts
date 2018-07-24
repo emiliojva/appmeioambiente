@@ -89,6 +89,7 @@ export class AddParcelaPage {
                 });                
                   
               } else {
+                
                 nav.pop();
 
                 if($this.novaParcela){

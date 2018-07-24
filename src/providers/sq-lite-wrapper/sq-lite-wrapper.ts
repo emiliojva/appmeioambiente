@@ -606,7 +606,7 @@ export class SqLiteWrapperProvider {
 
         let obj_individuo:Individuo = this.fromJSON(individuo,Individuo);
 
-        obj_individuo.codigo =  parseInt(individuo.especie_id + '' +individuo.estacao_id);
+        obj_individuo.codigo =  parseInt(individuo.especie_id + '' +individuo.parcela_id);
         obj_individuo.datacriacao = new Date().getTime();
         
         console.log('Dados prepados para query', JSON.stringify(individuo));

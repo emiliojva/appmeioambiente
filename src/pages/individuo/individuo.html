@@ -43,31 +43,37 @@
         <ion-item *ngIf="individuos?.length < 1">Cadastre um novo Individuo.</ion-item>
 
       <!-- <ion-item *ngFor="let l of locais" (click)="chamarEstacoes(l.id)"> -->
-      <button ion-item *ngFor="let individuo of individuos; index as i">
+      <!-- <button ion-item  > -->
 
-        <ion-grid>
+
+        <ion-item *ngFor="let individuo of individuos; index as i">
+        
+          <ion-grid >
             <ion-row>
               <ion-col col-2>
                 <p>{{i+1}}</p>
               </ion-col>
             
 
-              <ion-col (click)="chamarTroncos(individuo)">
+              <ion-col>
                 <!-- <h2>Individuo {{ individuo.id }}</h2> -->
                 <h3 style="font-style: italic">{{ individuo.especie_descricao }}</h3>
                 <p>Com {{ individuo.numero_de_troncos }} Troncos - Criado em {{individuo.datacriacao | date:'dd-MM-yyyy HH:mm:ss'}}</p>
               </ion-col>
-              <ion-icon name="ios-information-circle-outline"></ion-icon>
 
+              <button ion-button (click)="chamarTroncos(individuo)">
+                <ion-icon name="ios-information-circle-outline"  ></ion-icon>
+              </button>
           </ion-row>
-        </ion-grid>
+          </ion-grid>
+        </ion-item>
             <!-- <ion-avatar item-end>
                 <img src="assets/imgs/logo.png">
                 <img src="assets/imgs/troncos.png">
               <img src="assets/imgs/troncos_desenho.png" style="margin: 0px auto;">
               <p style="font-size: 12px">Ver Troncos</p>
             </ion-avatar> -->
-      </button>
+      <!-- </button> -->
 
     </ion-list>
 

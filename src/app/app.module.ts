@@ -33,6 +33,7 @@ import { AddIndividuoPage } from '../pages/add-individuo/add-individuo';
 import { AddTroncoPage } from '../pages/add-tronco/add-tronco';
 import { Individuo2Page } from '../pages/individuo2/individuo2';
 import { AddParcelaPage } from '../pages/add-parcela/add-parcela';
+import { TroncoPage } from '../pages/tronco/tronco';
 
 /**
  * Providers & Services
@@ -50,12 +51,13 @@ import { ComponentsModule } from '../components/components.module';
     LocalPage,
     EstacaoPage,
     AddEstacaoPage,
+    ParcelaPage,
+    AddParcelaPage,
+    Individuo2Page,
     IndividuoPage,
     AddIndividuoPage,
     AddTroncoPage,
-    Individuo2Page,
-    AddParcelaPage,
-    ParcelaPage
+    TroncoPage    
   ],
   imports: [
     MatExpansionModule,
@@ -78,7 +80,8 @@ import { ComponentsModule } from '../components/components.module';
     AddTroncoPage,
     Individuo2Page,
     AddParcelaPage,
-    ParcelaPage
+    ParcelaPage,
+    TroncoPage
   ],
   providers: [
     StatusBar,

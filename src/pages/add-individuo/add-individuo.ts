@@ -65,47 +65,39 @@ export class AddIndividuoPage extends PaginaBase {
   ) {
 
     super({ formBuilder: formBuilder });
+    
     this.foiSubmetido = false;
+    this.SQLService.getEspecies().then( rows => this.especies = rows);
+    this.SQLService.getParcelas(this.estacao_id).then( rows => {
+        this.parcelas = rows;
+    });
 
+    if(this.navParams.get('estacao')){
+      this.estacao_selected = this.navParams.get('estacao');
+      this.estacao_id = this.estacao_selected.id;
+    }
+
+    if(this.navParams.get('parcela')){
+
+      this.parcela_selected = this.navParams.get('parcela');
+
+      this.parcela_id = this.parcela_selected.id;
+
+      this.params = {
+        parcela: this.parcela_selected
+      };
+
+    }
+
+    this.doCarregarValidadores();
+
+    // this.createForm();
 
     
-    this.SQLService.getEspecies()
-      .then( rows => this.especies = rows);
 
 
-      if(this.navParams.get('estacao')){
-        this.estacao_selected = this.navParams.get('estacao');
-        this.estacao_id = this.estacao_selected.id;
-      }
-  
-      if(this.navParams.get('parcela')){
-  
-        this.parcela_selected = this.navParams.get('parcela');
-  
-        this.parcela_id = this.parcela_selected.id;
-  
-        this.params = {
-          parcela: this.parcela_selected
-        };
 
-      }
 
-    // if(this.navParams.get('estacao')){
-
-    //   this.estacao_selected = this.navParams.get('estacao');
-      
-    //   console.log(this.especie_selected);
-    //   this.estacao_id = this.estacao_selected.id;
-    //   this.local_id = this.estacao_selected.local_id;
-
-      this.SQLService.getParcelas(this.estacao_id)
-        .then( rows => {
-            this.parcelas = rows;
-        });
-
-    // }
-    
-    this.createForm();
   }
 
   ionViewDidLoad() {
@@ -131,6 +123,10 @@ export class AddIndividuoPage extends PaginaBase {
      });
   }
 
+  popView(){
+    this.navCtrl.pop();
+  }
+
   private populateLocais():Promise<any>{
     return this.SQLService.getLocais()          
         .then( (rows) => {
@@ -150,7 +146,7 @@ export class AddIndividuoPage extends PaginaBase {
   private createForm(){
 
     // Compose group form 
-    this.addIndividuoFormGroup = this.formBuilder.group(
+    this.individuoFrmGroup = this.formBuilder.group(
       {
         especie_id:['', Validators.required ]  , 
         parcela_id:[this.parcela_id,Validators.required], 
@@ -165,13 +161,15 @@ export class AddIndividuoPage extends PaginaBase {
 
   logForm(){
 
-    let formValid = this.addIndividuoFormGroup.valid;
+    const $this = this;
+
+    let formValid = this.individuoFrmGroup.valid;
 
     // Form data submited
-    let data_to_save = this.addIndividuoFormGroup.value; 
+    let data_to_save = this.individuoFrmGroup.value; 
 
     // let individuo:Individuo = Object.assign(this.addIndividuoFormGroup.value, Individuo);
-    let individuo:Individuo = UtilityProvider.fromJSON(this.addIndividuoFormGroup.value, Individuo);
+    let individuo:Individuo = UtilityProvider.fromJSON(this.individuoFrmGroup.value, Individuo);
 
     const navPrevious = this.navCtrl.getPrevious();
 
@@ -198,8 +196,6 @@ export class AddIndividuoPage extends PaginaBase {
 
             if(formValid){
 
-              alert(formValid);
-
               if(navPrevious == null || navPrevious.index==0){
 
                 nav.push(IndividuoPage, {estacao: estacao_id}).then( () => {
@@ -213,12 +209,15 @@ export class AddIndividuoPage extends PaginaBase {
                 });                
                   
               } else {
+
                 // show modal with page 'addTronco'
                 let troncoModal = modal.create(
                   AddTroncoPage, {individuo:individuo}
                 );
                 troncoModal.present();
-                // nav.pop();
+          
+                $this.popView();
+                //nav.pop();
               }
 
             }
@@ -240,6 +239,8 @@ export class AddIndividuoPage extends PaginaBase {
         
         console.log('SAVE');
 
+        this.foiSubmetido = true;
+
         console.log(individuo);
 
         alertIndividuo
@@ -247,6 +248,7 @@ export class AddIndividuoPage extends PaginaBase {
           .present()
 
       }).catch( error => {
+        this.foiSubmetido = true;
         console.log(error)
         console.log('erro ao gravar estação',data_to_save,error);
       });

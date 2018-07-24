@@ -10,6 +10,7 @@ import { LocalPage } from '../local/local';
 import { EstacaoPage } from '../estacao/estacao';
 import { ParcelaPage } from '../parcela/parcela';
 import { TroncoPage } from '../tronco/tronco';
+import { AddIndividuoPage } from '../add-individuo/add-individuo';
 
 /**
  * Generated class for the AddTroncoPage page.
@@ -158,13 +159,20 @@ export class AddTroncoPage {
     return true;
   }
     
-
+  
   private closeForm() {
 
+    const individuo = this.individuo;
+    // show modal with page 'addTronco'
+    let troncoModal = this.modalCtrl.create(
+      TroncoPage, {individuo: individuo}
+    );
+    
     var viewCtrl = this.viewCtrl;
     var nav = this.navCtrl;
-    const indexCurrentPage = nav.getActive().index;
+    
     var arr_promises = [];
+
     // validando
     if(this.toValidateForms()){
 
@@ -184,8 +192,6 @@ export class AddTroncoPage {
           // console.log('dados para salvar',data_to_save)
           
           let tronco:Tronco = UtilityProvider.fromJSON(troncoForm.value, Tronco);
-
-          console.log('A PORRA DO TRONCO', tronco);
 
           arr_promises.push( 
             
@@ -208,7 +214,7 @@ export class AddTroncoPage {
         }
       }
 
-
+      // Todos os troncos salvos
       Promise.all(arr_promises).then( () => {
 
         let alertTronco = this.alert.create({
@@ -219,9 +225,7 @@ export class AddTroncoPage {
               handler: function(){
                 
                 viewCtrl.dismiss();
-                nav.remove(indexCurrentPage,1)
-
-    
+                troncoModal.present();
               }
             }
             

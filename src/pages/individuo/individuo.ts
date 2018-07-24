@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Form } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Form, ModalController } from 'ionic-angular';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Individuo } from '../../model/individuo.class';
 import { SqLiteWrapperProvider } from '../../providers/sq-lite-wrapper/sq-lite-wrapper';
@@ -8,6 +8,7 @@ import { AddIndividuoPage } from '../add-individuo/add-individuo';
 import { Estacao } from '../../model/estacao.class';
 import { Parcela } from '../../model/parcela.class';
 import { Local } from '../../model/local.class';
+import { TroncoPage } from '../tronco/tronco';
 
 /**
  * Generated class for the IndividuoPage page.
@@ -31,12 +32,18 @@ export class IndividuoPage {
   pushPage: Page;
   params: Object;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
-    public SQLService: SqLiteWrapperProvider) {
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams,
+    public SQLService: SqLiteWrapperProvider,
+    public modalCtrl: ModalController
+  ) {
 
     // Formulario para adicionar Individuo
     this.pushPage = AddIndividuoPage;
 
+
+    
     // if(this.navParams.get('estacao')){
     //   this.estacao_selected = this.navParams.get('estacao');
     // }
@@ -68,13 +75,6 @@ export class IndividuoPage {
 
         })
       })
-
-      
-
-      // this.parcela_selected = this.navParams.get('parcela');
-      
-      
-
      
     }
 
@@ -98,11 +98,27 @@ export class IndividuoPage {
     
   }
 
+  
+
   reloadIndividuos(){
     this.SQLService.getIndividuos(this.parcela_id, true)
         .then( rows => {
           this.individuos = rows;
           console.log('listando individuos',rows);
         });
+  }
+
+  chamarTroncos(individuo:Individuo){
+
+     //   // show modal with page 'addTronco'
+      let troncoModal = this.modalCtrl.create(TroncoPage, {individuo: individuo});
+      troncoModal.present();
+
+
+    // new Individuo(individuo_id).get().then( individuo_active=>{
+    
+   
+
+    // });
   }
 }

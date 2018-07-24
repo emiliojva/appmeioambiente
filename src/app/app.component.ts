@@ -14,6 +14,7 @@ import { Individuo2Page } from '../pages/individuo2/individuo2';
 import { EstacaoPage } from '../pages/estacao/estacao';
 import { AddParcelaPage } from '../pages/add-parcela/add-parcela';
 import { Table } from '../model/table.class';
+import { TroncoPage } from '../pages/tronco/tronco';
 
 @Component({
   templateUrl: 'app.html'
@@ -30,7 +31,6 @@ export class MyApp {
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen,
     private SQLService: SqLiteWrapperProvider  ) {
-
     
     // used for an example of ngFor and navigation
     this.pages = [
@@ -42,7 +42,8 @@ export class MyApp {
       // { title: 'Adicionar Individuo', component: AddIndividuoPage },
       { title: 'Adicionar Tronco - InDev', component: AddTroncoPage },
       // { title: 'Individuo 2', component: Individuo2Page}
-      { title: 'Adicionar Parcela', component: AddParcelaPage }
+      { title: 'Adicionar Parcela', component: AddParcelaPage },
+      { title: 'Troncos', component: TroncoPage },
     ];
 
     platform.ready().then(() => {
