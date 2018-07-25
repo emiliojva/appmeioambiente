@@ -46,16 +46,24 @@ export class AddTroncoPage {
     public modalCtrl: ModalController
   ) {
       
-    if(this.navParams.get('individuo')){
-      console.log(this.navParams.get('individuo'));
-      this.individuo = this.navParams.get('individuo')
+    let individuo_id = 1;
+    let individuoParam:Individuo = this.navParams.get('individuo');
+
+    if(individuoParam.id!=null){
+      this.individuo = individuoParam;
+      individuo_id = individuoParam.id
+    }
+      
+    if(this.individuo.numero_de_troncos>0){
+
       for (let i = 0; i < this.individuo.numero_de_troncos; i++ ) {
         this.troncos.push(
           { 
-            individuoID: this.individuo.id || 1 , //this.individuo.id 
+            individuoID: individuo_id
           }
         );
       }
+
     }
 
     this.createForm();

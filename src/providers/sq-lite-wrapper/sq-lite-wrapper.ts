@@ -618,14 +618,24 @@ export class SqLiteWrapperProvider {
         return db.executeSql(obj_query.query, obj_query.values);
 
       })
-      .then( (result) => {
+      .then( (results) => {
+        
+        let table = individuo.constructor.name.toLocaleLowerCase();
+        let foreignKey = 'parcela_id';
 
-        if(result.rows[0]){
-          individuo.id = result.rows[0].id;
+        return this.database.executeSql('SELECT max(id) as maxID FROM '+table+' WHERE '+foreignKey+' = ?',[individuo.parcela_id]);
+        
+      })
+      .then( (dataset) => {
+        console.log(dataset.rows.item(0));
+        
+        if(dataset.rows.item(0).maxID>0){
+          individuo.id = dataset.rows.item(0).maxID;
         }
-
+          
         return individuo;
       });
+      
       
 
   }

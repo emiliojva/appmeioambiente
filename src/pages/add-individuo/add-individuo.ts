@@ -50,6 +50,8 @@ export class AddIndividuoPage extends PaginaBase {
   parcela_selected: Parcela;
   parcela_id: number;
 
+  novoIndividuo:Individuo;
+
 
   // depois de criar interface cpb
   foiSubmetido: boolean;
@@ -163,23 +165,9 @@ export class AddIndividuoPage extends PaginaBase {
 
             if(formValid){
 
-              if(navPrevious == null || navPrevious.index==0){
-
-                nav.push(IndividuoPage, {estacao: estacao_id}).then( () => {
-                  nav.remove(indexCurrentPage,1);   
-                  nav.insertPages(0,[
-                    {page: LocalPage}, 
-                    {page: EstacaoPage},
-                    {page: ParcelaPage},
-                    {page: IndividuoPage}
-                  ]);
-                });                
-                  
-              } else {
-
-                // show modal with page 'addTronco'
+              // show modal with page 'addTronco'
                 let troncoModal = modal.create(
-                  AddTroncoPage, {individuo:individuo}
+                  AddTroncoPage, {individuo: $this.novoIndividuo}
                 );
                 troncoModal.present();
           
@@ -187,7 +175,6 @@ export class AddIndividuoPage extends PaginaBase {
                 //nav.pop();
               }
 
-            }
           }
         }
         
@@ -202,11 +189,12 @@ export class AddIndividuoPage extends PaginaBase {
 
       // const individuo:Individuo = Object.assign(this.addIndividuoFormGroup.value, Individuo);
 
-      this.SQLService.storeIndividuo(individuo).then( () => {
+      this.SQLService.storeIndividuo(individuo).then( (individuo) => {
         
+        this.novoIndividuo = individuo;
         this.foiSubmetido = true;
         alertIndividuo
-          .setTitle('Formulário Salvo com Sucesso')
+          .setTitle(`Indivíduo salvo com sucesso. \n\nPreencha a seguir os ${individuo.numero_de_troncos} troncos!`)
           .present()
 
         }).catch( error => {
